@@ -15,12 +15,6 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>no.digipost.signature</groupId>
-            <artifactId>signature-api-specification-parent</artifactId>
-            <version>1.2</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
