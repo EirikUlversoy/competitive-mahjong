@@ -5,12 +5,25 @@ public class Ruleset {
     private Integer winds;
     private Integer flowers;
 
+    private Integer perTile;
+
+
+    }
+
     Ruleset(){
         this.suits = 3;
         this.colors = 3;
         this.winds = 4;
         this.flowers = 0;
+        this.perTile = 4;
     }
+
+    public Integer getPerTile() {
+        return perTile;
+    }
+
+    public void setPerTile(Integer perTile) {
+        this.perTile = perTile;
 
     public Integer getSuits() {
         return suits;
