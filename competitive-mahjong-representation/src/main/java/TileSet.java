@@ -10,6 +10,13 @@ public class TileSet {
     public Integer getAmount(){
         return unusedTiles.size();
     }
+
+    public void initializeTiles(){
+
+    }
+    public void initializeTiles(String ruletype){
+
+    }
     public List<Tile> getRandomTiles(Integer amount){
         int randomNumber = 0;
         Random rnd = new Random();

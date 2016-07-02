@@ -4,9 +4,14 @@ import java.util.List;
 public class Hand {
     private String playerId;
     private List<Tile> tiles = new ArrayList<Tile>();
-
+    private Integer handsize = 13;
     Hand(String playerId){
         this.playerId = playerId;
+    }
+    Hand(String playerId, Integer amount){
+        this.playerId = playerId;
+        this.handsize = amount;
+
     }
 
     public List<Tile> getTiles() {
@@ -24,6 +29,7 @@ public class Hand {
     public void setPlayerId(String playerId) {
         this.playerId = playerId;
     }
+
 
 
 

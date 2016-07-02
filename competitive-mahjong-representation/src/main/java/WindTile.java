@@ -3,4 +3,6 @@ public class WindTile extends Tile{
     private String tileId;
     private Integer tileNumber;
     private Position position;
+
+
 }
