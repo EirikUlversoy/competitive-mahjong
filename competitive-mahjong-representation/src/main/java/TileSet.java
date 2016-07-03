@@ -25,6 +25,8 @@ public class TileSet {
 
         }
     }
+
+
     public void initializeTiles(String ruletype){
 
     }
@@ -36,22 +38,27 @@ public class TileSet {
         {
             for(int x = 0; x<amountPerTile; x++){
                 WindTile tile = new WindTile();
+                Position position = new Position();
                 switch (i){
                     case 0:
                         tile.setIdentifier("West");
                         tile.setTileNumber(x+1);
+                        tile.setPosition(position);
                         windTiles.add(tile);
                     case 1:
                         tile.setIdentifier("East");
                         tile.setTileNumber(x+1);
+                        tile.setPosition(position);
                         windTiles.add(tile);
                     case 2:
                         tile.setIdentifier("North");
                         tile.setTileNumber(x+1);
+                        tile.setPosition(position);
                         windTiles.add(tile);
                     case 3:
                         tile.setIdentifier("South");
                         tile.setTileNumber(x+1);
+                        tile.setPosition(position);
                         windTiles.add(tile);
                 }
             }

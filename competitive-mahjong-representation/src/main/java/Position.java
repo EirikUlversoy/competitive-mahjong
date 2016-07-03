@@ -1,6 +1,6 @@
 
 public class Position {
-    private String location;
+    private String location = "Not placed";
     private int number;
 
     public String getLocation() {

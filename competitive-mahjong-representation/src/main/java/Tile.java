@@ -2,7 +2,24 @@ public class Tile {
 
     private String tileId;
     private Position position;
+    private Integer tileNumber;
+    private String identifier;
 
+    public Integer getTileNumber() {
+        return tileNumber;
+    }
+
+    public void setTileNumber(Integer tileNumber) {
+        this.tileNumber = tileNumber;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
     public String getTileId() {
         return tileId;
