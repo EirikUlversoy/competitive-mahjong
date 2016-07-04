@@ -2,13 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Hand {
-    private String playerId;
+    private Integer playerId;
     private List<Tile> tiles = new ArrayList<Tile>();
     private Integer handsize = 13;
-    Hand(String playerId){
+    Hand(Integer playerId){
         this.playerId = playerId;
     }
-    Hand(String playerId, Integer amount){
+    Hand(Integer playerId, Integer amount){
         this.playerId = playerId;
         this.handsize = amount;
 
@@ -22,12 +22,26 @@ public class Hand {
         this.tiles = tiles;
     }
 
-    public String getPlayerId() {
+    public Integer getPlayerId() {
         return playerId;
     }
 
-    public void setPlayerId(String playerId) {
+    public void setPlayerId(Integer playerId) {
         this.playerId = playerId;
+    }
+
+    public void drawTile(Tile tile){
+        if(tiles.size() <= 13){
+            tiles.add(tile);
+        }
+    }
+
+    public void discardTile(Tile tile){
+        tiles.remove(tile);
+    }
+
+    public void initializeHand(TileSet tileSet){
+        tiles = tileSet.getRandomTiles(handsize);
     }
 
 

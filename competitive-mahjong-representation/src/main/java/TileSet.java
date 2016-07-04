@@ -51,7 +51,7 @@ public class TileSet {
     public List<Tile> generateSuitTiles(Integer amountSuits, Integer amountPerTile, Integer amountPerSuit, Suit suit){
         List<Tile> tiles = new ArrayList<>();
         Integer tilenumber = 0;
-            for (int x = 1; x <= amountPerSuit; x++) {
+            for (int x = 1; x < amountPerSuit; x++) {
                 tilenumber = x;
 
                 for (int i = 0; i < amountPerTile; i++) {
@@ -73,14 +73,6 @@ public class TileSet {
             }
 
 
-        if(suit.getIdentifier() == "Pin")
-        {
-
-        }
-
-        if(suit.getIdentifier() == "Sou"){
-
-        }
         return tiles;
 
     }
@@ -161,7 +153,8 @@ public class TileSet {
             unusedTiles.remove(randomNumber);
 
         }
-
+        System.out.println("Drew and removed " + amount + " tiles");
+        System.out.println("There are " + unusedTiles.size() + "tiles left in the tileset");
         return returnedTiles;
 
     };

@@ -6,6 +6,9 @@ public class Wall {
     private List<Tile> tiles = new ArrayList<Tile>();
     private Integer slotAmount = 20;
 
+    Wall(String direction){
+        this.direction = direction;
+    }
     public void generateWall(TileSet tileSet){
         System.out.println("there are " + tileSet.getAmount() + "tiles left in the tileset");
         this.tiles = tileSet.getRandomTiles(this.slotAmount);
@@ -16,7 +19,7 @@ public class Wall {
         String returnString = "";
         for (Tile tile : tiles)
         {
-            returnString.concat(tile.toString());
+            returnString.concat(tile.toString()).concat(",");
 
         };
         return returnString;

@@ -7,14 +7,30 @@ public class Ruleset {
 
     private Integer perTile;
     private Integer perSuit;
-
-
+    private Integer handsize;
+    private Integer playerAmount;
     public Integer getPerSuit() {
         return perSuit;
     }
 
     public void setPerSuit(Integer perSuit) {
         this.perSuit = perSuit;
+    }
+
+    public Integer getHandsize() {
+        return handsize;
+    }
+
+    public void setHandsize(Integer handsize) {
+        this.handsize = handsize;
+    }
+
+    public Integer getPlayerAmount() {
+        return playerAmount;
+    }
+
+    public void setPlayerAmount(Integer playerAmount) {
+        this.playerAmount = playerAmount;
     }
 
     Ruleset(){
@@ -24,6 +40,9 @@ public class Ruleset {
         this.flowers = 0;
         this.perTile = 4;
         this.perSuit = 9;
+        this.handsize = 13;
+        this.playerAmount = 4;
+
 
     }
 
@@ -33,6 +52,7 @@ public class Ruleset {
 
     public void setPerTile(Integer perTile) {
         this.perTile = perTile;
+    }
 
     public Integer getSuits() {
         return suits;
