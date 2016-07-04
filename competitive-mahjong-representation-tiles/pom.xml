@@ -2,22 +2,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>competitive-mahjong-representation</artifactId>
+        <groupId>no.mahjong</groupId>
+        <version>0.1.0-SNAPSHOT</version>
+        <relativePath>../competitive-mahjong-representation/pom.xml</relativePath>
+    </parent>
 
-    <groupId>no.mahjong</groupId>
-    <artifactId>competitive-mahjong-representation</artifactId>
-    <packaging>pom</packaging>
-    <version>0.1.0-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>no.mahjong</groupId>
-            <artifactId>tiles</artifactId>
+            <artifactId>competitive-mahjong-representation</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-    <modules>
-        <module>../competitive-mahjong-representation-tiles</module>
-    </modules>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>tiles</artifactId>
 
 
 </project>
