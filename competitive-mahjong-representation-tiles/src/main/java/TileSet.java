@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 public class TileSet {
@@ -17,17 +18,70 @@ public class TileSet {
     public void initializeTiles(){
         this.ruleset = new Ruleset();
 
-        for(int i = 0;i<this.ruleset.getColors();i++)
-        {
-            List<Tile> ColorTiles = generateColorTiles(this.ruleset.getColors(),this.ruleset.getPerTile());
-            List<Tile> WindTiles = generateWindTiles(this.ruleset.getWinds(),this.ruleset.getPerTile());
+        List<Tile> ColorTiles = generateColorTiles(ruleset.getColors(),ruleset.getPerTile());
+        List<Tile> WindTiles = generateWindTiles(ruleset.getWinds(),ruleset.getPerTile());
+
+        Suit wanSuit = new Suit("Wan");
+        Suit souSuit = new Suit("Sou");
+        Suit pinSuit = new Suit("Pin");
+
+        List<Tile> WanTiles = generateSuitTiles(ruleset.getSuits(),ruleset.getPerTile(), ruleset.getPerSuit(),
+                wanSuit);
+        List<Tile> SouTiles = generateSuitTiles(ruleset.getSuits(),ruleset.getPerTile(), ruleset.getPerSuit(),
+                souSuit);
+        List<Tile> PinTiles = generateSuitTiles(ruleset.getSuits(),ruleset.getPerTile(), ruleset.getPerSuit(),
+                pinSuit);
+
+        unusedTiles.addAll(ColorTiles);
+        unusedTiles.addAll(WindTiles);
+        unusedTiles.addAll(WanTiles);
+        unusedTiles.addAll(SouTiles);
+        unusedTiles.addAll(PinTiles);
 
 
-        }
+
+
     }
 
 
     public void initializeTiles(String ruletype){
+
+    }
+
+    public List<Tile> generateSuitTiles(Integer amountSuits, Integer amountPerTile, Integer amountPerSuit, Suit suit){
+        List<Tile> tiles = new ArrayList<>();
+        Integer tilenumber = 0;
+            for (int x = 1; x <= amountPerSuit; x++) {
+                tilenumber = x;
+
+                for (int i = 0; i < amountPerTile; i++) {
+                    Position position = new Position();
+                    Tile tile = new Tile();
+                    if(suit.getIdentifier() == "Wan"){
+                        tile = new WanTile();
+                    } else if(suit.getIdentifier() == "Sou") {
+                        tile = new SouTile();
+                    } else if(suit.getIdentifier() == "Pin"){
+                        tile = new PinTile();
+                    }
+                    tile.setIdentifier(suit.getIdentifier() + "--" + tilenumber + "--" + i);
+                    tile.setTileNumber(i);
+                    tile.setPosition(position);
+                    tile.setTileId(UUID.randomUUID().toString());
+                    tiles.add(tile);
+                }
+            }
+
+
+        if(suit.getIdentifier() == "Pin")
+        {
+
+        }
+
+        if(suit.getIdentifier() == "Sou"){
+
+        }
+        return tiles;
 
     }
     public List<Tile> generateWindTiles (Integer amountWinds, Integer amountPerTile){
@@ -39,6 +93,7 @@ public class TileSet {
             for(int x = 0; x<amountPerTile; x++){
                 WindTile tile = new WindTile();
                 Position position = new Position();
+                tile.setTileId(UUID.randomUUID().toString());
                 switch (i){
                     case 0:
                         tile.setIdentifier("West");
@@ -73,18 +128,18 @@ public class TileSet {
         {
             for(int x = 0; x<amountPerTile; x++){
                 ColorTile tile = new ColorTile();
+                Position position = new Position();
+                tile.setPosition(position);
+                tile.setTileNumber(x+1);
                 switch (i){
                     case 0:
                         tile.setIdentifier("Chun");
-                        tile.setTileNumber(x+1);
                         colorTiles.add(tile);
                     case 1:
                         tile.setIdentifier("Haku");
-                        tile.setTileNumber(x+1);
                         colorTiles.add(tile);
                     case 2:
                         tile.setIdentifier("Hatsu");
-                        tile.setTileNumber(x+1);
                         colorTiles.add(tile);
                 }
             }

@@ -1,3 +1,3 @@
 
-public class PinTile {
+public class PinTile extends Tile {
 }

@@ -6,8 +6,15 @@ public class Ruleset {
     private Integer flowers;
 
     private Integer perTile;
+    private Integer perSuit;
 
 
+    public Integer getPerSuit() {
+        return perSuit;
+    }
+
+    public void setPerSuit(Integer perSuit) {
+        this.perSuit = perSuit;
     }
 
     Ruleset(){
@@ -16,6 +23,8 @@ public class Ruleset {
         this.winds = 4;
         this.flowers = 0;
         this.perTile = 4;
+        this.perSuit = 9;
+
     }
 
     public Integer getPerTile() {
