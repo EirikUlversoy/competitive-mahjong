@@ -16,7 +16,24 @@ public class Gameboard {
     private Player player4;
     private Ruleset ruleset = new Ruleset();
 
+    public Ruleset getRuleset() {
+        return ruleset;
+    }
+
+    public void setRuleset(Ruleset ruleset) {
+        this.ruleset = ruleset;
+    }
+
+    public TileSet getTileSet() {
+        return tileSet;
+    }
+
+    public void setTileSet(TileSet tileSet) {
+        this.tileSet = tileSet;
+    }
+
     public void startGame(){
+
         this.tileSet = new TileSet();
         tileSet.initializeTiles();
         initializePonds();
@@ -26,7 +43,7 @@ public class Gameboard {
         initializeWall("North");
         initializePlayers(ruleset.getPlayerAmount());
         //System.out.println(ponds.get(0).toString());
-        System.out.println(eastWall.toString());
+        //System.out.println(eastWall.toString());
 
 
     }

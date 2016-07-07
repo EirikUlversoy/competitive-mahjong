@@ -1,9 +1,13 @@
+import javafx.scene.image.Image;
+
 public class Tile {
 
     private String tileId;
     private Position position;
     private Integer tileNumber;
     private String identifier;
+    private Image image;
+
 
     public Integer getTileNumber() {
         return tileNumber;
@@ -15,6 +19,14 @@ public class Tile {
 
     public String getIdentifier() {
         return identifier;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public void setIdentifier(String identifier) {

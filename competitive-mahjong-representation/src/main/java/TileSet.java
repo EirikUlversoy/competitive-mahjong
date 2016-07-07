@@ -1,3 +1,5 @@
+import javafx.scene.image.Image;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -68,6 +70,8 @@ public class TileSet {
                     tile.setTileNumber(i);
                     tile.setPosition(position);
                     tile.setTileId(UUID.randomUUID().toString());
+                    Image image = new Image("file:/resources/images/"+x+suit.getIdentifier() + ".png");
+                    tile.setImage(image);
                     tiles.add(tile);
                 }
             }
@@ -76,34 +80,63 @@ public class TileSet {
         return tiles;
 
     }
+
+    public List<Tile> getUnusedTiles() {
+        return unusedTiles;
+    }
+
+    public List<Tile> getUsedTiles() {
+        return usedTiles;
+    }
+
+    public Ruleset getRuleset() {
+        return ruleset;
+    }
+
     public List<Tile> generateWindTiles (Integer amountWinds, Integer amountPerTile){
 
         List<Tile> windTiles = new ArrayList<>();
-
+        String windPath = "file:resources/images/";
         for(int i = 0; i<amountWinds;i++)
         {
+            if(i == 0){
+                windPath = windPath.concat("West.png");
+            } else if(i == 1) {
+                windPath = windPath.concat("East.png");
+            } else if(i == 2) {
+
+                windPath = windPath.concat("North.png");
+            } else if(i == 3) {
+                windPath = windPath.concat("South.png");
+            }
             for(int x = 0; x<amountPerTile; x++){
                 WindTile tile = new WindTile();
                 Position position = new Position();
                 tile.setTileId(UUID.randomUUID().toString());
+
+                Image image = new Image(windPath);
                 switch (i){
                     case 0:
                         tile.setIdentifier("West");
+                        tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
                     case 1:
                         tile.setIdentifier("East");
+                        tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
                     case 2:
                         tile.setIdentifier("North");
+                        tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
                     case 3:
                         tile.setIdentifier("South");
+                        tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
@@ -115,23 +148,35 @@ public class TileSet {
     public List<Tile> generateColorTiles (Integer amountColors, Integer amountPerTile)
     {
         List<Tile> colorTiles = new ArrayList<>();
-
+        String colorPath = "file:resources/images/";
         for(int i = 0; i<amountColors;i++)
         {
+            if(i == 0){
+                colorPath = colorPath.concat("Red.png");
+            } else if(i == 1) {
+                colorPath = colorPath.concat("White.png");
+            } else if(i == 2) {
+                colorPath = colorPath.concat("Green.png");
+            }
             for(int x = 0; x<amountPerTile; x++){
                 ColorTile tile = new ColorTile();
                 Position position = new Position();
                 tile.setPosition(position);
                 tile.setTileNumber(x+1);
+                System.out.println(colorPath);
+                Image image = new Image(colorPath);
                 switch (i){
                     case 0:
                         tile.setIdentifier("Chun");
+                        tile.setImage(image);
                         colorTiles.add(tile);
                     case 1:
                         tile.setIdentifier("Haku");
+                        tile.setImage(image);
                         colorTiles.add(tile);
                     case 2:
                         tile.setIdentifier("Hatsu");
+                        tile.setImage(image);
                         colorTiles.add(tile);
                 }
             }
