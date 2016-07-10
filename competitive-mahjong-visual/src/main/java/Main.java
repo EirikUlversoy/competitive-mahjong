@@ -15,6 +15,7 @@ import java.util.List;
 
 public class Main extends Application
 {
+    private Gameboard board;
     public static void main(String[] args)
     {
         launch(args);
@@ -27,7 +28,7 @@ public class Main extends Application
         theStage.setMaxHeight(1000);
         theStage.setMaxWidth(1000);
         Game game = new Game();
-        Gameboard board = new Gameboard();
+        board = new Gameboard();
         board.startGame();
         displayMainStage(board.getTileSet().getUnusedTiles());
         for(Tile tile : board.getTileSet().getUnusedTiles()){
@@ -56,7 +57,6 @@ public class Main extends Application
 
         mainStage.show();
 
-        MainController controller = new MainController();
 
     }
 

@@ -7,9 +7,9 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
 
-<Pane fx:id="mainStage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="MainController">
+<Pane fx:id="mainStage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
    <children>
       <MenuBar prefHeight="14.0" prefWidth="166.0">
         <menus>
@@ -32,7 +32,10 @@ fx:controller="MainController">
       </MenuBar>
       <SplitPane dividerPositions="0.35714285714285715" layoutX="-3.0" layoutY="704.0" orientation="VERTICAL" prefHeight="303.0" prefWidth="1007.0">
         <items>
-          <AnchorPane fx:id="playerHand" minHeight="0.0" minWidth="0.0" prefHeight="116.0" prefWidth="978.0" />
+          <AnchorPane fx:id="playerHand" minHeight="0.0" minWidth="0.0" prefHeight="116.0" prefWidth="978.0">
+               <children>
+                  <Rectangle fx:id="card" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="52.0" layoutX="296.0" layoutY="15.0" stroke="BLACK" strokeType="INSIDE" width="36.0" />
+               </children></AnchorPane>
           <AnchorPane fx:id="actionPane" minHeight="0.0" minWidth="0.0" prefHeight="215.0" prefWidth="992.0">
                <children>
                   <Button fx:id="Win" layoutX="870.0" layoutY="75.0" mnemonicParsing="false" text="Button" />
@@ -50,5 +53,9 @@ fx:controller="MainController">
       <Pane fx:id="northWall" layoutX="302.0" layoutY="82.0" prefHeight="32.0" prefWidth="340.0" />
       <Pane fx:id="westWall" layoutX="236.0" layoutY="211.0" prefHeight="310.0" prefWidth="36.0" />
       <Pane fx:id="eastWall" layoutX="683.0" layoutY="220.0" prefHeight="310.0" prefWidth="36.0" />
+      <Pane fx:id="westCallArea" layoutX="83.0" layoutY="57.0" prefHeight="141.0" prefWidth="138.0" />
+      <Pane fx:id="northCallArea" layoutX="819.0" layoutY="57.0" prefHeight="141.0" prefWidth="138.0" />
+      <Pane fx:id="southCallArea" layoutX="70.0" layoutY="520.0" prefHeight="141.0" prefWidth="138.0" />
+      <Pane fx:id="eastCallArea" layoutX="819.0" layoutY="530.0" prefHeight="141.0" prefWidth="138.0" />
    </children>
 </Pane>
