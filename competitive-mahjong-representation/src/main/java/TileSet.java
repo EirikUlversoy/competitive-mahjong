@@ -1,5 +1,6 @@
 import javafx.scene.image.Image;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -53,6 +54,8 @@ public class TileSet {
     public List<Tile> generateSuitTiles(Integer amountSuits, Integer amountPerTile, Integer amountPerSuit, Suit suit){
         List<Tile> tiles = new ArrayList<>();
         Integer tilenumber = 0;
+        System.out.println(new java.io.File("").getAbsolutePath());
+        System.out.println(TileSet.class.getClassLoader().getResource("").getPath());
             for (int x = 1; x < amountPerSuit; x++) {
                 tilenumber = x;
 
@@ -70,7 +73,10 @@ public class TileSet {
                     tile.setTileNumber(i);
                     tile.setPosition(position);
                     tile.setTileId(UUID.randomUUID().toString());
-                    Image image = new Image("file:/resources/images/"+x+suit.getIdentifier() + ".png");
+                    System.out.println(suit.getIdentifier());
+                    URL url = TileSet.class.getClassLoader().getResource(x+suit.getIdentifier()+".png");
+                    //String filesPathAndName = url.getPath();
+                    Image image = new Image("file:competitive-mahjong-representation/src/main/resources/images/"+x+suit.getIdentifier()+".png");
                     tile.setImage(image);
                     tiles.add(tile);
                 }
@@ -96,7 +102,7 @@ public class TileSet {
     public List<Tile> generateWindTiles (Integer amountWinds, Integer amountPerTile){
 
         List<Tile> windTiles = new ArrayList<>();
-        String windPath = "file:resources/images/";
+        String windPath = "file:competitive-mahjong-representation/src/main/resources/images/";
         for(int i = 0; i<amountWinds;i++)
         {
             if(i == 0){
@@ -148,7 +154,7 @@ public class TileSet {
     public List<Tile> generateColorTiles (Integer amountColors, Integer amountPerTile)
     {
         List<Tile> colorTiles = new ArrayList<>();
-        String colorPath = "file:resources/images/";
+        String colorPath = "file:competitive-mahjong-representation/src/main/resources/images/";
         for(int i = 0; i<amountColors;i++)
         {
             if(i == 0){

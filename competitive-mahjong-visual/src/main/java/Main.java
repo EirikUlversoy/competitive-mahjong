@@ -1,5 +1,7 @@
 
 import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -23,14 +25,32 @@ public class Main extends Application
         Game game = new Game();
         Gameboard board = new Gameboard();
         board.startGame();
+        displayMainStage(board.getTileSet().getUnusedTiles());
         for(Tile tile : board.getTileSet().getUnusedTiles()){
             System.out.println("Trying to display:" + tile.getTileId());
             ImageView imv = new ImageView();
             imv.setImage(tile.getImage());
-            
-            theStage.show();
+
 
         }
+    }
+
+    public void displayMainStage(List<Tile> tiles){
+
+        Tile firstTile = tiles.get(0);
+        System.out.println(firstTile.getImage().isError());
+        ImageView imv = new ImageView(firstTile.getImage());
+        Stage mainStage = new Stage();
+
+        Group mainGroup = new Group();
+
+        Scene mainScene = new Scene(mainGroup);
+
+        mainGroup.getChildren().add(imv);
+
+        mainStage.setScene(mainScene);
+
+        mainStage.show();
     }
 
 }
