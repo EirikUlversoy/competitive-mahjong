@@ -27,10 +27,33 @@ public class HandEvaluator {
         List<Tile> wanTiles = hand.getTiles().stream().filter(z -> z.getClass() == WanTile.class).collect(Collectors.toList());
         return wanTiles;
     }
-    public List<SequenceGroup> findValidSequenceGroups(){
-        return null;
+
+    public List<Tile> reduceTileSet(List<Tile> tiles){
+        List<Tile> newTiles = tiles.stream().sorted((z,x) -> z.getTileNumber()
+                .compareTo(x.getTileNumber()))
+                .collect(Collectors.toList());
+        newTiles.stream().forEach(z -> System.out.println(z.toString()));
+        return newTiles;
     }
-    public List<SequenceGroup> findSequences(List<Tile> tiles) {
-        return null;
+    public List<SequenceGroup> findValidSequenceGroups(int[] numbers){
+        List<SequenceGroup> validSequenceGroups = new ArrayList<>();
+        for (int number: numbers){
+            if(number <= 7){
+                Tile tile = new Tile();
+                tile.setTileNumber(number);
+                Tile secondTile = new Tile();
+                secondTile.setTileNumber(number+1);
+                Tile thirdTile = new Tile();
+                thirdTile.setTileNumber(number+2);
+                validSequenceGroups.add(new SequenceGroup(tile,secondTile,thirdTile));
+
+            }
+
+
+        }
+        return validSequenceGroups;
+    }
+    public List<SequenceGroup> findSequences(List<Tile> tiles, List<SequenceGroup> validSequenceGroups) {
+    return null;
     }
 }
