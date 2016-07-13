@@ -1,7 +1,7 @@
 
 public class ValuationHan {
 
-    public void calculateHand(Hand hand){
+    public void calculateHan(Hand hand){
 
     }
 }

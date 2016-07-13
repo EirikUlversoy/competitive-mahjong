@@ -8,6 +8,7 @@ public class Hand {
     Hand(Integer playerId){
         this.playerId = playerId;
     }
+    private boolean isInRichiiState = false;
     Hand(Integer playerId, Integer amount){
         this.playerId = playerId;
         this.handsize = amount;
