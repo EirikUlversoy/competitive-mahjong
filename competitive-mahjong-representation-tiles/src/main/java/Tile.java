@@ -7,7 +7,15 @@ public class Tile {
     private Integer tileNumber;
     private String identifier;
     private Image image;
+    private String imagePath;
 
+    public void findImage(){
+        this.image = new Image(imagePath);
+    }
+
+    public void setImagePath(String imagePath){
+        this.imagePath = imagePath;
+    }
 
     public Integer getTileNumber() {
         return tileNumber;
@@ -51,7 +59,7 @@ public class Tile {
 
     public String toString(){
         String returnString = "";
-        returnString.concat(tileId).concat("@"+position.toString());
+        returnString = returnString.concat(identifier).concat("@"+position.toString()).concat(tileNumber.toString());
 
         return returnString;
     }

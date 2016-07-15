@@ -1,7 +1,7 @@
 
 public class Position {
     private String location = "Not placed";
-    private int number;
+    private int number = 666;
 
     public String getLocation() {
         return location;

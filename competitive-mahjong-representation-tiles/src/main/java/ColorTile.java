@@ -1,8 +1,10 @@
 
 public class ColorTile extends Tile {
-    private Position position;
-    private String tileId;
+    private String classIdentifier = "Color";
+    private Position position = new Position();
+    private String tileId = "hmm";
     private String identifier = "color";
+    private Integer tileNumber = 0;
 
 
     public Integer getTileNumber() {
@@ -13,7 +15,6 @@ public class ColorTile extends Tile {
         this.tileNumber = tileNumber;
     }
 
-    private Integer tileNumber;
 
     public String getIdentifier() {
         return identifier;

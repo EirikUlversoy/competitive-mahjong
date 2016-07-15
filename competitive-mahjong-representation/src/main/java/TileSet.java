@@ -55,11 +55,12 @@ public class TileSet {
         List<Tile> tiles = new ArrayList<>();
         Integer tilenumber = 0;
         System.out.println(new java.io.File("").getAbsolutePath());
+        String basePath = "file:competitive-mahjong-representation/src/main/resources/images/";
         System.out.println(TileSet.class.getClassLoader().getResource("").getPath());
-            for (int x = 1; x < amountPerSuit; x++) {
+            for (int x = 1; x <= amountPerSuit; x++) {
                 tilenumber = x;
 
-                for (int i = 0; i < amountPerTile; i++) {
+                for (int i = 1; i <= amountPerTile; i++) {
                     Position position = new Position();
                     Tile tile = new Tile();
                     if(suit.getIdentifier() == "Wan"){
@@ -71,13 +72,16 @@ public class TileSet {
                     }
                     tile.setIdentifier(suit.getIdentifier() + "--" + tilenumber + "--" + i);
                     tile.setTileNumber(i);
+                    System.out.println(tilenumber);
+                    System.out.println(i);
                     tile.setPosition(position);
                     tile.setTileId(UUID.randomUUID().toString());
                     System.out.println(suit.getIdentifier());
                     URL url = TileSet.class.getClassLoader().getResource(x+suit.getIdentifier()+".png");
                     //String filesPathAndName = url.getPath();
-                    Image image = new Image("file:competitive-mahjong-representation/src/main/resources/images/"+x+suit.getIdentifier()+".png");
-                    tile.setImage(image);
+                    //Image image = new Image("file:competitive-mahjong-representation/src/main/resources/images/"+x+suit.getIdentifier()+".png");
+                    tile.setImagePath(basePath.concat(x+suit.getIdentifier()+".png"));
+                    //tile.setImage(image);
                     tiles.add(tile);
                 }
             }
@@ -120,29 +124,30 @@ public class TileSet {
                 Position position = new Position();
                 tile.setTileId(UUID.randomUUID().toString());
 
-                Image image = new Image(windPath);
+                //Image image = new Image(windPath);
+                tile.setImagePath(windPath);
                 switch (i){
                     case 0:
                         tile.setIdentifier("West");
-                        tile.setImage(image);
+                        //tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
                     case 1:
                         tile.setIdentifier("East");
-                        tile.setImage(image);
+                        //tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
                     case 2:
                         tile.setIdentifier("North");
-                        tile.setImage(image);
+                        //tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
                     case 3:
                         tile.setIdentifier("South");
-                        tile.setImage(image);
+                        //tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
@@ -170,19 +175,21 @@ public class TileSet {
                 tile.setPosition(position);
                 tile.setTileNumber(x+1);
                 System.out.println(colorPath);
-                Image image = new Image(colorPath);
+                //Image image = new Image(colorPath);
+                tile.setImagePath(colorPath);
+
                 switch (i){
                     case 0:
                         tile.setIdentifier("Chun");
-                        tile.setImage(image);
+                        //tile.setImage(image);
                         colorTiles.add(tile);
                     case 1:
                         tile.setIdentifier("Haku");
-                        tile.setImage(image);
+                        //tile.setImage(image);
                         colorTiles.add(tile);
                     case 2:
                         tile.setIdentifier("Hatsu");
-                        tile.setImage(image);
+                        //tile.setImage(image);
                         colorTiles.add(tile);
                 }
             }
@@ -204,6 +211,7 @@ public class TileSet {
             unusedTiles.remove(randomNumber);
 
         }
+        System.out.println(returnedTiles.stream().distinct().count());
         System.out.println("Drew and removed " + amount + " tiles");
         System.out.println("There are " + unusedTiles.size() + "tiles left in the tileset");
         return returnedTiles;
