@@ -54,9 +54,7 @@ public class TileSet {
     public List<Tile> generateSuitTiles(Integer amountSuits, Integer amountPerTile, Integer amountPerSuit, Suit suit){
         List<Tile> tiles = new ArrayList<>();
         Integer tilenumber = 0;
-        System.out.println(new java.io.File("").getAbsolutePath());
         String basePath = "file:competitive-mahjong-representation/src/main/resources/images/";
-        System.out.println(TileSet.class.getClassLoader().getResource("").getPath());
             for (int x = 1; x <= amountPerSuit; x++) {
                 tilenumber = x;
 
@@ -72,11 +70,8 @@ public class TileSet {
                     }
                     tile.setIdentifier(suit.getIdentifier() + "--" + tilenumber + "--" + i);
                     tile.setTileNumber(i);
-                    System.out.println(tilenumber);
-                    System.out.println(i);
                     tile.setPosition(position);
                     tile.setTileId(UUID.randomUUID().toString());
-                    System.out.println(suit.getIdentifier());
                     URL url = TileSet.class.getClassLoader().getResource(x+suit.getIdentifier()+".png");
                     //String filesPathAndName = url.getPath();
                     //Image image = new Image("file:competitive-mahjong-representation/src/main/resources/images/"+x+suit.getIdentifier()+".png");
@@ -133,24 +128,28 @@ public class TileSet {
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
+                        break;
                     case 1:
                         tile.setIdentifier("East");
                         //tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
+                        break;
                     case 2:
                         tile.setIdentifier("North");
                         //tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
+                        break;
                     case 3:
                         tile.setIdentifier("South");
                         //tile.setImage(image);
                         tile.setTileNumber(x+1);
                         tile.setPosition(position);
                         windTiles.add(tile);
+                        break;
                 }
             }
         }
@@ -174,7 +173,6 @@ public class TileSet {
                 Position position = new Position();
                 tile.setPosition(position);
                 tile.setTileNumber(x+1);
-                System.out.println(colorPath);
                 //Image image = new Image(colorPath);
                 tile.setImagePath(colorPath);
 
@@ -183,14 +181,17 @@ public class TileSet {
                         tile.setIdentifier("Chun");
                         //tile.setImage(image);
                         colorTiles.add(tile);
+                        break;
                     case 1:
                         tile.setIdentifier("Haku");
                         //tile.setImage(image);
                         colorTiles.add(tile);
+                        break;
                     case 2:
                         tile.setIdentifier("Hatsu");
                         //tile.setImage(image);
                         colorTiles.add(tile);
+                        break;
                 }
             }
         }

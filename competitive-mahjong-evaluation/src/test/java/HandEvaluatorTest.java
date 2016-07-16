@@ -23,7 +23,7 @@ public class HandEvaluatorTest {
         //        .filter(z-> z.getIdentifier() == "Chun" || z.getIdentifier() == "Hatsu" || z.getIdentifier() == "Haku")
         //        .forEach(z -> System.out.println(z.toString()));
         hand.getTiles().stream()
-                .forEach(z -> System.out.println(z.getIdentifier().concat("@"+z.getPosition().toString()).concat(z.getTileNumber().toString())));
+                .forEach(z -> System.out.println("The hands tiles: "+ z.getIdentifier().concat("@"+z.getPosition().toString()).concat(z.getTileNumber().toString())));
         List<Tile> filteredTiles = handEvaluator.filterPin();
 
         List<Tile> sortedTiles = handEvaluator.reduceTileSet(filteredTiles);
