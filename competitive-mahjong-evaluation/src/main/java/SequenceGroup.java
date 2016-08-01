@@ -42,4 +42,12 @@ public class SequenceGroup {
     public void setThirdMember(Tile thirdMember) {
         ThirdMember = thirdMember;
     }
+
+    public String toString(){
+        String returnString = "";
+        returnString = returnString.concat(FirstMember.toString()).concat(" + "+SecondMember.toString())
+                .concat(" + " + ThirdMember.toString() );
+
+        return returnString;
+    }
 }

@@ -9,6 +9,13 @@ public class Tile {
     private Image image;
     private String imagePath;
 
+    public Tile (){
+
+    }
+
+    public Tile(Integer tileNumber){
+        this.tileNumber = tileNumber;
+    }
     public void findImage(){
         this.image = new Image(imagePath);
     }
