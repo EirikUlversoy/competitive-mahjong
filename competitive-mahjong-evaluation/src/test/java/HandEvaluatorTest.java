@@ -34,10 +34,26 @@ public class HandEvaluatorTest {
         testList.add(new SouTile(8));
         testList.add(new SouTile(9));
         testList.add(new SouTile(4));
+        testList.add(new SouTile(3));
+        testList.add(new SouTile(2));
+        testList.add(new SouTile(1));
 
-        List<Tile> sortedTiles = handEvaluator.reduceTileSet(testList);
-        handEvaluator.reduceTileSet(filteredTiles);
+
+        List<SequenceGroup> sortedTiles = handEvaluator.reduceTileSet(testList);
+        sortedTiles = handEvaluator.reduceTileSet(filteredTiles);
         List<SetGroup> sets = handEvaluator.checkForSets(filteredTiles);
+        List<Group> totalGroups = new ArrayList<>();
+        totalGroups.addAll(sets);
+        totalGroups.addAll(sortedTiles);
+
+        Integer validGroups = handEvaluator.checkForOverlap(totalGroups);
+        System.out.println(validGroups);
+        totalGroups.clear();
+        totalGroups.addAll(handEvaluator.reduceTileSet(testList));
+
+        validGroups = handEvaluator.checkForOverlap(totalGroups);
+
+        System.out.println(validGroups);
 
         //sets.stream().map(SetGroup::toString).forEach(System.out::println);
         //sortedTiles.stream()

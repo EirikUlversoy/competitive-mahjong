@@ -56,7 +56,7 @@ public class HandEvaluator {
         List<Tile> wanTiles = hand.getTiles().stream().filter(z -> z.getClass() == WanTile.class).collect(Collectors.toList());
         return wanTiles;
     }
-    public List<Tile> reduceTileSet(List<Tile> tiles){
+    public List<SequenceGroup> reduceTileSet(List<Tile> tiles){
         //tiles.sort((z,x)-> z.getTileNumber());
         final List<Integer> previousTiles = tiles.stream()
                 .map(Tile::getTileNumber)
@@ -73,7 +73,7 @@ public class HandEvaluator {
             sequenceGroupTiles.add(tile);
 
             for(Tile tile1 : actualPreviousTiles){
-                if(sequenceGroupTiles.size() != 3){
+                if(sequenceGroupTiles.size() <= 2){
                     if((tile1.getTileNumber() == tile.getTileNumber()+1) || (tile1.getTileNumber() == tile.getTileNumber()-1) ){
                         for (Tile tile2 : sequenceGroupTiles){
                             if(tile2.getTileNumber() == tile1.getTileNumber()){
@@ -110,7 +110,42 @@ public class HandEvaluator {
 
 
 
-        return tiles;
+        return possibleSeqGroups;
+    }
+
+    public Integer checkForOverlap(List<Group> groupList){
+        boolean NOT_VALID = false;
+        Integer validGroupCount = 0;
+        Map<String, Tile > stringTileMap = new HashMap<>();
+        for (Group group : groupList){
+            validGroupCount += 1;
+
+            if(stringTileMap.containsKey(group.getFirstMember().toString())){
+                NOT_VALID = true;
+            } else {
+                stringTileMap.put(group.getFirstMember().toString(),group.getFirstMember());
+            }
+
+            if(stringTileMap.containsKey(group.getSecondMember().toString())){
+                NOT_VALID = true;
+            } else {
+                stringTileMap.put(group.getSecondMember().toString(), group.getSecondMember());
+
+            }
+
+            if(stringTileMap.containsKey(group.getThirdMember().toString())){
+                NOT_VALID = true;
+            } else {
+                stringTileMap.put(group.getThirdMember().toString(), group.getThirdMember());
+
+            }
+
+            if(NOT_VALID == true){
+                validGroupCount -= 1;
+            }
+
+        }
+        return validGroupCount;
     }
     private List<SequenceGroup> findValidSequenceGroups(int[] numbers){
         List<SequenceGroup> validSequenceGroups = new ArrayList<>();

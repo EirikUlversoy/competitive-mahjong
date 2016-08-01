@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Optional;
 
-public class SetGroup {
+public class SetGroup extends Group {
     private Suit suit;
     private Integer tilenumber;
 
@@ -13,6 +13,7 @@ public class SetGroup {
     private Optional<Tile> fourthTile;
 
     public SetGroup(List<Tile> tiles){
+        super(tiles);
         this.firstTile = tiles.get(0);
         this.secondTile = tiles.get(1);
         this.thirdTile = tiles.get(2);
@@ -22,7 +23,6 @@ public class SetGroup {
         } catch (IndexOutOfBoundsException ex) {
             this.fourthTile = Optional.empty();
         }
-
 
     }
 
