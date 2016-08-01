@@ -68,9 +68,6 @@ public class HandEvaluator {
             Boolean secondHit = false;
             Boolean thirdHit = false;
 
-
-
-
             }
         return null;
 
