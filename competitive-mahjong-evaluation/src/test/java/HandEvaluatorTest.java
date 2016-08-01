@@ -1,6 +1,7 @@
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HandEvaluatorTest {
@@ -26,7 +27,16 @@ public class HandEvaluatorTest {
         //        .forEach(z -> System.out.println("The hands tiles: "+ z.getIdentifier().concat("@"+z.getPosition().toString()).concat(z.getTileNumber().toString())));
         List<Tile> filteredTiles = handEvaluator.filterPin();
 
-        List<Tile> sortedTiles = handEvaluator.reduceTileSet(filteredTiles);
+        List<Tile> testList = new ArrayList<>();
+        testList.add(new SouTile(5));
+        testList.add(new SouTile(6));
+        testList.add(new SouTile(7));
+        testList.add(new SouTile(8));
+        testList.add(new SouTile(9));
+        testList.add(new SouTile(4));
+
+        List<Tile> sortedTiles = handEvaluator.reduceTileSet(testList);
+        handEvaluator.reduceTileSet(filteredTiles);
         List<SetGroup> sets = handEvaluator.checkForSets(filteredTiles);
 
         //sets.stream().map(SetGroup::toString).forEach(System.out::println);

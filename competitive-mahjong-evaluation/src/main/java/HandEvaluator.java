@@ -62,27 +62,54 @@ public class HandEvaluator {
                 .map(Tile::getTileNumber)
                 .collect(Collectors.toList());
 
-        for( Tile tile : tiles){
+        final List<Tile> actualPreviousTiles = tiles;
 
-        }
         List<SequenceGroup> sequenceGroupList = new ArrayList<>();
 
-        List<Tile> newTiles =  tiles.stream()
-                .filter( z -> previousTiles.contains(z.getTileNumber()-1) && previousTiles.contains(z.getTileNumber()+1))
-                .sorted((z,x) -> Integer.compare(z.getTileNumber(),x.getTileNumber()) )
-                .collect(Collectors.toList());
+        List<SequenceGroup> possibleSeqGroups = new ArrayList<>();
+        List<Tile> sequenceGroupTiles = new ArrayList<>();
+        boolean DO_NOT_ADD = false;
+        for (Tile tile : tiles){
+            sequenceGroupTiles.add(tile);
 
-        System.out.println("should be sorted now...");
-        newTiles.stream().map(Tile::toString).forEach(System.out::println);
+            for(Tile tile1 : actualPreviousTiles){
+                if(sequenceGroupTiles.size() != 3){
+                    if((tile1.getTileNumber() == tile.getTileNumber()+1) || (tile1.getTileNumber() == tile.getTileNumber()-1) ){
+                        for (Tile tile2 : sequenceGroupTiles){
+                            if(tile2.getTileNumber() == tile1.getTileNumber()){
+                                DO_NOT_ADD = true;
+                            }
 
-        //newTiles.stream().forEach();
+                        }
+                        if(!DO_NOT_ADD){
+                            sequenceGroupTiles.add(tile1);
+                            System.out.println("added " + tile1.toString() + " because of " + tile.getTileNumber()
+                                    + "and" + tile1.getTileNumber());
+                            System.out.println("Sequence group is now " + sequenceGroupTiles.toString());
+
+                        } else {
+                            DO_NOT_ADD = false;
+                        }
+                        if(sequenceGroupTiles.size() == 3){
+                            possibleSeqGroups.add(new SequenceGroup
+                                    (sequenceGroupTiles.get(0),sequenceGroupTiles.get(1),sequenceGroupTiles.get(2)));
+                            System.out.println("Made a new sequence group!");
+                            sequenceGroupTiles.clear();
+                            System.out.println("Cleared the sequence, it is now: " + sequenceGroupTiles.toString());
+                            sequenceGroupTiles.add(tile);
+                        }
+
+                    }
+
+            }
+        }}
+
+        System.out.println("Now printing found sequences");
+        possibleSeqGroups.stream().map(SequenceGroup::toString).forEach(System.out::println);
 
 
 
-        //List<Tile> newTiles = tiles.stream().sorted((z,x) -> z.getTileNumber()
-        //        .compareTo(x.getTileNumber()))
-         //       .collect(Collectors.toList());
-        //newTiles.stream().forEach(z -> System.out.println(z.toString()));
+
         return tiles;
     }
     private List<SequenceGroup> findValidSequenceGroups(int[] numbers){
