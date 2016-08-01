@@ -13,7 +13,7 @@ public class HandEvaluatorTest {
     public void setupTestEnvironment(){
         tileSet = new TileSet();
         tileSet.initializeTiles();
-        hand = new Hand(1,50);
+        hand = new Hand(1,120);
         hand.initializeHand(tileSet);
     }
 
@@ -45,15 +45,20 @@ public class HandEvaluatorTest {
         List<Group> totalGroups = new ArrayList<>();
         totalGroups.addAll(sets);
         totalGroups.addAll(sortedTiles);
+        totalGroups.addAll(handEvaluator.checkForSets(handEvaluator.filterSou()));
+        totalGroups.addAll(handEvaluator.reduceTileSet(handEvaluator.filterSou()));
+        totalGroups.addAll(handEvaluator.checkForSets(handEvaluator.filterWan()));
+        totalGroups.addAll(handEvaluator.reduceTileSet(handEvaluator.filterWan()));
+
 
         Integer validGroups = handEvaluator.checkForOverlap(totalGroups);
         System.out.println(validGroups);
-        totalGroups.clear();
-        totalGroups.addAll(handEvaluator.reduceTileSet(testList));
+        //totalGroups.clear();
+        //totalGroups.addAll(handEvaluator.reduceTileSet(testList));
 
-        validGroups = handEvaluator.checkForOverlap(totalGroups);
+        //validGroups = handEvaluator.checkForOverlap(totalGroups);
 
-        System.out.println(validGroups);
+        //System.out.println(validGroups);
 
         //sets.stream().map(SetGroup::toString).forEach(System.out::println);
         //sortedTiles.stream()
