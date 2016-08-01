@@ -69,7 +69,7 @@ public class TileSet {
                         tile = new PinTile();
                     }
                     tile.setIdentifier(suit.getIdentifier() + "--" + tilenumber + "--" + i);
-                    tile.setTileNumber(i);
+                    tile.setTileNumber(tilenumber);
                     tile.setPosition(position);
                     tile.setTileId(UUID.randomUUID().toString());
                     URL url = TileSet.class.getClassLoader().getResource(x+suit.getIdentifier()+".png");

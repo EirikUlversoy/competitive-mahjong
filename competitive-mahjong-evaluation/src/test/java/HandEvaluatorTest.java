@@ -12,7 +12,7 @@ public class HandEvaluatorTest {
     public void setupTestEnvironment(){
         tileSet = new TileSet();
         tileSet.initializeTiles();
-        hand = new Hand(1);
+        hand = new Hand(1,50);
         hand.initializeHand(tileSet);
     }
 
@@ -22,13 +22,14 @@ public class HandEvaluatorTest {
         //hand.getTiles().stream()
         //        .filter(z-> z.getIdentifier() == "Chun" || z.getIdentifier() == "Hatsu" || z.getIdentifier() == "Haku")
         //        .forEach(z -> System.out.println(z.toString()));
-        hand.getTiles().stream()
-                .forEach(z -> System.out.println("The hands tiles: "+ z.getIdentifier().concat("@"+z.getPosition().toString()).concat(z.getTileNumber().toString())));
+        //hand.getTiles().stream()
+        //        .forEach(z -> System.out.println("The hands tiles: "+ z.getIdentifier().concat("@"+z.getPosition().toString()).concat(z.getTileNumber().toString())));
         List<Tile> filteredTiles = handEvaluator.filterPin();
 
         List<Tile> sortedTiles = handEvaluator.reduceTileSet(filteredTiles);
-        filteredTiles.stream()
-                .forEach(z -> System.out.println(z.toString()));
+        List<SetGroup> sets = handEvaluator.checkForSets(filteredTiles);
+
+        //sets.stream().map(SetGroup::toString).forEach(System.out::println);
         //sortedTiles.stream()
         //        .forEach(z -> System.out.println(z.toString()));
     }
