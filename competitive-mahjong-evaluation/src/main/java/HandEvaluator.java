@@ -32,12 +32,12 @@ public class HandEvaluator {
     }
 
     public List<SetGroup> checkForSets( List<Tile> input){
-        Map<Integer, Integer> test = new HashMap();
+        Map<Integer, Integer> tilenumberToAmount = new HashMap();
         List<SetGroup> sets = new ArrayList<>();
         for (Tile tile : input){
-            if(test.containsKey(tile.getTileNumber())){
-                test.replace(tile.getTileNumber(),test.get(tile.getTileNumber())+1);
-                if(test.get(tile.getTileNumber()) >= 3){
+            if(tilenumberToAmount.containsKey(tile.getTileNumber())){
+                tilenumberToAmount.replace(tile.getTileNumber(),tilenumberToAmount.get(tile.getTileNumber())+1);
+                if(tilenumberToAmount.get(tile.getTileNumber()) >= 3){
 
                     SetGroup newSet = new SetGroup(input.stream().filter(z -> z.getTileNumber() == tile.getTileNumber())
                     .collect(Collectors.toList()));
@@ -45,7 +45,7 @@ public class HandEvaluator {
                 }
 
             } else {
-                test.put(tile.getTileNumber(),1);
+                tilenumberToAmount.put(tile.getTileNumber(),1);
             }
         }
 

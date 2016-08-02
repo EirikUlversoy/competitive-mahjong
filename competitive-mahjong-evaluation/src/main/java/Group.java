@@ -2,11 +2,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class Group {
-    private Suit suit;
-    private Tile FirstMember;
-    private Tile SecondMember;
-    private Tile ThirdMember;
-    private Optional<Tile> FourthMember;
+    protected Suit suit;
+    protected Tile FirstMember;
+    protected Tile SecondMember;
+    protected Tile ThirdMember;
+    protected Optional<Tile> FourthMember;
+
     Group(Tile firstMember, Tile secondMember, Tile thirdMember){
         this.FirstMember = firstMember;
         this.SecondMember = secondMember;

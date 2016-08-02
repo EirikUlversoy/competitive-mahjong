@@ -1,15 +1,9 @@
 
 public class SequenceGroup extends Group {
-    private Suit suit;
-    private Tile FirstMember;
-    private Tile SecondMember;
-    private Tile ThirdMember;
 
     SequenceGroup(Tile firstMember, Tile secondMember, Tile thirdMember){
         super(firstMember,secondMember,thirdMember);
-        this.FirstMember = firstMember;
-        this.SecondMember = secondMember;
-        this.ThirdMember = thirdMember;
+
 
     }
 
@@ -22,7 +16,7 @@ public class SequenceGroup extends Group {
     }
 
     public Tile getFirstMember() {
-        return FirstMember;
+        return this.FirstMember;
     }
 
     public void setFirstMember(Tile firstMember) {
