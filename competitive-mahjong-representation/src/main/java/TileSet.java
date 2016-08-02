@@ -68,7 +68,8 @@ public class TileSet {
                     } else if(suit.getIdentifier() == "Pin"){
                         tile = new PinTile();
                     }
-                    tile.setIdentifier(suit.getIdentifier() + "--" + tilenumber + "--" + i);
+                    tile.setSuit(suit);
+                    tile.setIdentifier("Suit: "+suit.getIdentifier() + " - Picture: " + tilenumber + " - Iteration: " + i);
                     tile.setTileNumber(tilenumber);
                     tile.setPosition(position);
                     tile.setTileId(UUID.randomUUID().toString());

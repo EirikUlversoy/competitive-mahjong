@@ -11,4 +11,8 @@ public class SouTile extends Tile {
         this.setIdentifier("???");
     }
 
+    public SouTile(Integer tileNumber, Integer tileId){
+        super(tileNumber,tileId);
+    }
+
 }

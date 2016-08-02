@@ -1,15 +1,33 @@
+import java.util.List;
+import java.util.Optional;
 
-public class SequenceGroup extends Group {
+public class Group {
+    protected Suit suit;
+    protected Tile FirstMember;
+    protected Tile SecondMember;
+    protected Tile ThirdMember;
+    protected Optional<Tile> FourthMember;
 
-    SequenceGroup(Tile firstMember, Tile secondMember, Tile thirdMember){
-        super(firstMember,secondMember,thirdMember);
+    Group(Tile firstMember, Tile secondMember, Tile thirdMember){
+        this.FirstMember = firstMember;
+        this.SecondMember = secondMember;
+        this.ThirdMember = thirdMember;
+    }
+
+    public Group(List<Tile> tiles){
+        this.FirstMember = tiles.get(0);
+        this.SecondMember = tiles.get(1);
+        this.ThirdMember = tiles.get(2);
+        try{
+            this.FourthMember = Optional.ofNullable(tiles.get(3));
+
+        } catch (IndexOutOfBoundsException ex) {
+            this.FourthMember = Optional.empty();
+        }
 
 
     }
 
-    public Tile getRealMember(){
-        
-    }
     public Suit getSuit() {
         return suit;
     }
@@ -19,7 +37,7 @@ public class SequenceGroup extends Group {
     }
 
     public Tile getFirstMember() {
-        return this.FirstMember;
+        return FirstMember;
     }
 
     public void setFirstMember(Tile firstMember) {

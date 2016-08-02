@@ -1,7 +1,7 @@
 
 public class Position {
-    private String location = "Not placed";
-    private int number = 666;
+    private String location = "NOT-PLACED";
+    private int number = -1;
 
     public String getLocation() {
         return location;
@@ -20,7 +20,7 @@ public class Position {
     }
 
     public String toString(){
-        return "".concat(number + "@" +location);
+        return "".concat("Number:" + number + "@Location:" +location);
     }
 
 }
