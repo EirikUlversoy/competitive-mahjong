@@ -31,17 +31,31 @@ public class HandEvaluator {
         return pinTiles;
     }
 
-    public List<SetGroup> checkForSets( List<Tile> input){
+    public List<Tile> filterWan(){
+        List<Tile> wanTiles = hand.getTiles().stream()
+                .filter(z -> z.getClass() == WanTile.class)
+                .collect(Collectors.toList());
+        return wanTiles;
+    }
+
+    public List<Tile> filterSuit(Class aClass){
+        List<Tile> tiles = hand.getTiles().stream()
+                .filter(z -> z.getClass() == aClass)
+                .collect(Collectors.toList());
+        return tiles;
+    }
+    public List<SetGroup> findSets( List<Tile> input){
         Map<Integer, Integer> tilenumberToAmount = new HashMap();
         List<SetGroup> sets = new ArrayList<>();
         for (Tile tile : input){
             if(tilenumberToAmount.containsKey(tile.getTileNumber())){
                 tilenumberToAmount.replace(tile.getTileNumber(),tilenumberToAmount.get(tile.getTileNumber())+1);
-                if(tilenumberToAmount.get(tile.getTileNumber()) >= 3){
+                if(tilenumberToAmount.get(tile.getTileNumber()) == 3){
 
                     SetGroup newSet = new SetGroup(input.stream().filter(z -> z.getTileNumber() == tile.getTileNumber())
                     .collect(Collectors.toList()));
                     sets.add(newSet);
+
                 }
 
             } else {
@@ -52,62 +66,32 @@ public class HandEvaluator {
         return sets;
 
     }
-    public List<Tile> filterWan(){
-        List<Tile> wanTiles = hand.getTiles().stream().filter(z -> z.getClass() == WanTile.class).collect(Collectors.toList());
-        return wanTiles;
-    }
-    public List<SequenceGroup> reduceTileSet(List<Tile> tiles){
+
+    /**
+     * Finds the sequences in the given tile list. The tilelist passed in should be of only one suit.
+     * @param tiles
+     * @return
+     */
+    public List<SequenceGroup> findSequences(List<Tile> tiles){
         //tiles.sort((z,x)-> z.getTileNumber());
         final List<Integer> previousTiles = tiles.stream()
                 .map(Tile::getTileNumber)
                 .collect(Collectors.toList());
 
         final List<Tile> actualPreviousTiles = tiles;
+        Map<String, Tile> stringTileMap = new HashMap<>();
 
-        List<SequenceGroup> sequenceGroupList = new ArrayList<>();
-
-        List<SequenceGroup> possibleSeqGroups = new ArrayList<>();
-        List<Tile> sequenceGroupTiles = new ArrayList<>();
-        boolean DO_NOT_ADD = false;
-        for (Tile tile : tiles){
-            sequenceGroupTiles.add(tile);
-
-            for(Tile tile1 : actualPreviousTiles){
-                if(sequenceGroupTiles.size() <= 2){
-                    if((tile1.getTileNumber() == tile.getTileNumber()+1) || (tile1.getTileNumber() == tile.getTileNumber()-1) ){
-                        for (Tile tile2 : sequenceGroupTiles){
-                            if(tile2.getTileNumber() == tile1.getTileNumber()){
-                                DO_NOT_ADD = true;
-                            }
-
-                        }
-                        if(!DO_NOT_ADD){
-                            sequenceGroupTiles.add(tile1);
-                            System.out.println("added " + tile1.toString() + " because of " + tile.getTileNumber()
-                                    + "and" + tile1.getTileNumber());
-                            System.out.println("Sequence group is now " + sequenceGroupTiles.toString());
-
-                        } else {
-                            DO_NOT_ADD = false;
-                        }
-                        if(sequenceGroupTiles.size() == 3){
-                            possibleSeqGroups.add(new SequenceGroup
-                                    (sequenceGroupTiles.get(0),sequenceGroupTiles.get(1),sequenceGroupTiles.get(2)));
-                            System.out.println("Made a new sequence group!");
-                            sequenceGroupTiles.clear();
-                            System.out.println("Cleared the sequence, it is now: " + sequenceGroupTiles.toString());
-                            sequenceGroupTiles.add(tile);
-                        }
-
-                    }
-
-            }
-        }}
-
-        System.out.println("Now printing found sequences");
-        possibleSeqGroups.stream().map(SequenceGroup::toString).forEach(System.out::println);
+        List<Tile> newTiles = tiles.stream()
+                .peek(z -> stringTileMap.put(z.getTileNumber()+z.getSuit().toString()+z.getTileId(),z))
+                .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()-1)
+                        || previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()+2)
+                        || previousTiles.contains(z.getTileNumber()-1) && previousTiles.contains(z.getTileNumber()-2))
+        .collect(Collectors.toList());
 
 
+        List<Tile> newTiles2 = tiles.stream()
+                .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()-1))
+                .collect(Collectors.toList());
 
 
         return possibleSeqGroups;
@@ -164,21 +148,6 @@ public class HandEvaluator {
 
         }
         return validSequenceGroups;
-    }
-    public List<SequenceGroup> findSequences(List<Tile> tiles) {
-
-        List<SequenceGroup> validSequenceGroups = findValidSequenceGroups(this.tileNumbers);
-        List<SequenceGroup> possibleGroups = new ArrayList<>();
-        List<Tile> tileHolder = new ArrayList<>();
-
-        for(Tile tile: tiles){
-            Boolean firstHit = false;
-            Boolean secondHit = false;
-            Boolean thirdHit = false;
-
-            }
-        return null;
-
     }
 
 

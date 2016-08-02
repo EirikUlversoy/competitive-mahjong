@@ -8,6 +8,15 @@ public class Tile {
     private String identifier;
     private Image image;
     private String imagePath;
+    private Suit suit;
+
+    public Suit getSuit() {
+        return suit;
+    }
+
+    public void setSuit(Suit suit) {
+        this.suit = suit;
+    }
 
     public Tile (){
 
