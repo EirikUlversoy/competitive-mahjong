@@ -81,18 +81,43 @@ public class HandEvaluator {
         final List<Tile> actualPreviousTiles = tiles;
         Map<String, Tile> stringTileMap = new HashMap<>();
 
+        List<SequenceGroup> possibleSeqGroups = new ArrayList<>();
+
         List<Tile> newTiles = tiles.stream()
-                .peek(z -> stringTileMap.put(z.getTileNumber()+z.getSuit().toString()+z.getTileId(),z))
+                .peek(z -> stringTileMap.put(z.getTileNumber()+"",z))
                 .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()-1)
                         || previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()+2)
                         || previousTiles.contains(z.getTileNumber()-1) && previousTiles.contains(z.getTileNumber()-2))
         .collect(Collectors.toList());
 
 
-        List<Tile> newTiles2 = tiles.stream()
+        List<Tile> middleSequenceTiles = tiles.stream()
                 .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()-1))
+                .peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()-1))))
                 .collect(Collectors.toList());
 
+        List<Tile> risingSequenceTiles = tiles.stream()
+                .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()+2))
+                .peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()+2))))
+                .collect(Collectors.toList());
+
+        List<Tile> sinkingSequenceTiles = tiles.stream()
+                .filter(z -> previousTiles.contains(z.getTileNumber()-1) && previousTiles.contains(z.getTileNumber()-2))
+                .peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()-1),z, new Tile(z.getTileNumber()-2))))
+                .collect(Collectors.toList());
+
+        List<Tile> mrsTiles = new ArrayList<>();
+        mrsTiles.addAll(middleSequenceTiles);
+        mrsTiles.addAll(sinkingSequenceTiles);
+        mrsTiles.addAll(risingSequenceTiles);
+
+        List<Tile> newMrsTiles = mrsTiles.stream().distinct().collect(Collectors.toList());
+
+        System.out.println("Printing remaining tiles");
+        newMrsTiles.stream().map(Tile::toString).forEach(System.out::println);
+        System.out.println("Printing possible sequence groups");
+        possibleSeqGroups.stream().map(SequenceGroup::toString).forEach(System.out::println);
+        possibleSeqGroups.stream().peek(z -> z.get);
 
         return possibleSeqGroups;
     }

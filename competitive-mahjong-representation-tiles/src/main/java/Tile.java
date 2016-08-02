@@ -24,6 +24,16 @@ public class Tile {
 
     public Tile(Integer tileNumber){
         this.tileNumber = tileNumber;
+        this.identifier = "not set";
+        this.position = new Position();
+        this.tileId = "not set";
+    }
+
+    public Tile(Integer tileNumber, Integer tileId){
+        this.tileNumber = tileNumber;
+        this.identifier = "not set";
+        this.position = new Position();
+        this.tileId = tileId.toString();
     }
     public void findImage(){
         this.image = new Image(imagePath);
@@ -75,7 +85,7 @@ public class Tile {
 
     public String toString(){
         String returnString = "";
-        returnString = returnString.concat(identifier).concat("@"+position.toString()).concat(tileNumber.toString());
+        returnString = returnString.concat(tileNumber.toString()+"-"+tileId.toString()).concat("@"+position.toString()).concat(tileNumber.toString());
 
         return returnString;
     }

@@ -7,6 +7,9 @@ public class SequenceGroup extends Group {
 
     }
 
+    public Tile getRealMember(){
+        
+    }
     public Suit getSuit() {
         return suit;
     }

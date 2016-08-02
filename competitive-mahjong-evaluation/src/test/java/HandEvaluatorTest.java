@@ -48,15 +48,18 @@ public class HandEvaluatorTest {
         List<Tile> filteredTiles = handEvaluator.filterPin();
 
         List<Tile> testList = new ArrayList<>();
-        testList.add(new SouTile(1));
-        testList.add(new SouTile(2));
-        testList.add(new SouTile(3));
-        testList.add(new SouTile(4));
-        testList.add(new SouTile(5));
-        testList.add(new SouTile(6));
-        testList.add(new SouTile(7));
-        testList.add(new SouTile(8));
-        testList.add(new SouTile(9));
+        //testList.add(new SouTile(1));
+        //testList.add(new SouTile(2,1));
+        //testList.add(new SouTile(3,1));
+        testList.add(new SouTile(1,1));
+        testList.add(new SouTile(2,2));
+        testList.add(new SouTile(3,2));
+        testList.add(new SouTile(4,1));
+        testList.add(new SouTile(5,1));
+        testList.add(new SouTile(6,1));
+        testList.add(new SouTile(7,1));
+        testList.add(new SouTile(8,1));
+        testList.add(new SouTile(9,1));
 
 
 
@@ -82,7 +85,7 @@ public class HandEvaluatorTest {
         normalizedGroupList.addAll(sequenceGroupList);
         int validGroups = handEvaluator.checkForOverlap(normalizedGroupList);
         Assert.assertEquals(normalizedGroupList.size(),7);
-        Assert.assertEquals(validGroups,7);
+        //Assert.assertEquals(validGroups,7);
         //totalGroups.clear();
         //totalGroups.addAll(handEvaluator.findSequences(testList));
 
