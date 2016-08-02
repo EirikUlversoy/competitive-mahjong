@@ -3,6 +3,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HandEvaluatorTest {
@@ -50,7 +51,9 @@ public class HandEvaluatorTest {
         List<Tile> testList = new ArrayList<>();
         //testList.add(new SouTile(1));
         //testList.add(new SouTile(2,1));
-        //testList.add(new SouTile(3,1));
+        testList.add(new SouTile(3,1));
+        testList.add(new SouTile(3,3));
+        testList.add(new SouTile(3,4));
         testList.add(new SouTile(1,1));
         testList.add(new SouTile(2,2));
         testList.add(new SouTile(3,2));
@@ -60,6 +63,7 @@ public class HandEvaluatorTest {
         testList.add(new SouTile(7,1));
         testList.add(new SouTile(8,1));
         testList.add(new SouTile(9,1));
+        Collections.shuffle(testList);
 
 
 

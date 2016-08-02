@@ -67,6 +67,12 @@ public class HandEvaluator {
 
     }
 
+    public Map<Integer, Integer> findTileCount(List<Tile> tiles){
+        Map<Integer, Integer> tilesCount = new HashMap<>();
+
+        Map<Integer, Integer> tilesCount2 = tiles.stream()
+                .peek(z -> tilesCount.forEach( x -> x.)
+    }
     /**
      * Finds the sequences in the given tile list. The tilelist passed in should be of only one suit.
      * @param tiles
@@ -74,6 +80,8 @@ public class HandEvaluator {
      */
     public List<SequenceGroup> findSequences(List<Tile> tiles){
         //tiles.sort((z,x)-> z.getTileNumber());
+        Map<Integer, Integer> tileNumberCount = new HashMap<>();
+        List<Tile> otherTiles = tiles;
         final List<Integer> previousTiles = tiles.stream()
                 .map(Tile::getTileNumber)
                 .collect(Collectors.toList());
@@ -93,12 +101,12 @@ public class HandEvaluator {
 
         List<Tile> middleSequenceTiles = tiles.stream()
                 .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()-1))
-                .peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()-1))))
+                //.peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()-1))))
                 .collect(Collectors.toList());
 
         List<Tile> risingSequenceTiles = tiles.stream()
                 .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()+2))
-                .peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()+2))))
+                //.peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()+2))))
                 .collect(Collectors.toList());
 
         List<Tile> sinkingSequenceTiles = tiles.stream()
@@ -117,7 +125,6 @@ public class HandEvaluator {
         newMrsTiles.stream().map(Tile::toString).forEach(System.out::println);
         System.out.println("Printing possible sequence groups");
         possibleSeqGroups.stream().map(SequenceGroup::toString).forEach(System.out::println);
-        possibleSeqGroups.stream().peek(z -> z.get);
 
         return possibleSeqGroups;
     }
