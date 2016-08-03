@@ -49,12 +49,11 @@ public class HandEvaluatorTest {
         List<Tile> filteredTiles = handEvaluator.filterPin();
 
         List<Tile> testList = new ArrayList<>();
-        //testList.add(new SouTile(1));
-        //testList.add(new SouTile(2,1));
-        //testList.add(new SouTile(3,1));
         testList.add(new SouTile(1,2));
         testList.add(new SouTile(2,2));
-        testList.add(new SouTile(3,2));
+        testList.add(new SouTile(5,2));
+        testList.add(new SouTile(6,2));
+
 
         testList.add(new SouTile(1,1));
         testList.add(new SouTile(2,1));
@@ -68,6 +67,16 @@ public class HandEvaluatorTest {
         testList.add(new SouTile(8,1));
 
         testList.add(new SouTile(9,1));
+        List<Tile> testListSequenceAndSetTogether = new ArrayList<>();
+        testListSequenceAndSetTogether.add(new SouTile(1,1));
+        testListSequenceAndSetTogether.add(new SouTile(2,1));
+        testListSequenceAndSetTogether.add(new SouTile(3,1));
+        testListSequenceAndSetTogether.add(new SouTile(1,2));
+        testListSequenceAndSetTogether.add(new SouTile(2,2));
+        testListSequenceAndSetTogether.add(new SouTile(3,2));
+        testListSequenceAndSetTogether.add(new SouTile(1,1));
+        testListSequenceAndSetTogether.add(new SouTile(2,1));
+        testListSequenceAndSetTogether.add(new SouTile(3,1));
 
         Collections.shuffle(testList);
 
@@ -78,6 +87,12 @@ public class HandEvaluatorTest {
 
         List<SequenceGroup> sequenceGroupList = handEvaluator.findSequences(testList);
         List<SequenceGroup> validSequenceGroupList = handEvaluator.findMaxValidSequences(sequenceGroupList,testList);
-        Assert.assertEquals(validSequenceGroupList.size(),4);
+        Assert.assertEquals(validSequenceGroupList.size(),3);
+
+        List<SequenceGroup> sequenceGroupList1 = handEvaluator.findSequences(testList);
+        List<SequenceGroup> validSequenceGroupList1 = handEvaluator.findMaxValidSequences(sequenceGroupList1,testListSequenceAndSetTogether);
+
+        Assert.assertEquals(validSequenceGroupList1.size(),3);
+
     }
 }

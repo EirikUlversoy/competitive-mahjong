@@ -213,6 +213,14 @@ public class HandEvaluator {
         });
         System.out.println("Leftover tiles are : ");
         tiles.stream().map(Tile::toString).forEach(System.out::println);
+
+        List<SequenceGroup> additionalGroups = findSequences(tiles);
+        List<SequenceGroup> additionalValidSequences = new ArrayList<>();
+
+        if( additionalGroups.size() != 0){
+            additionalValidSequences = findMaxValidSequences(additionalGroups,tiles);
+        }
+        validSequences.addAll(additionalValidSequences);
         return validSequences;
     }
     
