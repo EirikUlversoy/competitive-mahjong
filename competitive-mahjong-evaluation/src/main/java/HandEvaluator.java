@@ -177,13 +177,12 @@ public class HandEvaluator {
 
         return possibleSeqGroups;
     }
-    public List<SequenceGroup> findMaxValidSequences(List<SequenceGroup> possibleSequences){
+    public List<SequenceGroup> findMaxValidSequences(List<SequenceGroup> possibleSequences, List<Tile> tiles){
         List<SequenceGroup> validSequences = new ArrayList<>();
         List<Tile> usedTiles = new ArrayList<>();
+
         System.out.println("Sequence list before sorting: ");
         possibleSequences.stream().map(z -> z.getThirdMember().getTileNumber()).forEach(System.out::println);
-
-
         Collections.sort(possibleSequences, (SequenceGroup s1, SequenceGroup s2) -> s1.getThirdMember().getTileNumber().compareTo(s2.getThirdMember().getTileNumber()));
         System.out.println("Sequence list after sorting: ");
         possibleSequences.stream().map(z -> z.getThirdMember().getTileNumber()).forEach(System.out::println);
@@ -198,10 +197,22 @@ public class HandEvaluator {
                 usedTiles.add(z.getFirstMember());
                 usedTiles.add(z.getSecondMember());
                 usedTiles.add(z.getThirdMember());
+
+                tiles.removeIf(x ->
+                        z.getFirstMember().getTileNumber() == x.getTileNumber()
+                                && z.getFirstMember().getTileId() == x.getTileId() );
+                tiles.removeIf(x ->
+                        z.getSecondMember().getTileNumber() == x.getTileNumber()
+                                && z.getSecondMember().getTileId() == x.getTileId() );
+                tiles.removeIf(x ->
+                        z.getThirdMember().getTileNumber() == x.getTileNumber()
+                                && z.getThirdMember().getTileId() == x.getTileId() );
             }
 
 
         });
+        System.out.println("Leftover tiles are : ");
+        tiles.stream().map(Tile::toString).forEach(System.out::println);
         return validSequences;
     }
     public Integer checkForOverlap(List<Group> groupList){

@@ -54,17 +54,22 @@ public class HandEvaluatorTest {
         //testList.add(new SouTile(3,1));
         testList.add(new SouTile(1,2));
         testList.add(new SouTile(2,2));
-        testList.add(new SouTile(3,2));
+        //testList.add(new SouTile(3,2));
 
         testList.add(new SouTile(1,1));
         testList.add(new SouTile(2,1));
         testList.add(new SouTile(3,1));
+        testList.add(new SouTile(4,2));
 
         testList.add(new SouTile(4,1));
+        testList.add(new SouTile(5,2));
+
         testList.add(new SouTile(5,1));
         testList.add(new SouTile(6,1));
         testList.add(new SouTile(7,1));
         testList.add(new SouTile(8,1));
+        testList.add(new SouTile(9,2));
+
         testList.add(new SouTile(9,1));
 
         Collections.shuffle(testList);
@@ -75,7 +80,7 @@ public class HandEvaluatorTest {
 
 
         List<SequenceGroup> sequenceGroupList = handEvaluator.findSequences(testList);
-        List<SequenceGroup> validSequenceGroupList = handEvaluator.findMaxValidSequences(sequenceGroupList);
+        List<SequenceGroup> validSequenceGroupList = handEvaluator.findMaxValidSequences(sequenceGroupList,testList);
         Assert.assertEquals(validSequenceGroupList.size(),4);
     }
 }
