@@ -11,9 +11,9 @@ public class RonChecker {
 
     public static boolean checkIfValid(Hand hand, List<Group> groups){
         if(groups.size() == 4){
-            if(ValuationHan.getHan(hand, groups) >= 1){
+            if(ValuationHan.calculateHan(hand, groups); >= 1){
                 return true;
-            } else if(ValuationFu.getFu(hand, groups) >= 40) {
+            } else if(ValuationFu.calculateFu(hand, groups) >= 40) {
                     return true;
                 } else {
                 return false;

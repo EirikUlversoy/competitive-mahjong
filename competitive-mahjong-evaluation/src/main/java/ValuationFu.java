@@ -1,7 +1,8 @@
+import java.util.List;
 
 public class ValuationFu {
 
-    public void calculateFu(Hand hand){
+    public static void calculateFu(Hand hand, List<Group> groupList){
 
     }
 }
