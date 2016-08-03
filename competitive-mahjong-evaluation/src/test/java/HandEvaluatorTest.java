@@ -3,6 +3,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HandEvaluatorTest {
@@ -51,50 +52,32 @@ public class HandEvaluatorTest {
         //testList.add(new SouTile(1));
         //testList.add(new SouTile(2,1));
         //testList.add(new SouTile(3,1));
-        testList.add(new SouTile(1,1));
+        testList.add(new SouTile(1,2));
         testList.add(new SouTile(2,2));
         testList.add(new SouTile(3,2));
+
+        testList.add(new SouTile(1,1));
+        testList.add(new SouTile(2,1));
+        testList.add(new SouTile(3,1));
+
         testList.add(new SouTile(4,1));
+
         testList.add(new SouTile(5,1));
         testList.add(new SouTile(6,1));
         testList.add(new SouTile(7,1));
         testList.add(new SouTile(8,1));
+
         testList.add(new SouTile(9,1));
 
+        Collections.shuffle(testList);
+
+        handEvaluator.findTileCount(testList);
 
 
-        /*
-        List<SequenceGroup> sortedTiles = handEvaluator.findSequences(testList);
-        sortedTiles = handEvaluator.findSequences(filteredTiles);
-        List<SetGroup> sets = handEvaluator.findSets(filteredTiles);
-        List<Group> totalGroups = new ArrayList<>();
-        totalGroups.addAll(sets);
-        totalGroups.addAll(sortedTiles);
-        totalGroups.addAll(handEvaluator.findSets(handEvaluator.filterSou()));
-        totalGroups.addAll(handEvaluator.findSequences(handEvaluator.filterSou()));
-        totalGroups.addAll(handEvaluator.findSets(handEvaluator.filterWan()));
-        totalGroups.addAll(handEvaluator.findSequences(handEvaluator.filterWan()));
 
-
-        Integer validGroups = handEvaluator.checkForOverlap(totalGroups);
-        System.out.println(validGroups);
-        */
 
         List<SequenceGroup> sequenceGroupList = handEvaluator.findSequences(testList);
-        List<Group> normalizedGroupList = new ArrayList<>();
-        normalizedGroupList.addAll(sequenceGroupList);
-        int validGroups = handEvaluator.checkForOverlap(normalizedGroupList);
-        Assert.assertEquals(normalizedGroupList.size(),7);
-        //Assert.assertEquals(validGroups,7);
-        //totalGroups.clear();
-        //totalGroups.addAll(handEvaluator.findSequences(testList));
-
-        //validGroups = handEvaluator.checkForOverlap(totalGroups);
-
-        //System.out.println(validGroups);
-
-        //sets.stream().map(SetGroup::toString).forEach(System.out::println);
-        //sortedTiles.stream()
-        //        .forEach(z -> System.out.println(z.toString()));
+        List<SequenceGroup> validSequenceGroupList = handEvaluator.findMaxValidSequences(sequenceGroupList,testList);
+        Assert.assertEquals(validSequenceGroupList.size(),4);
     }
 }
