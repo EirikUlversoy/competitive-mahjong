@@ -215,40 +215,7 @@ public class HandEvaluator {
         tiles.stream().map(Tile::toString).forEach(System.out::println);
         return validSequences;
     }
-    public Integer checkForOverlap(List<Group> groupList){
-        boolean NOT_VALID = false;
-        Integer validGroupCount = 0;
-        Map<String, Tile > stringTileMap = new HashMap<>();
-        for (Group group : groupList){
-            validGroupCount += 1;
-
-            if(stringTileMap.containsKey(group.getFirstMember().toString())){
-                NOT_VALID = true;
-            } else {
-                stringTileMap.put(group.getFirstMember().toString(),group.getFirstMember());
-            }
-
-            if(stringTileMap.containsKey(group.getSecondMember().toString())){
-                NOT_VALID = true;
-            } else {
-                stringTileMap.put(group.getSecondMember().toString(), group.getSecondMember());
-
-            }
-
-            if(stringTileMap.containsKey(group.getThirdMember().toString())){
-                NOT_VALID = true;
-            } else {
-                stringTileMap.put(group.getThirdMember().toString(), group.getThirdMember());
-
-            }
-
-            if(NOT_VALID == true){
-                validGroupCount -= 1;
-            }
-
-        }
-        return validGroupCount;
-    }
+    
     private List<SequenceGroup> findValidSequenceGroups(int[] numbers){
         List<SequenceGroup> validSequenceGroups = new ArrayList<>();
         for (int number: numbers){
