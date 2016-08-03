@@ -18,6 +18,10 @@ public class SetGroup extends Group {
         }
     }
 
+    public boolean isKAN(){
+        return KAN;
+    }
+
     public String toString(){
         String returnString = "";
         returnString = returnString.concat(FirstMember.toString()).concat(" + "+SecondMember.toString())

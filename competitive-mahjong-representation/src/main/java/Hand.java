@@ -7,6 +7,7 @@ public class Hand {
     private List<Tile> leftoverTiles = new ArrayList<>();
     private List<Group> tileGroups = new ArrayList<>();
 
+    private boolean closed = true;
     private Integer handsize = 13;
     Hand(Integer playerId){
         this.playerId = playerId;
