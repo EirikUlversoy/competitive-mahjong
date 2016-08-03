@@ -4,11 +4,15 @@ import java.util.List;
 public class Hand {
     private Integer playerId;
     private List<Tile> tiles = new ArrayList<Tile>();
+    private List<Tile> leftoverTiles = new ArrayList<>();
+    private List<Group> tileGroups = new ArrayList<>();
+
     private Integer handsize = 13;
     Hand(Integer playerId){
         this.playerId = playerId;
     }
     private boolean isInRichiiState = false;
+
     Hand(Integer playerId, Integer amount){
         this.playerId = playerId;
         this.handsize = amount;

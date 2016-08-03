@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -67,11 +64,37 @@ public class HandEvaluator {
 
     }
 
-    public Map<Integer, Integer> findTileCount(List<Tile> tiles){
+    public Map<Integer, List<Tile>> findTileCount(List<Tile> tiles){
         Map<Integer, Integer> tilesCount = new HashMap<>();
+        Map<Integer, List<Tile>> numberToTile = new HashMap<>();
 
-        Map<Integer, Integer> tilesCount2 = tiles.stream()
-                .peek(z -> tilesCount.forEach( x -> x.)
+        for (int i = 1; i<= 9; i++){
+            tilesCount.put(i,0);
+            numberToTile.put(i,new ArrayList<>());
+        }
+
+
+        Map<Integer,Integer> newTilesCount = tilesCount;
+
+        tiles.stream()
+                .peek(z -> numberToTile.forEach( (x,c) -> {
+                    if(x.equals(z.getTileNumber())){
+                        List<Tile> newList = new ArrayList<Tile>();
+                        newList.addAll(c);
+                        newList.add(z);
+                        numberToTile.replace(x,newList);
+
+
+                    }}))
+                .forEach(z -> tilesCount.forEach( (x,c) -> {
+                            if(x.equals(z.getTileNumber())){
+                                newTilesCount.replace(x,c,c+1);
+
+
+                            }
+                            }));
+
+        return numberToTile;
     }
     /**
      * Finds the sequences in the given tile list. The tilelist passed in should be of only one suit.
@@ -79,14 +102,10 @@ public class HandEvaluator {
      * @return
      */
     public List<SequenceGroup> findSequences(List<Tile> tiles){
-        //tiles.sort((z,x)-> z.getTileNumber());
-        Map<Integer, Integer> tileNumberCount = new HashMap<>();
-        List<Tile> otherTiles = tiles;
         final List<Integer> previousTiles = tiles.stream()
                 .map(Tile::getTileNumber)
                 .collect(Collectors.toList());
 
-        final List<Tile> actualPreviousTiles = tiles;
         Map<String, Tile> stringTileMap = new HashMap<>();
 
         List<SequenceGroup> possibleSeqGroups = new ArrayList<>();
@@ -121,6 +140,36 @@ public class HandEvaluator {
 
         List<Tile> newMrsTiles = mrsTiles.stream().distinct().collect(Collectors.toList());
 
+        Map<Integer, List<Tile>> tilemap = this.findTileCount(mrsTiles);
+
+        List<SequenceGroup> newPossibleSeqGroups = possibleSeqGroups;
+        Integer i = 0;
+        possibleSeqGroups.stream().forEach(z -> {
+            //Integer index = possibleSeqGroups.indexOf(z);
+            try{
+                z.setFirstMember(tilemap.get(z.getSecondMember().getTileNumber()-1).get(0));
+                z.setThirdMember(tilemap.get(z.getSecondMember().getTileNumber()-2).get(0));
+            } catch (IndexOutOfBoundsException IOOBE) {
+                System.out.println("no group possible, out of tiles");
+            }
+
+        });
+        possibleSeqGroups.stream().map(SequenceGroup::getSecondMember).forEach( z->
+        {
+            try {
+                z = tilemap.get(z.getTileNumber()).get(0);
+            } catch (IndexOutOfBoundsException IOOBE) {
+                System.out.println("no group possible, out of tiles");
+            }
+        });
+        possibleSeqGroups.stream().map(SequenceGroup::getThirdMember).forEach( z->{
+            try{
+                z = tilemap.get(z.getTileNumber()).get(0);
+            } catch (IndexOutOfBoundsException IOOBE) {
+                System.out.println("no group possible, out of tiles");
+            }
+        });
+
         System.out.println("Printing remaining tiles");
         newMrsTiles.stream().map(Tile::toString).forEach(System.out::println);
         System.out.println("Printing possible sequence groups");
@@ -128,7 +177,33 @@ public class HandEvaluator {
 
         return possibleSeqGroups;
     }
+    public List<SequenceGroup> findMaxValidSequences(List<SequenceGroup> possibleSequences){
+        List<SequenceGroup> validSequences = new ArrayList<>();
+        List<Tile> usedTiles = new ArrayList<>();
+        System.out.println("Sequence list before sorting: ");
+        possibleSequences.stream().map(z -> z.getThirdMember().getTileNumber()).forEach(System.out::println);
 
+
+        Collections.sort(possibleSequences, (SequenceGroup s1, SequenceGroup s2) -> s1.getThirdMember().getTileNumber().compareTo(s2.getThirdMember().getTileNumber()));
+        System.out.println("Sequence list after sorting: ");
+        possibleSequences.stream().map(z -> z.getThirdMember().getTileNumber()).forEach(System.out::println);
+
+        possibleSequences.stream().forEach(z -> {
+            if(usedTiles.contains(z.getFirstMember()) ||
+                    usedTiles.contains(z.getSecondMember()) ||
+                    usedTiles.contains(z.getThirdMember())) {
+                System.out.println("One or more tiles used already");
+            } else {
+                validSequences.add(z);
+                usedTiles.add(z.getFirstMember());
+                usedTiles.add(z.getSecondMember());
+                usedTiles.add(z.getThirdMember());
+            }
+
+
+        });
+        return validSequences;
+    }
     public Integer checkForOverlap(List<Group> groupList){
         boolean NOT_VALID = false;
         Integer validGroupCount = 0;
