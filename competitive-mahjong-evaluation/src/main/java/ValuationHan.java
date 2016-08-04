@@ -41,13 +41,19 @@ public class ValuationHan {
         Map<Object,Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
-    public List<SetGroup> removeDuplicateSuit(List<SetGroup> setGroups){
+    public List<SetGroup> removeDuplicateSuitSets(List<SetGroup> setGroups){
         return setGroups.stream().filter(distinctByKey(o -> o.getSuit().getIdentifier())).collect(Collectors.toList());
     }
 
+    public List<SequenceGroup> removeDuplicateSuitSequences(List<SequenceGroup> sequenceGroups){
+        return sequenceGroups.stream().filter(distinctByKey(o -> o.getSuit().getIdentifier())).collect(Collectors.toList());
+    }
+
+
+
     public boolean hasTripletColors(List<SetGroup> groupList){
         List<SetGroup> newGroupList = removeDuplicateSuit(groupList);
-        
+
         boolean threeSuits = groupList.stream()
                 .map(z -> z.getSuit().getIdentifier())
                 .distinct()
@@ -62,26 +68,14 @@ public class ValuationHan {
     }
 
     public boolean sameSequenceInThreeSuits( List<SequenceGroup> sequenceGroups){
-        if(sequenceGroups.size() == 3){
-            return (sequenceGroups.stream()
-                    .map(z -> z.getFirstMember().getTileNumber())
-                    .distinct()
-                    .count() == 1 )
-                    && (sequenceGroups.stream()
-                    .map(z -> z.getSuit().getIdentifier())
-                    .distinct()
-                    .count() == 3);
 
-        } else if (sequenceGroups.size() == 4) {
-            return (sequenceGroups.stream()
-                    .map(z -> z.getFirstMember().getTileNumber())
-                    .distinct().count() <= 2 ) &&
-                    (sequenceGroups.stream()
-                    .map(z -> z.getSuit().getIdentifier())
-                    .distinct()
-                    .count() == 3);
-        }
-        return false;
+        List<SequenceGroup> newSequenceGroups = removeDuplicateSuitSequences(sequenceGroups);
+
+        return newSequenceGroups.stream()
+                .map(z -> z.getFirstMember().getTileNumber())
+                .distinct()
+                .count() == 1;
+
     }
 
 
