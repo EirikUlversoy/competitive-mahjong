@@ -15,4 +15,9 @@ public class PinTile extends Tile {
         this.setSuit(new Suit("Pin"));
 
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

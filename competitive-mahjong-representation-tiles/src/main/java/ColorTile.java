@@ -1,42 +1,17 @@
 
 public class ColorTile extends Tile {
-    private String classIdentifier = "Color";
-    private Position position = new Position();
-    private String tileId = "hmm";
-    private String identifier = "color";
-    private Integer tileNumber = 1;
-    private Suit suit = new Suit("Color");
 
     ColorTile(){
+        super();
 
     }
 
-    ColorTile(String identifier){
+    ColorTile(String color){
         super(1);
-
-        this.identifier = identifier;
-        this.setSuit(new Suit("Color"));
+        this.setSuit(new Suit(color));
     }
-    ColorTile(String identifier, Integer tileNumber){
-        super(1,tileNumber);
-        this.identifier = identifier;
-        this.tileNumber = tileNumber;
-        this.setSuit(new Suit("Color"));
-    }
-    public Integer getTileNumber() {
-        return tileNumber;
-    }
-
-    public void setTileNumber(Integer tileNumber) {
-        this.tileNumber = tileNumber;
-    }
-
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    ColorTile(String color, Integer tile_id){
+        super(1,tile_id);
+        this.setSuit(new Suit(color));
     }
 }

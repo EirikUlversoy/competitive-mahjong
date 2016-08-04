@@ -8,17 +8,11 @@ public class Tile {
 
     private Position position;
     private String identifier;
-    
+
     private Image image;
     private String imagePath;
 
-    public Suit getSuit() {
-        return suit;
-    }
 
-    public void setSuit(Suit suit) {
-        this.suit = suit;
-    }
 
     public Tile (){
 
@@ -38,6 +32,13 @@ public class Tile {
         this.tileId = tileId;
     }
 
+
+    public Suit getSuit() {
+        return suit;
+    }
+    public void setSuit(Suit suit) {
+        this.suit = suit;
+    }
     public void findImage(){
         this.image = new Image(imagePath);
     }

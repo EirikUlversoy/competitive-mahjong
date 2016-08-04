@@ -37,18 +37,11 @@ public class ValuationHanTest {
         straight.add(new SouTile(8,2));
         straight.add(new SouTile(7,2));
         Tile colorTile1 = new ColorTile("Chun",1);
-        colorTile1.setIdentifier("Color");
         Tile colorTile2 = new ColorTile("Chun",2);
-        colorTile2.setIdentifier("Color");
         straight.add(colorTile1);
         straight.add(colorTile2);
-
-
-
-
-
-
-
+        straight.stream().map(Tile::toString).forEach(System.out::println);
+        this.straight = straight;
 
     }
 
@@ -56,6 +49,9 @@ public class ValuationHanTest {
     @Test
     public void checkFlushFunction(){
         straightSequences = handEvaluator.findSequences(straight);
+        System.out.println("printing sequences???");
+        straightSequences.stream().map(SequenceGroup::toString).forEach(System.out::println);
+
         straightSequences = handEvaluator.findMaxValidSequences(straightSequences,straight);
         straightCombinations.addAll(this.straightSequences);
         Assert.assertEquals(valuationHan.checkFlush(this.straightCombinations),"Flush");

@@ -1,9 +1,17 @@
 public class WindTile extends Tile{
-    private String classIdentifier = "wind";
-    private String identifier = "wind";
-    private String tileId;
-    private Integer tileNumber;
-    private Position position;
 
+    WindTile(){
+        super();
+
+    }
+
+    WindTile(String wind){
+        super(1);
+        this.setSuit(new Suit(wind));
+    }
+    WindTile(String wind, Integer tile_id){
+        super(1,tile_id);
+        this.setSuit(new Suit(wind));
+    }
 
 }

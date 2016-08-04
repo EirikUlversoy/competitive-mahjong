@@ -1,6 +1,5 @@
 
 public class SouTile extends Tile {
-    private String classIdentifier = "Sou";
     public SouTile() {
         super();
         this.setSuit(new Suit("Sou"));
@@ -9,8 +8,6 @@ public class SouTile extends Tile {
 
     public SouTile(Integer tileNumber){
         super(tileNumber);
-        this.setPosition(new Position());
-        this.setIdentifier("???");
         this.setSuit(new Suit("Sou"));
 
     }
@@ -20,4 +17,8 @@ public class SouTile extends Tile {
         this.setSuit(new Suit("Sou"));
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

@@ -102,6 +102,8 @@ public class HandEvaluator {
      * @return
      */
     public List<SequenceGroup> findSequences(List<Tile> tiles){
+        System.out.println("am I here?");
+        tiles.stream().map(Tile::toString).forEach(System.out::println);
         final List<Integer> previousTiles = tiles.stream()
                 .map(Tile::getTileNumber)
                 .collect(Collectors.toList());
