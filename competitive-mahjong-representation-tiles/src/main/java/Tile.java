@@ -2,13 +2,15 @@ import javafx.scene.image.Image;
 
 public class Tile {
 
-    private String tileId;
-    private Position position;
+    private Integer tileId;
     private Integer tileNumber;
+    private Suit suit;
+
+    private Position position;
     private String identifier;
+    
     private Image image;
     private String imagePath;
-    private Suit suit;
 
     public Suit getSuit() {
         return suit;
@@ -26,59 +28,49 @@ public class Tile {
         this.tileNumber = tileNumber;
         this.identifier = "not set";
         this.position = new Position();
-        this.tileId = "not set";
+        this.tileId = 0;
     }
 
     public Tile(Integer tileNumber, Integer tileId){
         this.tileNumber = tileNumber;
         this.identifier = "not set";
         this.position = new Position();
-        this.tileId = tileId.toString();
-    }
-    public void findImage(){
-        this.image = new Image(imagePath);
-    }
-
-    public void setImagePath(String imagePath){
-        this.imagePath = imagePath;
-    }
-
-    public Integer getTileNumber() {
-        return tileNumber;
-    }
-
-    public void setTileNumber(Integer tileNumber) {
-        this.tileNumber = tileNumber;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public String getTileId() {
-        return tileId;
-    }
-
-    public void setTileId(String tileId) {
         this.tileId = tileId;
     }
 
+    public void findImage(){
+        this.image = new Image(imagePath);
+    }
+    public void setImagePath(String imagePath){
+        this.imagePath = imagePath;
+    }
+    public Integer getTileNumber() {
+        return tileNumber;
+    }
+    public void setTileNumber(Integer tileNumber) {
+        this.tileNumber = tileNumber;
+    }
+    public String getIdentifier() {
+        return identifier;
+    }
+    public Image getImage() {
+        return image;
+    }
+    public void setImage(Image image) {
+        this.image = image;
+    }
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+    public Integer getTileId() {
+        return tileId;
+    }
+    public void setTileId(Integer tileId) {
+        this.tileId = tileId;
+    }
     public Position getPosition() {
         return position;
     }
-
     public void setPosition(Position position) {
         this.position = position;
     }

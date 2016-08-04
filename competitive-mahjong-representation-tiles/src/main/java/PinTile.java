@@ -3,11 +3,16 @@ public class PinTile extends Tile {
     private String classIdentifier = "Pin";
 
     public PinTile() {
+        this.setSuit(new Suit("Pin"));
+
     }
 
     public PinTile(Integer tileNumber) {
         super(tileNumber);
         this.setPosition(new Position());
         this.setIdentifier("???");
+
+        this.setSuit(new Suit("Pin"));
+
     }
 }

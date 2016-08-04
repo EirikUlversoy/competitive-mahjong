@@ -5,13 +5,17 @@ import java.util.List;
  */
 public class RonChecker {
     private Gamerules gamerules;
+    private ValuationHan hanEvaluator;
+
     RonChecker(Gamerules gamerules){
         this.gamerules = gamerules;
+        this.hanEvaluator = new ValuationHan();
     }
 
-    public static boolean checkIfValid(Hand hand, List<Group> groups){
+    public boolean checkIfValid(Hand hand, List<Group> groups){
         if(groups.size() == 4){
-            if(ValuationHan.calculateHan(hand, groups); >= 1){
+            /*
+            if(hanEvaluator(hand, groups) >= 1){
                 return true;
             } else if(ValuationFu.calculateFu(hand, groups) >= 40) {
                     return true;
@@ -26,6 +30,7 @@ public class RonChecker {
             return false;
         }
         return false;
+        */
     }
-
-}
+    return false;
+}}

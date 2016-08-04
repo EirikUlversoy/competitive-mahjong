@@ -32,4 +32,16 @@ public class DrawEvaluation {
     public boolean doubleRichii(){
         return false;
     }
+
+    public boolean heavenlyHand(){
+        return false;
+    }
+
+    public boolean handOfEarth(){
+        return false;
+    }
+
+    public boolean handOfMan(){
+        return false;
+    }
 }

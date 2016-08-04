@@ -2,7 +2,8 @@ public class Suit {
     String identifier;
 
     Suit(String identifier){
-        this.setIdentifier(identifier);
+        this.identifier = identifier;
+        //this.setIdentifier(identifier);
     }
     public String getIdentifier() {
         return identifier;

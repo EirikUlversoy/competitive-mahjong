@@ -5,6 +5,10 @@ public class SequenceGroup extends Group {
     private Optional<Integer> realMember;
     SequenceGroup(Tile firstMember, Tile secondMember, Tile thirdMember){
         super(firstMember,secondMember,thirdMember);
+        this.suit = secondMember.getSuit();
+        this.setSuit(secondMember.getSuit());
+        System.out.println(secondMember.getSuit().getIdentifier());
+        System.out.println(suit.getIdentifier().toString());
 
 
     }

@@ -13,17 +13,15 @@ public class ValuationHan {
 
     }
     public static List<Group> filterOutHonors(List<Group> groupList){
-        return groupList.stream().filter(z -> {
-            if(z.getSuit().getIdentifier() == "Color" || z.getSuit().getIdentifier() == "Wind"){
-                return false;
-            }
-            return true;
-        }).collect(Collectors.toList());
-
+        return groupList.stream()
+                .filter(z -> z.getSuit().getIdentifier() != "Color" || z.getSuit().getIdentifier() != "Wind")
+                .collect(Collectors.toList());
     }
 
     public Integer groupAmountCounter(List<Group> groupList, Class aClass){
-        List<Group> setGroups = groupList.stream().filter(z -> z.getClass() == aClass).collect(Collectors.toList());
+        System.out.println(groupList.get(0).getSecondMember().getClass().toString());
+        System.out.println(aClass.toString());
+        List<Group> setGroups = groupList.stream().filter(z -> z.getSecondMember().getClass().toString() != aClass.toString()).collect(Collectors.toList());
         return setGroups.size();
     }
 
@@ -52,7 +50,7 @@ public class ValuationHan {
 
 
     public boolean hasTripletColors(List<SetGroup> groupList){
-        List<SetGroup> newGroupList = removeDuplicateSuit(groupList);
+        List<SetGroup> newGroupList = removeDuplicateSuitSets(groupList);
 
         boolean threeSuits = groupList.stream()
                 .map(z -> z.getSuit().getIdentifier())
@@ -78,7 +76,14 @@ public class ValuationHan {
 
     }
 
+    public boolean twoSetsOfIdenticalSequences(List<SequenceGroup> sequenceGroups){
+        boolean WAN = oneSetOfIdenticalSequencesSameSuit(sequenceGroups,new Suit("Wan"));
+        boolean PIN = oneSetOfIdenticalSequencesSameSuit(sequenceGroups,new Suit("Pin"));
+        boolean SOU = oneSetOfIdenticalSequencesSameSuit(sequenceGroups,new Suit("Sou"));
 
+        return WAN && (PIN || SOU) || (PIN && SOU);
+
+    }
 
     public boolean oneSetOfIdenticalSequencesSameSuit(List<SequenceGroup> sequenceGroups, Suit suit){
         List<SequenceGroup> filteredSequenceGroups = sequenceGroups.stream()
@@ -122,9 +127,11 @@ public class ValuationHan {
 
     }
 
+
     //public Integer tripletHands(List<Group> groupList){
 
     //}
+
 
 
     public String checkFlush(List<Group> groupList){

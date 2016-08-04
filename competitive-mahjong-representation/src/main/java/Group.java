@@ -12,6 +12,7 @@ public class Group {
         this.FirstMember = firstMember;
         this.SecondMember = secondMember;
         this.ThirdMember = thirdMember;
+        this.suit = secondMember.getSuit();
     }
 
     public Group(List<Tile> tiles){
@@ -24,6 +25,8 @@ public class Group {
         } catch (IndexOutOfBoundsException ex) {
             this.FourthMember = Optional.empty();
         }
+        this.suit = SecondMember.getSuit();
+
 
 
     }
