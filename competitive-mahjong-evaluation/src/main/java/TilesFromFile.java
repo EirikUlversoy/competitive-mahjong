@@ -48,7 +48,11 @@ public class TilesFromFile {
         WIND = false;
     }
     public void dealWithDuplicates(){
-        
+        Hand hand = new Hand(1);
+        HandEvaluator handEvaluator = new HandEvaluator(hand);
+        handEvaluator.
+        List<Tile> newTiles = this.tiles.stream()
+                .sorted()
     }
     public void analyzeCharacters(char i){
         switch(i){
