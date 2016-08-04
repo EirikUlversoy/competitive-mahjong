@@ -1,5 +1,9 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ValuationHan {
@@ -23,32 +27,110 @@ public class ValuationHan {
         return setGroups.size();
     }
 
-    public boolean threeQuads(List<SetGroup> groupList){
+    public boolean hasThreeQuads(List<SetGroup> groupList){
         return groupList.stream()
                 .filter(SetGroup::isKAN)
                 .collect(Collectors.toList()).size() >= 3 ;
     }
 
-    public boolean allTriplets(List<SetGroup> groupList){
+    public boolean isAllTriplets(List<SetGroup> groupList){
         return groupList.size() == 4;
     }
 
-    public boolean tripletColors(List<SetGroup> groupList){
+    public static <T> Predicate<T> distinctByKey(Function<? super T,Object> keyExtractor) {
+        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+    public List<SetGroup> removeDuplicateSuit(List<SetGroup> setGroups){
+        return setGroups.stream().filter(distinctByKey(o -> o.getSuit().getIdentifier())).collect(Collectors.toList());
+    }
+
+    public boolean hasTripletColors(List<SetGroup> groupList){
+        List<SetGroup> newGroupList = removeDuplicateSuit(groupList);
+        
         boolean threeSuits = groupList.stream()
                 .map(z -> z.getSuit().getIdentifier())
                 .distinct()
                 .collect(Collectors.toList()).size() == 3;
 
-        boolean sameNumbers = groupList.stream()
+        boolean sameNumbers = newGroupList.stream()
                 .map(z -> z.getFirstMember().getTileNumber())
-                .allMatch(z -> groupList.get(0).getFirstMember().getTileNumber() == z);
+                .allMatch(z -> newGroupList.get(0).getFirstMember().getTileNumber().equals(z));
 
         return threeSuits && sameNumbers;
 
     }
-    public Integer tripletHands(List<Group> groupList){
+
+    public boolean sameSequenceInThreeSuits( List<SequenceGroup> sequenceGroups){
+        if(sequenceGroups.size() == 3){
+            return (sequenceGroups.stream()
+                    .map(z -> z.getFirstMember().getTileNumber())
+                    .distinct()
+                    .count() == 1 )
+                    && (sequenceGroups.stream()
+                    .map(z -> z.getSuit().getIdentifier())
+                    .distinct()
+                    .count() == 3);
+
+        } else if (sequenceGroups.size() == 4) {
+            return (sequenceGroups.stream()
+                    .map(z -> z.getFirstMember().getTileNumber())
+                    .distinct().count() <= 2 ) &&
+                    (sequenceGroups.stream()
+                    .map(z -> z.getSuit().getIdentifier())
+                    .distinct()
+                    .count() == 3);
+        }
+        return false;
+    }
+
+
+
+    public boolean oneSetOfIdenticalSequencesSameSuit(List<SequenceGroup> sequenceGroups, Suit suit){
+        List<SequenceGroup> filteredSequenceGroups = sequenceGroups.stream()
+                .filter(z -> z.getSuit().getIdentifier() == suit.getIdentifier())
+                .collect(Collectors.toList());
+
+        return filteredSequenceGroups.size() >= 2 && filteredSequenceGroups.stream()
+                    .map(SequenceGroup::getFirstMember)
+                    .map(Tile::getTileNumber)
+                    .distinct()
+                    .count() == filteredSequenceGroups.size() - 1;
+        }
+
+
+
+    public boolean hasStraight(List<SequenceGroup> sequenceGroups){
+
+        List<Integer> disqualifyingNumbers = new ArrayList<>();
+        disqualifyingNumbers.add(2);
+        disqualifyingNumbers.add(3);
+        disqualifyingNumbers.add(5);
+        disqualifyingNumbers.add(6);
+
+        List<SequenceGroup> newSequenceGroups = filterLargestSuit(sequenceGroups);
+
+        return newSequenceGroups.stream()
+                .map(Group::getFirstMember)
+                .filter(z -> !disqualifyingNumbers.contains(z.getTileNumber()))
+                .distinct()
+                .count() >= 3;
+    }
+
+    public List<SequenceGroup> filterLargestSuit(List<SequenceGroup> sequenceGroups){
+        Map<String, List<SequenceGroup>> stringListMap =
+                sequenceGroups.stream()
+                        .collect(Collectors.groupingBy(z -> z.getSuit().getIdentifier()));
+
+        return stringListMap.get(stringListMap.keySet().stream().max((z,x) -> stringListMap.get(z).size()).get());
+
+
 
     }
+
+    //public Integer tripletHands(List<Group> groupList){
+
+    //}
 
 
     public String checkFlush(List<Group> groupList){
