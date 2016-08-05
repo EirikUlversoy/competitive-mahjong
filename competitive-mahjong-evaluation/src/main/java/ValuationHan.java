@@ -7,26 +7,38 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ValuationHan {
-
-
+    private List<String> honors;
+    public ValuationHan(){
+        honors = new ArrayList<>();
+        honors.add("Red");
+        honors.add("White");
+        honors.add("Green");
+        honors.add("Wind");
+        honors.add("Color");
+        honors.add("North");
+        honors.add("South");
+        honors.add("West");
+        honors.add("East");
+    }
     public void calculateHan(Hand hand, List<Group> groupList){
 
     }
     public static List<Group> filterOutHonors(List<Group> groupList){
-        List<String> invalids = new ArrayList<>();
-        invalids.add("Red");
-        invalids.add("White");
-        invalids.add("Green");
-        invalids.add("Wind");
-        invalids.add("Color");
-        invalids.add("North");
-        invalids.add("South");
-        invalids.add("West");
-        invalids.add("East");
+
+        List<String> honors = new ArrayList<>();
+        honors.add("Red");
+        honors.add("White");
+        honors.add("Green");
+        honors.add("Wind");
+        honors.add("Color");
+        honors.add("North");
+        honors.add("South");
+        honors.add("West");
+        honors.add("East");
 
         return groupList.stream()
                 .peek(z -> System.out.println(z.getSecondMember().getSuit().getIdentifier()))
-                .filter(z -> !invalids.contains(z.getSuit().getIdentifier()))
+                .filter(z -> !honors.contains(z.getSuit().getIdentifier()))
                 .collect(Collectors.toList());
     }
 
@@ -119,6 +131,93 @@ public class ValuationHan {
         }
 
 
+    public boolean hasAllSimples(List<Group> groups){
+        List<Integer> disqualifyingNumbers = new ArrayList<>();
+        disqualifyingNumbers.add(1);
+        disqualifyingNumbers.add(9);
+        boolean noHonors = groups.stream()
+                .noneMatch( z -> honors.contains(z.getSuit().getIdentifier()) );
+
+        boolean isAllSimples = groups.stream()
+                .noneMatch( z -> disqualifyingNumbers.contains(z.getThirdMember().getTileNumber()));
+
+        return noHonors && isAllSimples;
+
+    }
+
+    public Integer findColorSetAmount(List<Group> groups){
+        Integer colorCount = 0;
+        if(hasHonorSet(groups,new Suit("Green"))){
+            colorCount += 1;
+        }
+        if(hasHonorSet(groups,new Suit("White"))){
+            colorCount += 1;
+        }
+        if(hasHonorSet(groups,new Suit("Red"))){
+            colorCount += 1;
+        }
+        return colorCount;
+    }
+    public boolean hasSouthWind(List<Group> groups){
+        return hasHonorSet(groups,new Suit("South"));
+    }
+    public boolean hasNorthWind(List<Group> groups){
+        return hasHonorSet(groups,new Suit("North"));
+    }
+    public boolean hasWestWind(List<Group> groups){
+        return hasHonorSet(groups,new Suit("West"));
+    }
+    public boolean hasEastWind(List<Group> groups){
+        return hasHonorSet(groups,new Suit("East"));
+    }
+    public Integer findWindSetAmount(List<Group> groups){
+        Integer windCount = 0;
+        if(hasSouthWind(groups)){
+            windCount+=1;
+        }
+        if(hasEastWind(groups)){
+            windCount+=1;
+        }
+        if(hasNorthWind(groups)){
+            windCount+=1;
+        }
+        if(hasWestWind(groups)){
+            windCount+=1;
+        }
+        return windCount;
+    }
+    public boolean hasHonorSet(List<Group> groups, Suit suit){
+        return groups.stream()
+                .filter(z -> z.getSuit() == suit)
+                .count() == 1;
+    }
+
+    public boolean hasChanta(List<Group> groups){
+        groups = ValuationHan.filterOutHonors(groups);
+        return allGroupsHaveATerminal(groups) && (groups.stream().anyMatch(z -> z.getClass() == SequenceGroup.class));
+    }
+
+    public boolean allGroupsHaveATerminal(List<Group> groups){
+        return groups.stream().allMatch(z -> z.getFirstMember().getTileNumber() == 9
+                || z.getThirdMember().getTileNumber() == 1);
+    }
+
+    public boolean hasTerminalInEachSet(List<Group> groups){
+        boolean noHonors = groups.stream()
+                .noneMatch( z -> honors.contains(z.getSuit().getIdentifier()) );
+        boolean chanta = hasChanta(groups);
+
+        return noHonors && chanta;
+    }
+
+    public boolean allTerminalsAndHonors(List<Group> groups){
+        groups = ValuationHan.filterOutHonors(groups);
+        boolean hasFour = groups.size() == 4;
+        boolean allGroupsAreSets = groups.stream().allMatch(z -> z.getClass() == SetGroup.class);
+        boolean allGroupsHaveATerminal = allGroupsHaveATerminal(groups);
+
+        return hasFour && allGroupsAreSets && allGroupsHaveATerminal;
+    }
 
     public boolean hasStraight(List<SequenceGroup> sequenceGroups){
 
@@ -204,6 +303,8 @@ public class ValuationHan {
 
         return amountOfHan;
     }
+
+
     }
 
 
