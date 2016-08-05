@@ -3,6 +3,7 @@ public class PinTile extends Tile {
     private String classIdentifier = "Pin";
 
     public PinTile() {
+        super();
         this.setSuit(new Suit("Pin"));
 
     }

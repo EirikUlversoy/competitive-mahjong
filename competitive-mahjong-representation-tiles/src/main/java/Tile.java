@@ -4,7 +4,7 @@ public class Tile {
 
     private Integer tileId;
     private Integer tileNumber;
-    private Suit suit;
+    private Suit suit = new Suit("No suit set yet");
 
     private Position position;
     private String identifier;
@@ -78,7 +78,7 @@ public class Tile {
 
     public String toString(){
         String returnString = "";
-        returnString = returnString.concat(tileNumber.toString()+"-"+tileId.toString()).concat("@"+position.toString()).concat(tileNumber.toString());
+        returnString = returnString.concat(this.getClass().toString() +tileNumber.toString()+"-"+tileId.toString()).concat("@"+position.toString()).concat(tileNumber.toString());
 
         return returnString;
     }

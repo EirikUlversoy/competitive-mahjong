@@ -30,6 +30,7 @@ public class TilesFromFile {
         System.out.println(System.getProperty("user.dir"));
         File file = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\samplehands");
         Files.lines(Paths.get(System.getProperty("user.dir")+"\\src\\test\\resources\\samplehands"))
+                .filter(z -> !z.contains("#"))
                 .forEach(z->strings.add(z));
 
         for(String string : strings){
@@ -37,7 +38,13 @@ public class TilesFromFile {
             string.chars()
                     .mapToObj(i -> (char)i)
                     .forEach(this::analyzeCharacters);
+            tiles = dealWithDuplicates(tiles);
+            tileLists.add(tiles);
         }
+
+        System.out.println(tileLists.toString());
+
+
         return tileLists;
     }
     public void clearBooleans(){
@@ -47,12 +54,43 @@ public class TilesFromFile {
         COLOR = false;
         WIND = false;
     }
-    public void dealWithDuplicates(){
+    public List<Tile> dealWithDuplicates(List<Tile> tiles){
         Hand hand = new Hand(1);
         HandEvaluator handEvaluator = new HandEvaluator(hand);
-        handEvaluator.
-        List<Tile> newTiles = this.tiles.stream()
-                .sorted()
+        List<Tile> newTiles = new ArrayList<>();
+        List<Map<Integer, List<Tile>>> maps = new ArrayList<>();
+
+        List<Tile> Wan = handEvaluator.filterWan();
+        List<Tile> Sou = handEvaluator.filterSou();
+        List<Tile> Pin = handEvaluator.filterPin();
+        List<Tile> Color = handEvaluator.filterSuit(ColorTile.class);
+        List<Tile> Wind = handEvaluator.filterSuit(WindTile.class);
+
+        maps.add(handEvaluator.findTileCount(Wan));
+        maps.add(handEvaluator.findTileCount(Sou));
+        maps.add(handEvaluator.findTileCount(Pin));
+        maps.add(handEvaluator.findTileCount(Color));
+        maps.add(handEvaluator.findTileCount(Wind));
+
+        //final Map<Integer, List<Tile>> integerToTiles = handEvaluator.findTileCount(tiles);
+        System.out.println("Before duplicate fix");
+        tiles.stream().map(Tile::toString).forEach(System.out::println);
+        for (Map<Integer, List<Tile>> tileMap : maps){
+            tileMap.keySet().stream()
+                    .map(z -> tileMap.get(z))
+                    .forEach(z -> {
+                        z.stream()
+                                .peek(x ->
+                                        x.setTileId(z.indexOf(x)+1))
+                                .forEach(x -> newTiles.add(x));
+                    });
+        }
+
+        System.out.println("After duplicate fix.");
+        newTiles.stream().map(Tile::toString).forEach(System.out::println);
+        return newTiles;
+
+
     }
     public void analyzeCharacters(char i){
         switch(i){
@@ -82,16 +120,17 @@ public class TilesFromFile {
             }
                 break;
             default : {
+                Integer numericValue = Character.getNumericValue(i);
                 if(this.SOU){
-                    this.tiles.add(new SouTile((int)i));
+                    this.tiles.add(new SouTile(numericValue));
                 } else if (this.WAN) {
-                    this.tiles.add(new WanTile((int)i));
+                    this.tiles.add(new WanTile(numericValue));
                 } else if (this.PIN) {
-                    this.tiles.add(new PinTile((int)i));
+                    this.tiles.add(new PinTile(numericValue));
                 } else if (this.COLOR) {
-                    this.tiles.add(new ColorTile(colorIntToString.get((int)i)));
+                    this.tiles.add(new ColorTile(colorIntToString.get(numericValue),numericValue));
                 } else if (this.WIND) {
-                    this.tiles.add(new WindTile(windIntToString.get((int)i)));
+                    this.tiles.add(new WindTile(windIntToString.get(numericValue),numericValue));
     }
             }
         }
