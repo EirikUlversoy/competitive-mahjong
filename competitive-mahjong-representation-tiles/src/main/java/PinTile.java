@@ -17,6 +17,11 @@ public class PinTile extends Tile {
 
     }
 
+    public PinTile(Integer tileNumber, Integer tileId){
+        super(tileNumber,tileId);
+        this.setSuit(new Suit("Sou"));
+    }
+
     @Override
     public String toString() {
         return super.toString();

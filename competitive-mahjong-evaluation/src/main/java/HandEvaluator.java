@@ -14,32 +14,32 @@ public class HandEvaluator {
         this.hand = hand;
     }
 
-    public List<Tile> filterSou(){
-        List<Tile> souTiles = hand.getTiles().stream()
+    public List<Tile> filterSou(List<Tile> tiles){
+        List<Tile> souTiles = tiles.stream()
                 .filter(z -> z.getClass() == SouTile.class)
                 .collect(Collectors.toList());
         return souTiles;
     }
 
-    public List<Tile> filterPin(){
-        List<Tile> pinTiles = hand.getTiles().stream()
+    public List<Tile> filterPin(List<Tile> tiles){
+        List<Tile> pinTiles = tiles.stream()
                 .filter(z -> z.getClass() == PinTile.class)
                 .collect(Collectors.toList());
         return pinTiles;
     }
 
-    public List<Tile> filterWan(){
-        List<Tile> wanTiles = hand.getTiles().stream()
+    public List<Tile> filterWan(List<Tile> tiles){
+        List<Tile> wanTiles = tiles.stream()
                 .filter(z -> z.getClass() == WanTile.class)
                 .collect(Collectors.toList());
         return wanTiles;
     }
 
-    public List<Tile> filterSuit(Class aClass){
-        List<Tile> tiles = hand.getTiles().stream()
+    public List<Tile> filterSuit(Class aClass, List<Tile> tiles){
+        List<Tile> newTiles = tiles.stream()
                 .filter(z -> z.getClass() == aClass)
                 .collect(Collectors.toList());
-        return tiles;
+        return newTiles;
     }
     public List<SetGroup> findSets( List<Tile> input){
         Map<Integer, Integer> tilenumberToAmount = new HashMap();

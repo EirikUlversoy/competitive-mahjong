@@ -34,12 +34,7 @@ public class TilesFromFile {
                 .forEach(z->strings.add(z));
 
         for(String string : strings){
-            tiles.clear();
-            string.chars()
-                    .mapToObj(i -> (char)i)
-                    .forEach(this::analyzeCharacters);
-            tiles = dealWithDuplicates(tiles);
-            tileLists.add(tiles);
+            tileLists.add(analyzeString(string));
         }
 
         System.out.println(tileLists.toString());
@@ -60,11 +55,11 @@ public class TilesFromFile {
         List<Tile> newTiles = new ArrayList<>();
         List<Map<Integer, List<Tile>>> maps = new ArrayList<>();
 
-        List<Tile> Wan = handEvaluator.filterWan();
-        List<Tile> Sou = handEvaluator.filterSou();
-        List<Tile> Pin = handEvaluator.filterPin();
-        List<Tile> Color = handEvaluator.filterSuit(ColorTile.class);
-        List<Tile> Wind = handEvaluator.filterSuit(WindTile.class);
+        List<Tile> Wan = handEvaluator.filterWan(tiles);
+        List<Tile> Sou = handEvaluator.filterSou(tiles);
+        List<Tile> Pin = handEvaluator.filterPin(tiles);
+        List<Tile> Color = handEvaluator.filterSuit(ColorTile.class, tiles);
+        List<Tile> Wind = handEvaluator.filterSuit(WindTile.class, tiles);
 
         maps.add(handEvaluator.findTileCount(Wan));
         maps.add(handEvaluator.findTileCount(Sou));
@@ -87,10 +82,19 @@ public class TilesFromFile {
         }
 
         System.out.println("After duplicate fix.");
+        System.out.println(newTiles.size());
         newTiles.stream().map(Tile::toString).forEach(System.out::println);
         return newTiles;
 
 
+    }
+    public List<Tile> analyzeString(String string){
+        tiles.clear();
+        string.chars()
+                .mapToObj(i -> (char)i)
+                .forEach(this::analyzeCharacters);
+        this.tiles = dealWithDuplicates(tiles);
+        return this.tiles;
     }
     public void analyzeCharacters(char i){
         switch(i){

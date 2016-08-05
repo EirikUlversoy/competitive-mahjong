@@ -13,6 +13,14 @@
         <java.encoding>UTF-8</java.encoding>
     </properties>
 
+    <modules>
+        <module>competitive-mahjong-evaluation</module>
+        <module>competitive-mahjong-representation</module>
+        <module>competitive-mahjong-representation-tiles</module>
+        <module>competitive-mahjong-helper-functions</module>
+        <module>competitive-mahjong-visual</module>
+
+    </modules>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->

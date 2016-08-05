@@ -46,7 +46,7 @@ public class HandEvaluatorTest {
         //        .forEach(z -> System.out.println(z.toString()));
         //hand.getTiles().stream()
         //        .forEach(z -> System.out.println("The hands tiles: "+ z.getIdentifier().concat("@"+z.getPosition().toString()).concat(z.getTileNumber().toString())));
-        List<Tile> filteredTiles = handEvaluator.filterPin();
+        List<Tile> filteredTiles = handEvaluator.filterPin(this.hand.getTiles());
 
         List<Tile> testList = new ArrayList<>();
         testList.add(new SouTile(1,2));
