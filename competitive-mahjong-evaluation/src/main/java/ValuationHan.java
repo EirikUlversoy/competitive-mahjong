@@ -63,8 +63,13 @@ public class ValuationHan {
 
     public boolean hasTripletColors(List<SetGroup> groupList){
         List<SetGroup> newGroupList = removeDuplicateSuitSets(groupList);
+        newGroupList.stream().map(Group::toString).forEach(System.out::println);
 
-        boolean threeSuits = groupList.stream()
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(newGroupList);
+        groups = filterOutHonors(groups);
+        groups.stream().map(Group::toString).forEach(System.out::println);
+        boolean threeSuits = groups.stream()
                 .map(z -> z.getSuit().getIdentifier())
                 .distinct()
                 .collect(Collectors.toList()).size() == 3;
@@ -78,10 +83,14 @@ public class ValuationHan {
     }
 
     public boolean sameSequenceInThreeSuits( List<SequenceGroup> sequenceGroups){
-
+        if(sequenceGroups.size() <= 2){
+            return false;
+        }
         List<SequenceGroup> newSequenceGroups = removeDuplicateSuitSequences(sequenceGroups);
-
-        return newSequenceGroups.stream()
+        List<Group> newGroups = new ArrayList<>();
+        newGroups.addAll(newSequenceGroups);
+        newGroups = ValuationHan.filterOutHonors(newGroups);
+        return newGroups.stream()
                 .map(z -> z.getFirstMember().getTileNumber())
                 .distinct()
                 .count() == 1;
@@ -122,7 +131,7 @@ public class ValuationHan {
         List<SequenceGroup> newSequenceGroups = filterLargestSuit(sequenceGroups);
 
         return newSequenceGroups.stream()
-                .map(Group::getFirstMember)
+                .map(Group::getThirdMember)
                 .filter(z -> !disqualifyingNumbers.contains(z.getTileNumber()))
                 .distinct()
                 .count() >= 3;

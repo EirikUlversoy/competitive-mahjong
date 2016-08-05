@@ -41,7 +41,23 @@ public class HandEvaluator {
                 .collect(Collectors.toList());
         return newTiles;
     }
+
     public List<SetGroup> findSets( List<Tile> input){
+        List<Tile> souTiles = filterSou(input);
+        List<Tile> wanTiles = filterWan(input);
+        List<Tile> pinTiles = filterPin(input);
+        List<Tile> colorTiles = filterSuit(ColorTile.class,input);
+        List<Tile> windTiles = filterSuit(WindTile.class,input);
+
+        List<SetGroup> setGroups = findSetsInSuit(souTiles);
+        setGroups.addAll(findSetsInSuit(wanTiles));
+        setGroups.addAll(findSetsInSuit(pinTiles));
+        setGroups.addAll(findSetsInSuit(colorTiles));
+        setGroups.addAll(findSetsInSuit(windTiles));
+
+        return setGroups;
+    }
+    public List<SetGroup> findSetsInSuit( List<Tile> input){
         Map<Integer, Integer> tilenumberToAmount = new HashMap();
         List<SetGroup> sets = new ArrayList<>();
         for (Tile tile : input){
@@ -178,9 +194,34 @@ public class HandEvaluator {
         System.out.println("Printing possible sequence groups");
         possibleSeqGroups.stream().map(SequenceGroup::toString).forEach(System.out::println);
 
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(possibleSeqGroups);
+
+        groups = ValuationHan.filterOutHonors(groups);
+        possibleSeqGroups.clear();
+
+        groups.stream().forEach(z -> {
+            possibleSeqGroups.add(new SequenceGroup(z.getFirstMember(),z.getSecondMember(),z.getThirdMember()));
+        });
         return possibleSeqGroups;
     }
+
     public List<SequenceGroup> findMaxValidSequences(List<SequenceGroup> possibleSequences, List<Tile> tiles){
+        List<Tile> wanTiles = filterWan(tiles);
+        List<Tile> pinTiles = filterPin(tiles);
+        List<Tile> souTiles = filterSou(tiles);
+
+        List<SequenceGroup> wanSequences = findSequences(wanTiles);
+        List<SequenceGroup> pinSequences = findSequences(pinTiles);
+        List<SequenceGroup> souSequences = findSequences(souTiles);
+
+        List<SequenceGroup> newList = findMaxValidSequencesOfSuit(wanSequences,wanTiles);
+        newList.addAll(findMaxValidSequencesOfSuit(pinSequences,pinTiles));
+        newList.addAll(findMaxValidSequencesOfSuit(souSequences,souTiles));
+
+        return newList;
+    }
+    public List<SequenceGroup> findMaxValidSequencesOfSuit(List<SequenceGroup> possibleSequences, List<Tile> tiles){
         List<SequenceGroup> validSequences = new ArrayList<>();
         List<Tile> usedTiles = new ArrayList<>();
 
