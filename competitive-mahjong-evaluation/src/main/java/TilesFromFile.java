@@ -14,8 +14,7 @@ public class TilesFromFile {
     private Map<Integer,String> colorIntToString = new HashMap<>();
     private Map<Integer,String> windIntToString = new HashMap<>();
 
-    public List<List<Tile>> getFromFile() throws IOException{
-
+    TilesFromFile(){
         colorIntToString.put(1,"Green");
         colorIntToString.put(2,"Red");
         colorIntToString.put(3,"White");
@@ -24,6 +23,10 @@ public class TilesFromFile {
         windIntToString.put(2,"South");
         windIntToString.put(3,"West");
         windIntToString.put(4,"North");
+    }
+    public List<List<Tile>> getFromFile() throws IOException{
+
+
 
         List<String> strings= new ArrayList<>();
         List<List<Tile>> tileLists = new ArrayList<>();
@@ -68,8 +71,6 @@ public class TilesFromFile {
         maps.add(handEvaluator.findTileCount(Wind));
 
         //final Map<Integer, List<Tile>> integerToTiles = handEvaluator.findTileCount(tiles);
-        System.out.println("Before duplicate fix");
-        tiles.stream().map(Tile::toString).forEach(System.out::println);
         for (Map<Integer, List<Tile>> tileMap : maps){
             tileMap.keySet().stream()
                     .map(z -> tileMap.get(z))
@@ -81,20 +82,21 @@ public class TilesFromFile {
                     });
         }
 
-        System.out.println("After duplicate fix.");
-        System.out.println(newTiles.size());
-        newTiles.stream().map(Tile::toString).forEach(System.out::println);
         return newTiles;
 
 
     }
     public List<Tile> analyzeString(String string){
-        tiles.clear();
+        this.tiles.clear();
+        clearBooleans();
         string.chars()
                 .mapToObj(i -> (char)i)
                 .forEach(this::analyzeCharacters);
-        this.tiles = dealWithDuplicates(tiles);
-        return this.tiles;
+        this.tiles = dealWithDuplicates(this.tiles);
+
+        List<Tile> tileOutput = new ArrayList<>();
+        tileOutput.addAll(this.tiles);
+        return tileOutput;
     }
     public void analyzeCharacters(char i){
         switch(i){

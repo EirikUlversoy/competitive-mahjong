@@ -13,9 +13,11 @@ public class ValuationHanTest {
     private List<SequenceGroup> straightSequences;
     private List<Group> straightCombinations = new ArrayList<>();
     private List<Tile> straight = new ArrayList<>();
+    private TilesFromFile tilesFromFile;
 
     @BeforeTest
     public void setup(){
+        tilesFromFile = new TilesFromFile();
         List<Tile> straight = new ArrayList<>();
         tileSet = new TileSet();
         tileSet.initializeTiles();
@@ -23,23 +25,7 @@ public class ValuationHanTest {
         hand.initializeHand(tileSet);
         valuationHan = new ValuationHan();
         this.handEvaluator = new HandEvaluator(hand);
-        straight.add(new SouTile(1,1));
-        straight.add(new SouTile(2,1));
-        straight.add(new SouTile(3,1));
-        straight.add(new SouTile(4,1));
-        straight.add(new SouTile(5,1));
-        straight.add(new SouTile(6,1));
-        straight.add(new SouTile(7,1));
-        straight.add(new SouTile(8,1));
-        straight.add(new SouTile(9,1));
-
-        straight.add(new SouTile(9,2));
-        straight.add(new SouTile(8,2));
-        straight.add(new SouTile(7,2));
-        Tile colorTile1 = new ColorTile("Chun",1);
-        Tile colorTile2 = new ColorTile("Chun",2);
-        straight.add(colorTile1);
-        straight.add(colorTile2);
+        straight = tilesFromFile.analyzeString("S123456778899C2C2");
         straight.stream().map(Tile::toString).forEach(System.out::println);
         this.straight = straight;
 
@@ -67,7 +53,45 @@ public class ValuationHanTest {
 
     @Test
     public void testHasThreeQuads() {
+        TilesFromFile tilesFromFile = new TilesFromFile();
+        tilesFromFile.analyzeString("S123123");
+        List<Tile> threeQuadsHand = new ArrayList<>();
+        threeQuadsHand = tilesFromFile.analyzeString("S1111W2222P3333");
+        List<Tile> noQuadsHand = tilesFromFile.analyzeString("S123456789");
+        List<Tile> twoQuadsHand = tilesFromFile.analyzeString("S1111W1111C2C2C2");
+        List<SetGroup> threeQuadsGroup = handEvaluator.findSets(threeQuadsHand);
+        List<SetGroup> noQuadsGroup = handEvaluator.findSets(noQuadsHand);
+        List<SetGroup> twoQuadsGroup = handEvaluator.findSets(twoQuadsHand);
+
+        Assert.assertTrue(valuationHan.hasThreeQuads(threeQuadsGroup));
+        Assert.assertFalse(valuationHan.hasThreeQuads(noQuadsGroup));
+        Assert.assertFalse(valuationHan.hasThreeQuads(twoQuadsGroup));
+
+    }
+
+    @Test
+    public void testAllTriplets(){
+        List<Tile> triplets = tilesFromFile.analyzeString("S111222333444");
+        List<SetGroup> tripletSets = handEvaluator.findSets(triplets);
+
+        Assert.assertTrue(valuationHan.isAllTriplets(tripletSets));
+    }
 
 
+    @Test
+    public void testFilterOutHonors(){
+        List<Tile> listWithHonors = tilesFromFile.analyzeString("S123456C111C222");
+        List<Tile> listWithHonorsForSets = tilesFromFile.analyzeString("S123456C111C222");
+
+        List<SequenceGroup> honorGroup = handEvaluator.findSequences(listWithHonors);
+        honorGroup = handEvaluator.findMaxValidSequences(honorGroup,listWithHonors);
+        List<SetGroup> honorGroupSets = handEvaluator.findSets(listWithHonorsForSets);
+
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(honorGroup);
+        groups.addAll(honorGroupSets);
+
+        List<Group> filteredGroups = ValuationHan.filterOutHonors(groups);
+        Assert.assertEquals(filteredGroups.size(),2);
     }
 }

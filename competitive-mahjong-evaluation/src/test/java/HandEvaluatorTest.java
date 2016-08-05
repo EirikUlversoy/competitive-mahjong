@@ -5,85 +5,100 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class HandEvaluatorTest {
 
     private TileSet tileSet;
     private Hand hand;
-
+    private TilesFromFile tilesFromFile;
     @BeforeTest
     public void setupTestEnvironment(){
         tileSet = new TileSet();
         tileSet.initializeTiles();
         hand = new Hand(1,120);
         hand.initializeHand(tileSet);
+        tilesFromFile = new TilesFromFile();
+
     }
 
     @Test
     public void findSets() {
         List<Tile> testList = new ArrayList<>();
-        testList.add(new SouTile(1));
-        testList.add(new SouTile(1));
-        testList.add(new SouTile(1));
-        testList.add(new SouTile(2));
-        testList.add(new SouTile(2));
-        testList.add(new SouTile(2));
-        testList.add(new SouTile(2));
-        testList.add(new SouTile(3));
-        testList.add(new SouTile(3));
-
+        testList = tilesFromFile.analyzeString("S111222233");
         HandEvaluator handEvaluator = new HandEvaluator(this.hand);
         List<SetGroup> sets = handEvaluator.findSets(testList);
         Assert.assertEquals(sets.size(),2);
+        Assert.assertTrue(sets.stream().filter(z -> z.getFirstMember().getTileNumber() == 2)
+        .anyMatch(z -> z.isKAN()));
 
 
+
+    }
+
+    @Test
+    public void numberToTileMapTest(){
+        HandEvaluator handEvaluator = new HandEvaluator(this.hand);
+        List<Tile> tiles = tilesFromFile.analyzeString("S11222333344");
+        Map<Integer, List<Tile>> integerListMap = handEvaluator.findTileCount(tiles);
+        Assert.assertEquals(integerListMap.get(1).size(),2);
+        Assert.assertEquals(integerListMap.get(2).size(),3);
+        Assert.assertEquals(integerListMap.get(3).size(),4);
+        Assert.assertEquals(integerListMap.get(4).size(),2);
+
+    }
+    @Test
+    public void findSequencesTest(){
+        HandEvaluator handEvaluator = new HandEvaluator(this.hand);
+        List<Tile> testList = new ArrayList<>();
+        testList = tilesFromFile.analyzeString("S111222333");
+
+        List<SequenceGroup> sequenceGroupList = handEvaluator.findSequences(testList);
+        Assert.assertEquals(sequenceGroupList.size(), 3);
+
+        testList.clear();
+        testList.add(new SouTile(1,1));
+        sequenceGroupList.clear();
+        sequenceGroupList = handEvaluator.findSequences(testList);
+        Assert.assertEquals(sequenceGroupList.size(),0);
+
+        testList.clear();
+        testList = tilesFromFile.analyzeString("S111P111W111");
+
+        sequenceGroupList.clear();
+        sequenceGroupList = handEvaluator.findSequences(testList);
+        Assert.assertEquals(sequenceGroupList.size(),0);
+
+        testList.clear();
+        sequenceGroupList.clear();
+        testList = tilesFromFile.analyzeString("S123456789");
+        sequenceGroupList = handEvaluator.findSequences(testList);
+        Assert.assertEquals(sequenceGroupList.size(),7);
+
+
+    }
+
+    @Test
+    public void testFindValidSequencesFromSequences(){
+        HandEvaluator handEvaluator = new HandEvaluator(this.hand);
+        List<Tile> tiles = tilesFromFile.analyzeString("S123456789");
+        List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
+        //As the other test shows, this gives 7 possible groups
+
+        sequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroups,tiles);
+        Assert.assertEquals(sequenceGroups.size(),3);
     }
     @Test
     public void testName() throws Exception {
         HandEvaluator handEvaluator = new HandEvaluator(this.hand);
-        //hand.getTiles().stream()
-        //        .filter(z-> z.getIdentifier() == "Chun" || z.getIdentifier() == "Hatsu" || z.getIdentifier() == "Haku")
-        //        .forEach(z -> System.out.println(z.toString()));
-        //hand.getTiles().stream()
-        //        .forEach(z -> System.out.println("The hands tiles: "+ z.getIdentifier().concat("@"+z.getPosition().toString()).concat(z.getTileNumber().toString())));
-        List<Tile> filteredTiles = handEvaluator.filterPin(this.hand.getTiles());
 
         List<Tile> testList = new ArrayList<>();
-        testList.add(new SouTile(1,2));
-        testList.add(new SouTile(2,2));
-        testList.add(new SouTile(5,2));
-        testList.add(new SouTile(6,2));
-
-
-        testList.add(new SouTile(1,1));
-        testList.add(new SouTile(2,1));
-        testList.add(new SouTile(3,1));
-
-        testList.add(new SouTile(4,1));
-
-        testList.add(new SouTile(5,1));
-        testList.add(new SouTile(6,1));
-        testList.add(new SouTile(7,1));
-        testList.add(new SouTile(8,1));
-
-        testList.add(new SouTile(9,1));
+        testList = tilesFromFile.analyzeString("S1234567891256");
         List<Tile> testListSequenceAndSetTogether = new ArrayList<>();
-        testListSequenceAndSetTogether.add(new SouTile(1,1));
-        testListSequenceAndSetTogether.add(new SouTile(2,1));
-        testListSequenceAndSetTogether.add(new SouTile(3,1));
-        testListSequenceAndSetTogether.add(new SouTile(1,2));
-        testListSequenceAndSetTogether.add(new SouTile(2,2));
-        testListSequenceAndSetTogether.add(new SouTile(3,2));
-        testListSequenceAndSetTogether.add(new SouTile(1,1));
-        testListSequenceAndSetTogether.add(new SouTile(2,1));
-        testListSequenceAndSetTogether.add(new SouTile(3,1));
-
-        Collections.shuffle(testList);
+        testListSequenceAndSetTogether = tilesFromFile.analyzeString("S111222333");
+        //Collections.shuffle(testList);
 
         handEvaluator.findTileCount(testList);
-
-
-
 
         List<SequenceGroup> sequenceGroupList = handEvaluator.findSequences(testList);
         List<SequenceGroup> validSequenceGroupList = handEvaluator.findMaxValidSequences(sequenceGroupList,testList);
@@ -93,6 +108,26 @@ public class HandEvaluatorTest {
         List<SequenceGroup> validSequenceGroupList1 = handEvaluator.findMaxValidSequences(sequenceGroupList1,testListSequenceAndSetTogether);
 
         Assert.assertEquals(validSequenceGroupList1.size(),3);
+
+    }
+
+    @Test
+    public void testSetsAndSequencesTogether(){
+        HandEvaluator handEvaluator = new HandEvaluator(this.hand);
+
+        List<Tile> tiles = tilesFromFile.analyzeString("S123456C1C1C1C2C2C2");
+        List<Tile> tiles2 = tilesFromFile.analyzeString("S123456C1C1C1C2C2C2");
+
+        List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
+        List<SequenceGroup> validSequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroups,tiles);
+        Assert.assertEquals(validSequenceGroups.size(),2);
+        tiles.stream().map(Tile::toString).forEach(System.out::println);
+        List<SetGroup> setGroups = handEvaluator.findSets(tiles2);
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(validSequenceGroups);
+        groups.addAll(setGroups);
+
+        Assert.assertEquals(groups.size(),4);
 
     }
 }

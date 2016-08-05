@@ -13,8 +13,20 @@ public class ValuationHan {
 
     }
     public static List<Group> filterOutHonors(List<Group> groupList){
+        List<String> invalids = new ArrayList<>();
+        invalids.add("Red");
+        invalids.add("White");
+        invalids.add("Green");
+        invalids.add("Wind");
+        invalids.add("Color");
+        invalids.add("North");
+        invalids.add("South");
+        invalids.add("West");
+        invalids.add("East");
+
         return groupList.stream()
-                .filter(z -> z.getSuit().getIdentifier() != "Color" || z.getSuit().getIdentifier() != "Wind")
+                .peek(z -> System.out.println(z.getSecondMember().getSuit().getIdentifier()))
+                .filter(z -> !invalids.contains(z.getSuit().getIdentifier()))
                 .collect(Collectors.toList());
     }
 

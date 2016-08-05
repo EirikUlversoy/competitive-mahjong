@@ -9,6 +9,7 @@ public class SetGroup extends Group {
 
     public SetGroup(List<Tile> tiles){
         super(tiles);
+        this.setSuit(tiles.get(0).getSuit());
         try {
             if(FourthMember.isPresent()){
                 this.KAN = true;

@@ -49,7 +49,8 @@ public class HandEvaluator {
                 tilenumberToAmount.replace(tile.getTileNumber(),tilenumberToAmount.get(tile.getTileNumber())+1);
                 if(tilenumberToAmount.get(tile.getTileNumber()) == 3){
 
-                    SetGroup newSet = new SetGroup(input.stream().filter(z -> z.getTileNumber() == tile.getTileNumber())
+                    SetGroup newSet = new SetGroup(input.stream().filter(z -> z.getTileNumber() == tile.getTileNumber()
+                            && z.getSuit().getIdentifier() == tile.getSuit().getIdentifier())
                     .collect(Collectors.toList()));
                     sets.add(newSet);
 
@@ -224,25 +225,6 @@ public class HandEvaluator {
         }
         validSequences.addAll(additionalValidSequences);
         return validSequences;
-    }
-    
-    private List<SequenceGroup> findValidSequenceGroups(int[] numbers){
-        List<SequenceGroup> validSequenceGroups = new ArrayList<>();
-        for (int number: numbers){
-            if(number <= 7){
-                Tile tile = new Tile();
-                tile.setTileNumber(number);
-                Tile secondTile = new Tile();
-                secondTile.setTileNumber(number+1);
-                Tile thirdTile = new Tile();
-                thirdTile.setTileNumber(number+2);
-                validSequenceGroups.add(new SequenceGroup(tile,secondTile,thirdTile));
-
-            }
-
-
-        }
-        return validSequenceGroups;
     }
 
 
