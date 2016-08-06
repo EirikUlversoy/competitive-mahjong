@@ -197,7 +197,7 @@ public class ValuationHan {
      * @param groups
      * @return
      */
-    public boolean hasAllSimples(List<Group> groups){
+    public boolean hasAllSimples(List<Group> groups, Pair pair){
         List<Integer> disqualifyingNumbers = new ArrayList<>();
         disqualifyingNumbers.add(1);
         disqualifyingNumbers.add(9);
@@ -207,7 +207,9 @@ public class ValuationHan {
         boolean isAllSimples = groups.stream()
                 .noneMatch( z -> disqualifyingNumbers.contains(z.getThirdMember().getTileNumber()));
 
-        return noHonors && isAllSimples;
+        boolean pairIsSimplePair = !disqualifyingNumbers.contains(pair.getFirstMember().getTileNumber());
+
+        return noHonors && isAllSimples && pairIsSimplePair;
 
     }
 
@@ -282,11 +284,27 @@ public class ValuationHan {
      * @param groups
      * @return
      */
-    public boolean hasChanta(List<Group> groups){
+    public boolean hasChanta(List<Group> groups, Pair pair){
         groups = ValuationHan.filterOutHonors(groups);
-        return allGroupsHaveATerminal(groups) && (groups.stream().anyMatch(z -> z.getClass() == SequenceGroup.class));
+
+        return pairIsTerminalOrHonor(pair)
+                || allGroupsHaveATerminal(groups)
+                && (groups.stream().anyMatch(z -> z.getClass() == SequenceGroup.class));
+
     }
 
+    /**
+     * Helper function. checks if the pair is a terminal or an honor tile. Only checks one of the tiles because
+     * a pair must have two equal(except for id of course) tiles in it.
+     * @param pair
+     * @return
+     */
+    public boolean pairIsTerminalOrHonor(Pair pair){
+        return honors.contains(pair.getFirstMember().getSuit().getIdentifier())
+                || pair.getFirstMember().getTileNumber() == 1
+                || pair.getFirstMember().getTileNumber() == 9;
+
+    }
     /**
      * Helper function for chanta. checks that all given groups have terminal entries within them.
      * @param groups
@@ -302,12 +320,12 @@ public class ValuationHan {
      * @param groups
      * @return
      */
-    public boolean hasTerminalInEachSet(List<Group> groups){
+    public boolean hasTerminalInEachSet(List<Group> groups, Pair pair){
         boolean noHonors = groups.stream()
                 .noneMatch( z -> honors.contains(z.getSuit().getIdentifier()) );
-        boolean chanta = hasChanta(groups);
+        boolean chanta = hasChanta(groups, pair);
 
-        return noHonors && chanta;
+        return noHonors && chanta && !pairIsTerminalOrHonor(pair);
     }
 
     /**
@@ -315,13 +333,13 @@ public class ValuationHan {
      * @param groups
      * @return
      */
-    public boolean allTerminalsAndHonors(List<Group> groups){
+    public boolean allTerminalsAndHonors(List<Group> groups, Pair pair){
         groups = ValuationHan.filterOutHonors(groups);
         boolean hasFour = groups.size() == 4;
         boolean allGroupsAreSets = groups.stream().allMatch(z -> z.getClass() == SetGroup.class);
         boolean allGroupsHaveATerminal = allGroupsHaveATerminal(groups);
 
-        return hasFour && allGroupsAreSets && allGroupsHaveATerminal;
+        return hasFour && allGroupsAreSets && allGroupsHaveATerminal && pairIsTerminalOrHonor(pair);
     }
 
     /**
@@ -347,6 +365,31 @@ public class ValuationHan {
     }
 
     /**
+     * Checks if the pair is a dragon pair
+     * @param pair
+     * @return
+     */
+    public boolean pairIsDragonPair(Pair pair){
+        List<String> dragons = new ArrayList<>();
+        dragons.add("Red");
+        dragons.add("White");
+        dragons.add("Green");
+
+        return dragons.contains(pair.getFirstMember().getSuit().getIdentifier());
+    }
+
+    /**
+     * Three little dragons. Example: C111C222C33*
+     * @param groups
+     * @param pair
+     * @return
+     */
+    public boolean hasThreeLittleDragons(List<Group> groups, Pair pair){
+        return (findColorSetAmount(groups)== 2) && pairIsDragonPair(pair);
+    }
+
+
+    /**
      * Filters out the largest suit. Helper function.
      * @param sequenceGroups
      * @return
@@ -367,33 +410,54 @@ public class ValuationHan {
 
     //}
 
-
     /**
-     * Checks for a flush. Returns half flush if honors are involved, Full flush otherwise, and no flush
-     * if there isnt one.
+     * Checks for full flush.
      * @param groupList
      * @return
      */
-    public String checkFlush(List<Group> groupList){
+    public boolean checkFullFlush(List<Group> groupList, Pair pair){
+        boolean WAN = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
+                && pairIsGivenSuit(pair,new Suit("Wan"));
+        boolean PIN = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
+                && pairIsGivenSuit(pair,new Suit("Pin"));
+        boolean SOU = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
+                && pairIsGivenSuit(pair,new Suit("Sou"));
 
+        return WAN || PIN || SOU;
+    }
+
+    /**
+     * Checks if pair is of the given suit.
+     */
+    public boolean pairIsGivenSuit(Pair pair, Suit suit){
+        return pair.getFirstMember().getSuit().getIdentifier().equals(suit.getIdentifier());
+    }
+
+    public boolean pairIsGivenClass(Pair pair, Class aClass){
+        return pair.getFirstMember().getClass() == aClass;
+    }
+
+    public boolean pairIsHonorPair(Pair pair){
+        return honors.contains(pair.getFirstMember().getSuit().getIdentifier());
+    }
+    /**
+     * Checks for half flush.
+     * @param groupList
+     * @return
+     */
+    public boolean checkHalfFlush(List<Group> groupList, Pair pair){
         List<Group> filteredGroupList = filterOutHonors(groupList);
-        boolean FULL_FLUSH = false;
-        if(filteredGroupList.equals(groupList)){
-            FULL_FLUSH = true;
-        }
-        boolean WAN = filteredGroupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan");
-        boolean PIN = filteredGroupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin");
-        boolean SOU = filteredGroupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou");
+        boolean wanHalfFlush = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
+                && (pairIsGivenSuit(pair,new Suit("Wan")) || pairIsHonorPair(pair));
+        boolean pinHalfFlush = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
+                && (pairIsGivenSuit(pair,new Suit("Pin")) || pairIsHonorPair(pair));
+        boolean souHalfFlush = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
+                && (pairIsGivenSuit(pair,new Suit("Sou")) || pairIsHonorPair(pair));
 
-        if(WAN || PIN || SOU){
-            if(FULL_FLUSH){
-                return "Flush";
-            } else {
-                return "Half Flush";
-            }
-        }
-        return "No Flush";
-        }
+        return wanHalfFlush || pinHalfFlush || souHalfFlush;
+
+
+    }
 
     /**
      * Conditions upon winning. Just a template.
@@ -432,6 +496,9 @@ public class ValuationHan {
         return amountOfHan;
     }
 
+    public List<String> getHonors(){
+        return this.honors;
+    }
 
     }
 
