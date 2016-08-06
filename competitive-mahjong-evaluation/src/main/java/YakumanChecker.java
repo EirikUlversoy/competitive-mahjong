@@ -1,5 +1,6 @@
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +29,89 @@ public class YakumanChecker {
 
     }
 
+    public boolean fourConcealedTriplets(List<Tile> tiles, boolean closed){
+        List<SetGroup> setGroups = handEvaluator.findSets(tiles);
+        Optional<Pair> pair = handEvaluator.findPair(tiles);
+        return setGroups.size() == 4 && pair.isPresent() && closed;
+    }
 
+    public boolean fourConcealedTripletsSingleWait(List<Tile> tiles, boolean singleWait, boolean closed){
+        return fourConcealedTriplets(tiles,closed) && singleWait;
+    }
 
+    public boolean threeBigDragons(List<Tile> tiles){
+        List<SetGroup> setGroups = handEvaluator.findSets(tiles);
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(setGroups);
+        return valuationHan.findColorSetAmount(groups) == 3;
+    }
 
+    public boolean littleFourWinds(List<Tile> tiles){
+        List<SetGroup> setGroups = handEvaluator.findSets(tiles);
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(setGroups);
+        Optional<Pair> pair = handEvaluator.findPair(tiles);
+        return valuationHan.findWindSetAmount(groups) == 3 && valuationHan.pairIsGivenClass(pair.get(),WindTile.class);
+    }
+
+    public boolean bigFourWinds(List<Tile> tiles){
+        List<SetGroup> setGroups = handEvaluator.findSets(tiles);
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(setGroups);
+        return valuationHan.findWindSetAmount(groups) == 4;
+    }
+
+    public boolean allHonors(List<Tile> tiles){
+        List<Tile> honorTiles = handEvaluator.filterSuit(WindTile.class,tiles);
+        List<Tile> colorTiles = handEvaluator.filterSuit(ColorTile.class,tiles);
+        honorTiles.addAll(colorTiles);
+        return tiles.size() == honorTiles.size();
+    }
+
+    public boolean allTerminals(List<Tile> tiles){
+        return tiles.stream().allMatch(z -> z.getTileNumber() == 1 || z.getTileNumber() == 9);
+    }
+
+    public boolean allGreen(List<Tile> tiles){
+
+        List<String> greenTileIDs = tilesFromFile.analyzeString("S23468C1").stream()
+                .map(z -> z.getTileNumber() + z.getSuit().getIdentifier())
+                .collect(Collectors.toList());
+
+        return tiles.stream()
+                .allMatch(z -> greenTileIDs.contains(z.getTileNumber() + z.getSuit().getIdentifier()));
+    }
+
+    public boolean doubleNineGates(List<Tile> tiles, boolean nineWait){
+        return nineGates(tiles) && nineWait;
+    }
+
+    public boolean nineGates(List<Tile> tiles){
+        List<Tile> nineGatesExample = tilesFromFile.analyzeString("S1112345678999");
+        Map<Integer, List<Tile>> nineGatesExampleMap = handEvaluator.findTileCount(nineGatesExample);
+        Map<Integer, List<Tile>> tilesCount = handEvaluator.findTileCount(tiles);
+        boolean hasAllRequiredTiles = nineGatesExampleMap.keySet().stream()
+                .allMatch(z -> {
+                    return tilesCount.get(z).size() >= nineGatesExampleMap.get(z).size();
+                });
+
+        List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
+        List<SetGroup> setGroups = handEvaluator.findSets(tiles);
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(setGroups);
+        groups.addAll(sequenceGroups);
+
+        Pair pair = handEvaluator.findPair(tiles).get();
+        boolean isFlush =  valuationHan.checkFullFlush(groups,pair);
+
+        return hasAllRequiredTiles && isFlush;
+    }
+
+    public boolean fourKans(List<Tile> tiles) {
+        List<SetGroup> setGroups = handEvaluator.findSets(tiles);
+        boolean allSetsAreQuads = setGroups.stream().allMatch(z -> z.isKAN());
+        boolean fourSets = setGroups.size() == 4;
+
+        return allSetsAreQuads && fourSets;
+    }
 }
