@@ -13,6 +13,7 @@ public class YakumanChecker {
     public YakumanChecker(Hand hand){
         this.valuationHan = new ValuationHan();
         this.handEvaluator = new HandEvaluator(hand);
+        this.tilesFromFile = new TilesFromFile();
     }
     public boolean thirtheenOrphans(List<Tile> tiles){
         Pair pair = handEvaluator.findPair(tiles).get();
@@ -21,7 +22,7 @@ public class YakumanChecker {
 
         boolean thirtheenOrphans = thirtheenOrphansExample.stream()
                 .map(z -> z.getTileNumber() + z.getSuit().getIdentifier())
-                .allMatch(z -> tiles.stream().map(x -> x.getTileNumber() + x.getSuit().getIdentifier())
+                .anyMatch(z -> tiles.stream().map(x -> x.getTileNumber() + x.getSuit().getIdentifier())
         .collect(Collectors.toList()).contains(z));
 
 

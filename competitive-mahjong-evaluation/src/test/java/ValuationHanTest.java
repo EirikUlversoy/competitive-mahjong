@@ -39,7 +39,8 @@ public class ValuationHanTest {
         straightSequences = handEvaluator.findMaxValidSequences(straightSequences,straight);
         straightCombinations.addAll(this.straightSequences);
         straightCombinations.addAll(setGroups);
-        Assert.assertEquals(valuationHan.checkFlush(this.straightCombinations),"Flush");
+        Pair pair = handEvaluator.findPair(straight).get();
+        Assert.assertEquals(valuationHan.checkFullFlush(this.straightCombinations,pair),true);
 
         List<Tile> tiles = tilesFromFile.analyzeString("S123456789123W456P111");
         List<SequenceGroup> wrongSequences = handEvaluator.findSequences(tiles);
@@ -49,7 +50,7 @@ public class ValuationHanTest {
         groups.addAll(wrongSequences);
         groups.addAll(wrongSetGroups);
 
-        Assert.assertEquals(valuationHan.checkFlush(groups),"No Flush");
+        Assert.assertEquals(valuationHan.checkFullFlush(groups,pair),false);
 
 
     }

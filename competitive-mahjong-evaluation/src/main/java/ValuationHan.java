@@ -275,7 +275,7 @@ public class ValuationHan {
      */
     public boolean hasHonorSet(List<Group> groups, Suit suit){
         return groups.stream()
-                .filter(z -> z.getSuit() == suit)
+                .filter(z -> z.getFirstMember().getSuit().getIdentifier().equals(suit.getIdentifier()))
                 .count() == 1;
     }
 

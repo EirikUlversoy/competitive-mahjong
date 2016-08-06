@@ -145,8 +145,7 @@ public class HandEvaluator {
      */
     public Optional<Pair> findPair(List<Tile> tiles){
         List<Optional<Pair>> potentialPairs = new ArrayList<>();
-        if(tiles.size() != 14){
-            //potentialPairs.add(Optional.empty());
+        if(tiles.size() <= 13 || tiles.size() >=19 ){
             return Optional.empty();
         }
         List<Tile> wanTiles = filterWan(tiles);
