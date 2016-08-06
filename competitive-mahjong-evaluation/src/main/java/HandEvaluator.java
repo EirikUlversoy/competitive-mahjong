@@ -113,6 +113,49 @@ public class HandEvaluator {
 
         return numberToTile;
     }
+    public Optional<Pair> findPair(List<Tile> tiles){
+        List<Optional<Pair>> potentialPairs = new ArrayList<>();
+
+        List<Tile> wanTiles = filterWan(tiles);
+        List<Tile> souTiles = filterSou(tiles);
+        List<Tile> pinTiles = filterPin(tiles);
+        List<Tile> colorTiles = filterSuit(ColorTile.class, tiles);
+        List<Tile> windTiles = filterSuit(WindTile.class, tiles);
+
+        potentialPairs = findPairInSuit(wanTiles, WanTile.class);
+        potentialPairs.addAll(findPairInSuit(souTiles,SouTile.class));
+        potentialPairs.addAll(findPairInSuit(pinTiles,PinTile.class));
+        potentialPairs.addAll(findPairInSuit(colorTiles,ColorTile.class));
+        potentialPairs.addAll(findPairInSuit(windTiles,WindTile.class));
+
+        potentialPairs.stream().map(z -> z.get()).map(Pair::toString).forEach(System.out::println);
+
+
+    }
+    public List<Optional<Pair>> findPairInSuit(List<Tile> tiles, Class aClass){
+        List<Optional<Pair>> potentialPairs = new ArrayList<>();
+        if(tiles.size() != 14){
+            potentialPairs.add(Optional.empty());
+            return potentialPairs;
+        }
+
+        Map<Integer, List<Tile>> integerTileMap= tiles.stream()
+                .filter(z -> z.getClass() == aClass)
+                .collect(Collectors.groupingBy(Tile::getTileNumber));
+
+        integerTileMap.keySet().stream().map(integerTileMap::get).peek( z -> {
+            if(z.size() == 2){
+                potentialPairs.add(Optional.ofNullable(new Pair(z.get(0),z.get(1))));
+            }
+        });
+        if(potentialPairs.size() == 0){
+            potentialPairs.add(Optional.empty());
+        }
+        return potentialPairs;
+
+
+
+    }
     /**
      * Finds the sequences in the given tile list. The tilelist passed in should be of only one suit.
      * @param tiles
