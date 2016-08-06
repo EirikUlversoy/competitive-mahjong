@@ -12,9 +12,62 @@ public class YakumanChecker {
     private TilesFromFile tilesFromFile;
     public YakumanChecker(Hand hand){
         this.valuationHan = new ValuationHan();
-        this.handEvaluator = new HandEvaluator(hand);
+        this.handEvaluator = new HandEvaluator();
         this.tilesFromFile = new TilesFromFile();
     }
+
+    public String findYakumanIfAny(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
+        if(thirtheenOrphans(tiles)){
+            return "Thirtheen Orphans";
+        }
+
+        if(fourKans(tiles)){
+            return "Four Quads";
+        }
+
+        if(fourConcealedTripletsSingleWait(tiles,singleWait,closed)){
+            return "Four Concealed Triplets With Single Wait";
+        }
+
+        if(fourConcealedTriplets(tiles,closed)){
+            return "Four Concealed Triplets";
+        }
+
+        if(threeBigDragons(tiles)){
+            return "DaiSanGen";
+        }
+
+        if(bigFourWinds(tiles)){
+            return "Big Four Winds";
+        }
+
+        if(littleFourWinds(tiles)){
+            return "Little Four Winds";
+        }
+
+        if(doubleNineGates(tiles,nineWait)){
+            return "Double Nine Gates";
+        }
+
+        if(nineGates(tiles)){
+            return "Nine Gates";
+        }
+
+        if(allHonors(tiles)){
+            return "All Honors";
+        }
+
+        if(allTerminals(tiles)){
+            return "All Terminals";
+        }
+
+        if(allGreen(tiles)){
+            return "All green";
+        }
+
+        return "Not A Yakuman";
+    }
+
     public boolean thirtheenOrphans(List<Tile> tiles){
         Pair pair = handEvaluator.findPair(tiles).get();
 

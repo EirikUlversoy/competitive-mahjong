@@ -24,9 +24,8 @@ public class ValuationHanTest {
         hand = new Hand(1,120);
         hand.initializeHand(tileSet);
         valuationHan = new ValuationHan();
-        this.handEvaluator = new HandEvaluator(hand);
+        this.handEvaluator = new HandEvaluator();
         straight = tilesFromFile.analyzeString("S123456778899C2C2");
-        straight.stream().map(Tile::toString).forEach(System.out::println);
         this.straight = straight;
 
     }
@@ -103,7 +102,7 @@ public class ValuationHanTest {
         groups.addAll(honorGroup);
         groups.addAll(honorGroupSets);
 
-        List<Group> filteredGroups = ValuationHan.filterOutHonors(groups);
+        List<Group> filteredGroups = HandEvaluator.filterOutHonors(groups);
         Assert.assertEquals(filteredGroups.size(),2);
     }
 

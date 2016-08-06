@@ -14,7 +14,7 @@ public class RonChecker {
     RonChecker(Gamerules gamerules, Hand hand){
         this.gamerules = gamerules;
         this.hanEvaluator = new ValuationHan();
-        this.handEvaluator = new HandEvaluator(hand);
+        this.handEvaluator = new HandEvaluator();
     }
 
     public boolean basicValidityCheck(List<Tile> tiles){
@@ -31,7 +31,6 @@ public class RonChecker {
     public boolean sevenPairsCheck(List<Tile> tiles){
         Map<Integer, List<Tile>> integerListMap= handEvaluator.findTileCount(tiles);
 
-        boolean sevenPairs = false;
         List<Integer> integers =  integerListMap.keySet().stream()
                 .filter(z -> integerListMap.get(z).size() == 2)
                 .collect(Collectors.toList());

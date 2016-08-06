@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -10,8 +12,8 @@ public class HandEvaluator {
     private Hand hand;
     private int[] tileNumbers = {1,2,3,4,5,6,7,8,9};
 
-    HandEvaluator(Hand hand){
-        this.hand = hand;
+    HandEvaluator(){
+
     }
 
     /**
@@ -46,7 +48,45 @@ public class HandEvaluator {
                 .collect(Collectors.toList());
         return newTiles;
     }
+    /**
+     * Returns all non-honor groups.
+     * @param groupList
+     * @return
+     */
+    public static List<Group> filterOutHonors(List<Group> groupList){
 
+        List<String> honors = new ArrayList<>();
+        honors.add("Red");
+        honors.add("White");
+        honors.add("Green");
+        honors.add("Wind");
+        honors.add("Color");
+        honors.add("North");
+        honors.add("South");
+        honors.add("West");
+        honors.add("East");
+
+        return groupList.stream()
+                .peek(z -> System.out.println(z.getSecondMember().getSuit().getIdentifier()))
+                .filter(z -> !honors.contains(z.getSuit().getIdentifier()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Filters out the largest suit. Helper function.
+     * @param sequenceGroups
+     * @return
+     */
+    public List<SequenceGroup> filterLargestSuit(List<SequenceGroup> sequenceGroups){
+        Map<String, List<SequenceGroup>> stringListMap =
+                sequenceGroups.stream()
+                        .collect(Collectors.groupingBy(z -> z.getSuit().getIdentifier()));
+
+        return stringListMap.get(stringListMap.keySet().stream().max((z,x) -> stringListMap.get(z).size()).get());
+
+
+
+    }
     /**
      * Finds all sets from a given tile list input. This one takes all suits.
      * @param input
@@ -270,7 +310,7 @@ public class HandEvaluator {
         List<Group> groups = new ArrayList<>();
         groups.addAll(possibleSeqGroups);
 
-        groups = ValuationHan.filterOutHonors(groups);
+        groups = filterOutHonors(groups);
         possibleSeqGroups.clear();
 
         groups.stream().forEach(z -> {
@@ -351,6 +391,28 @@ public class HandEvaluator {
         return validSequences;
     }
 
+    /**
+     * Removing duplicate suitsets and sequences, respectively.
+     * @param setGroups
+     * @return
+     */
+    public List<SetGroup> removeDuplicateSuitSets(List<SetGroup> setGroups){
+        return setGroups.stream().filter(distinctByKey(o -> o.getSuit().getIdentifier())).collect(Collectors.toList());
+    }
+    public List<SequenceGroup> removeDuplicateSuitSequences(List<SequenceGroup> sequenceGroups){
+        return sequenceGroups.stream().filter(distinctByKey(o -> o.getSuit().getIdentifier())).collect(Collectors.toList());
+    }
+
+    /**
+     * Helper function for removing duplicate suitsets in some specific circumstances
+     * @param keyExtractor
+     * @param <T>
+     * @return
+     */
+    public static <T> Predicate<T> distinctByKey(Function<? super T,Object> keyExtractor) {
+        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
 
     }
 

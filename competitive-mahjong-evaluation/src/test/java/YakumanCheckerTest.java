@@ -18,7 +18,7 @@ public class YakumanCheckerTest {
         hand = new Hand(1,120);
         hand.initializeHand(tileSet);
         valuationHan = new ValuationHan();
-        handEvaluator = new HandEvaluator(hand);
+        handEvaluator = new HandEvaluator();
         tilesFromFile = new TilesFromFile();
         yakumanChecker = new YakumanChecker(hand);
     }

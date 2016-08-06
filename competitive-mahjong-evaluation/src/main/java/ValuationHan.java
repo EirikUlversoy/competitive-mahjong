@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class ValuationHan {
     private List<String> honors;
-
+    private HandEvaluator handEvaluator;
     /**
      * Constructor sets up a list of the honor suits. Todo: Switch for class? Why else do I have different tile classes?
      */
@@ -23,6 +23,8 @@ public class ValuationHan {
         honors.add("South");
         honors.add("West");
         honors.add("East");
+
+        handEvaluator = new HandEvaluator();
     }
 
     /**
@@ -34,29 +36,7 @@ public class ValuationHan {
 
     }
 
-    /**
-     * Returns all non-honor groups.
-     * @param groupList
-     * @return
-     */
-    public static List<Group> filterOutHonors(List<Group> groupList){
 
-        List<String> honors = new ArrayList<>();
-        honors.add("Red");
-        honors.add("White");
-        honors.add("Green");
-        honors.add("Wind");
-        honors.add("Color");
-        honors.add("North");
-        honors.add("South");
-        honors.add("West");
-        honors.add("East");
-
-        return groupList.stream()
-                .peek(z -> System.out.println(z.getSecondMember().getSuit().getIdentifier()))
-                .filter(z -> !honors.contains(z.getSuit().getIdentifier()))
-                .collect(Collectors.toList());
-    }
 
     /**
      * Counts the amount of groups of a given class
@@ -91,28 +71,9 @@ public class ValuationHan {
         return groupList.size() == 4;
     }
 
-    /**
-     * Helper function for removing duplicate suitsets in some specific circumstances
-     * @param keyExtractor
-     * @param <T>
-     * @return
-     */
-    public static <T> Predicate<T> distinctByKey(Function<? super T,Object> keyExtractor) {
-        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
-        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }
 
-    /**
-     * Removing duplicate suitsets and sequences, respectively.
-     * @param setGroups
-     * @return
-     */
-    public List<SetGroup> removeDuplicateSuitSets(List<SetGroup> setGroups){
-        return setGroups.stream().filter(distinctByKey(o -> o.getSuit().getIdentifier())).collect(Collectors.toList());
-    }
-    public List<SequenceGroup> removeDuplicateSuitSequences(List<SequenceGroup> sequenceGroups){
-        return sequenceGroups.stream().filter(distinctByKey(o -> o.getSuit().getIdentifier())).collect(Collectors.toList());
-    }
+
+
 
 
     /**
@@ -121,12 +82,11 @@ public class ValuationHan {
      * @return
      */
     public boolean hasTripletColors(List<SetGroup> groupList){
-        List<SetGroup> newGroupList = removeDuplicateSuitSets(groupList);
-        newGroupList.stream().map(Group::toString).forEach(System.out::println);
-
+        List<SetGroup> newGroupList = handEvaluator.removeDuplicateSuitSets(groupList);
         List<Group> groups = new ArrayList<>();
         groups.addAll(newGroupList);
-        groups = filterOutHonors(groups);
+
+        groups = handEvaluator.filterOutHonors(groups);
         boolean threeSuits = groups.stream()
                 .map(z -> z.getSuit().getIdentifier())
                 .distinct()
@@ -149,10 +109,10 @@ public class ValuationHan {
         if(sequenceGroups.size() <= 2){
             return false;
         }
-        List<SequenceGroup> newSequenceGroups = removeDuplicateSuitSequences(sequenceGroups);
+        List<SequenceGroup> newSequenceGroups = handEvaluator.removeDuplicateSuitSequences(sequenceGroups);
         List<Group> newGroups = new ArrayList<>();
         newGroups.addAll(newSequenceGroups);
-        newGroups = ValuationHan.filterOutHonors(newGroups);
+        newGroups = HandEvaluator.filterOutHonors(newGroups);
         return newGroups.stream()
                 .map(z -> z.getFirstMember().getTileNumber())
                 .distinct()
@@ -285,7 +245,7 @@ public class ValuationHan {
      * @return
      */
     public boolean hasChanta(List<Group> groups, Pair pair){
-        groups = ValuationHan.filterOutHonors(groups);
+        groups = HandEvaluator.filterOutHonors(groups);
 
         return pairIsTerminalOrHonor(pair)
                 || allGroupsHaveATerminal(groups)
@@ -334,7 +294,7 @@ public class ValuationHan {
      * @return
      */
     public boolean allTerminalsAndHonors(List<Group> groups, Pair pair){
-        groups = ValuationHan.filterOutHonors(groups);
+        groups = HandEvaluator.filterOutHonors(groups);
         boolean hasFour = groups.size() == 4;
         boolean allGroupsAreSets = groups.stream().allMatch(z -> z.getClass() == SetGroup.class);
         boolean allGroupsHaveATerminal = allGroupsHaveATerminal(groups);
@@ -355,7 +315,7 @@ public class ValuationHan {
         disqualifyingNumbers.add(5);
         disqualifyingNumbers.add(6);
 
-        List<SequenceGroup> newSequenceGroups = filterLargestSuit(sequenceGroups);
+        List<SequenceGroup> newSequenceGroups = handEvaluator.filterLargestSuit(sequenceGroups);
 
         return newSequenceGroups.stream()
                 .map(Group::getThirdMember)
@@ -389,21 +349,7 @@ public class ValuationHan {
     }
 
 
-    /**
-     * Filters out the largest suit. Helper function.
-     * @param sequenceGroups
-     * @return
-     */
-    public List<SequenceGroup> filterLargestSuit(List<SequenceGroup> sequenceGroups){
-        Map<String, List<SequenceGroup>> stringListMap =
-                sequenceGroups.stream()
-                        .collect(Collectors.groupingBy(z -> z.getSuit().getIdentifier()));
 
-        return stringListMap.get(stringListMap.keySet().stream().max((z,x) -> stringListMap.get(z).size()).get());
-
-
-
-    }
 
 
     //public Integer tripletHands(List<Group> groupList){
@@ -446,7 +392,7 @@ public class ValuationHan {
      * @return
      */
     public boolean checkHalfFlush(List<Group> groupList, Pair pair){
-        List<Group> filteredGroupList = filterOutHonors(groupList);
+        List<Group> filteredGroupList = HandEvaluator.filterOutHonors(groupList);
         boolean wanHalfFlush = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
                 && (pairIsGivenSuit(pair,new Suit("Wan")) || pairIsHonorPair(pair));
         boolean pinHalfFlush = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
@@ -475,7 +421,7 @@ public class ValuationHan {
 
         amountOfHan += doraAmount;
 
-        HandEvaluator handEvaluator = new HandEvaluator(hand);
+        HandEvaluator handEvaluator = new HandEvaluator();
 
         Map<Integer, List<Tile>> integerListMap= handEvaluator.findTileCount(hand.getTiles());
 

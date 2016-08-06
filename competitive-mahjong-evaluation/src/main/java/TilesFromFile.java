@@ -54,7 +54,7 @@ public class TilesFromFile {
     }
     public List<Tile> dealWithDuplicates(List<Tile> tiles){
         Hand hand = new Hand(1);
-        HandEvaluator handEvaluator = new HandEvaluator(hand);
+        HandEvaluator handEvaluator = new HandEvaluator();
         List<Tile> newTiles = new ArrayList<>();
         List<Map<Integer, List<Tile>>> maps = new ArrayList<>();
 
