@@ -2,10 +2,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HandEvaluatorTest {
 
@@ -46,6 +43,29 @@ public class HandEvaluatorTest {
         Assert.assertEquals(integerListMap.get(3).size(),4);
         Assert.assertEquals(integerListMap.get(4).size(),2);
 
+    }
+
+    @Test
+    public void findPairsTest(){
+        HandEvaluator handEvaluator = new HandEvaluator(this.hand);
+        List<Tile> tiles = tilesFromFile.analyzeString("S11W123456789C111");
+        List<Tile> fakeTiles = tilesFromFile.analyzeString("S123W123C111V111S45");
+        Optional<Pair> pair = handEvaluator.findPair(tiles);
+        Optional<Pair> incorrectPair = handEvaluator.findPair(fakeTiles);
+        Assert.assertEquals(pair.isPresent(),true);
+        Assert.assertEquals(incorrectPair.isPresent(),false);
+
+
+    }
+
+    @Test
+    public void findPairInSuit(){
+        HandEvaluator handEvaluator = new HandEvaluator(this.hand);
+        List<Tile> tiles = tilesFromFile.analyzeString("S11");
+        List<Optional<Pair>> pairList = handEvaluator.findPairInSuit(tiles,SouTile.class);
+
+        Assert.assertEquals(pairList.size(),1);
+        Assert.assertEquals(pairList.get(0).isPresent(),true);
     }
     @Test
     public void findSequencesTest(){

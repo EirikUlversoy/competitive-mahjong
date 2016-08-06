@@ -14,6 +14,11 @@ public class HandEvaluator {
         this.hand = hand;
     }
 
+    /**
+     * These functions filter out various tiles. TODO: own filter class?
+     * @param tiles
+     * @return
+     */
     public List<Tile> filterSou(List<Tile> tiles){
         List<Tile> souTiles = tiles.stream()
                 .filter(z -> z.getClass() == SouTile.class)
@@ -42,6 +47,11 @@ public class HandEvaluator {
         return newTiles;
     }
 
+    /**
+     * Finds all sets from a given tile list input. This one takes all suits.
+     * @param input
+     * @return
+     */
     public List<SetGroup> findSets( List<Tile> input){
         List<Tile> souTiles = filterSou(input);
         List<Tile> wanTiles = filterWan(input);
@@ -57,6 +67,12 @@ public class HandEvaluator {
 
         return setGroups;
     }
+
+    /**
+     * Find all sets for the given suit
+     * @param input
+     * @return
+     */
     public List<SetGroup> findSetsInSuit( List<Tile> input){
         Map<Integer, Integer> tilenumberToAmount = new HashMap();
         List<SetGroup> sets = new ArrayList<>();
@@ -81,6 +97,12 @@ public class HandEvaluator {
 
     }
 
+    /**
+     * Returns a map where integers point to tilelists. Returns one map only
+     * , meaning that it only takes one suit as input. Todo: Could be made explicit for clarity.
+     * @param tiles
+     * @return
+     */
     public Map<Integer, List<Tile>> findTileCount(List<Tile> tiles){
         Map<Integer, Integer> tilesCount = new HashMap<>();
         Map<Integer, List<Tile>> numberToTile = new HashMap<>();
@@ -113,9 +135,20 @@ public class HandEvaluator {
 
         return numberToTile;
     }
+
+    /**
+     * Finds the pair in the given 14 tile set. If the tileset has less than 14 tiles
+     * it should return an empty optional. There should only be one pair.
+     * Todo: Where to enforce one pair restriction
+     * @param tiles
+     * @return
+     */
     public Optional<Pair> findPair(List<Tile> tiles){
         List<Optional<Pair>> potentialPairs = new ArrayList<>();
-
+        if(tiles.size() != 14){
+            //potentialPairs.add(Optional.empty());
+            return Optional.empty();
+        }
         List<Tile> wanTiles = filterWan(tiles);
         List<Tile> souTiles = filterSou(tiles);
         List<Tile> pinTiles = filterPin(tiles);
@@ -128,29 +161,32 @@ public class HandEvaluator {
         potentialPairs.addAll(findPairInSuit(colorTiles,ColorTile.class));
         potentialPairs.addAll(findPairInSuit(windTiles,WindTile.class));
 
-        potentialPairs.stream().map(z -> z.get()).map(Pair::toString).forEach(System.out::println);
-
-
+        if(potentialPairs.size() == 0){
+            potentialPairs.add(Optional.empty());
+        }
+        return potentialPairs.get(0);
     }
+
+    /**
+     * Finds the pair in the given tile list of the given class/suit
+     * @param tiles
+     * @param aClass
+     * @return
+     */
     public List<Optional<Pair>> findPairInSuit(List<Tile> tiles, Class aClass){
         List<Optional<Pair>> potentialPairs = new ArrayList<>();
-        if(tiles.size() != 14){
-            potentialPairs.add(Optional.empty());
-            return potentialPairs;
-        }
+
 
         Map<Integer, List<Tile>> integerTileMap= tiles.stream()
                 .filter(z -> z.getClass() == aClass)
                 .collect(Collectors.groupingBy(Tile::getTileNumber));
 
-        integerTileMap.keySet().stream().map(integerTileMap::get).peek( z -> {
+        integerTileMap.keySet().stream().map(integerTileMap::get).forEach( z -> {
             if(z.size() == 2){
                 potentialPairs.add(Optional.ofNullable(new Pair(z.get(0),z.get(1))));
             }
         });
-        if(potentialPairs.size() == 0){
-            potentialPairs.add(Optional.empty());
-        }
+
         return potentialPairs;
 
 
@@ -158,12 +194,11 @@ public class HandEvaluator {
     }
     /**
      * Finds the sequences in the given tile list. The tilelist passed in should be of only one suit.
+     * Todo: This function can be cleaned pretty extensively...
      * @param tiles
      * @return
      */
     public List<SequenceGroup> findSequences(List<Tile> tiles){
-        System.out.println("am I here?");
-        tiles.stream().map(Tile::toString).forEach(System.out::println);
         final List<Integer> previousTiles = tiles.stream()
                 .map(Tile::getTileNumber)
                 .collect(Collectors.toList());
@@ -232,10 +267,6 @@ public class HandEvaluator {
             }
         });
 
-        System.out.println("Printing remaining tiles");
-        newMrsTiles.stream().map(Tile::toString).forEach(System.out::println);
-        System.out.println("Printing possible sequence groups");
-        possibleSeqGroups.stream().map(SequenceGroup::toString).forEach(System.out::println);
 
         List<Group> groups = new ArrayList<>();
         groups.addAll(possibleSeqGroups);
@@ -249,6 +280,13 @@ public class HandEvaluator {
         return possibleSeqGroups;
     }
 
+    /**
+     * While the other function finds all *possible* sequences, this one restricts it to a possible number.
+     * It goes from bottom up, which is probably optimal and should give no errors. (for ready hands)
+     * @param possibleSequences
+     * @param tiles
+     * @return
+     */
     public List<SequenceGroup> findMaxValidSequences(List<SequenceGroup> possibleSequences, List<Tile> tiles){
         List<Tile> wanTiles = filterWan(tiles);
         List<Tile> pinTiles = filterPin(tiles);
@@ -264,15 +302,18 @@ public class HandEvaluator {
 
         return newList;
     }
+
+    /**
+     * Helper function for above function, returns max valid sequences from one suit
+     * @param possibleSequences
+     * @param tiles
+     * @return
+     */
     public List<SequenceGroup> findMaxValidSequencesOfSuit(List<SequenceGroup> possibleSequences, List<Tile> tiles){
         List<SequenceGroup> validSequences = new ArrayList<>();
         List<Tile> usedTiles = new ArrayList<>();
 
-        System.out.println("Sequence list before sorting: ");
-        possibleSequences.stream().map(z -> z.getThirdMember().getTileNumber()).forEach(System.out::println);
         Collections.sort(possibleSequences, (SequenceGroup s1, SequenceGroup s2) -> s1.getThirdMember().getTileNumber().compareTo(s2.getThirdMember().getTileNumber()));
-        System.out.println("Sequence list after sorting: ");
-        possibleSequences.stream().map(z -> z.getThirdMember().getTileNumber()).forEach(System.out::println);
 
         possibleSequences.stream().forEach(z -> {
             if(usedTiles.contains(z.getFirstMember()) ||

@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 
 public class ValuationHan {
     private List<String> honors;
+
+    /**
+     * Constructor sets up a list of the honor suits. Todo: Switch for class? Why else do I have different tile classes?
+     */
     public ValuationHan(){
         honors = new ArrayList<>();
         honors.add("Red");
@@ -20,9 +24,21 @@ public class ValuationHan {
         honors.add("West");
         honors.add("East");
     }
+
+    /**
+     * Should output the max han number for a hand.
+     * @param hand
+     * @param groupList
+     */
     public void calculateHan(Hand hand, List<Group> groupList){
 
     }
+
+    /**
+     * Returns all non-honor groups.
+     * @param groupList
+     * @return
+     */
     public static List<Group> filterOutHonors(List<Group> groupList){
 
         List<String> honors = new ArrayList<>();
@@ -42,6 +58,12 @@ public class ValuationHan {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Counts the amount of groups of a given class
+     * @param groupList
+     * @param aClass
+     * @return
+     */
     public Integer groupAmountCounter(List<Group> groupList, Class aClass){
         System.out.println(groupList.get(0).getSecondMember().getClass().toString());
         System.out.println(aClass.toString());
@@ -49,30 +71,55 @@ public class ValuationHan {
         return setGroups.size();
     }
 
+    /**
+     * checks if the given list contains three quad groups
+     * @param groupList
+     * @return
+     */
     public boolean hasThreeQuads(List<SetGroup> groupList){
         return groupList.stream()
                 .filter(SetGroup::isKAN)
                 .collect(Collectors.toList()).size() >= 3 ;
     }
 
+    /**
+     * If there are 4 SetGroups, alltriplets is true..
+     * @param groupList
+     * @return
+     */
     public boolean isAllTriplets(List<SetGroup> groupList){
         return groupList.size() == 4;
     }
 
+    /**
+     * Helper function for removing duplicate suitsets in some specific circumstances
+     * @param keyExtractor
+     * @param <T>
+     * @return
+     */
     public static <T> Predicate<T> distinctByKey(Function<? super T,Object> keyExtractor) {
         Map<Object,Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
+
+    /**
+     * Removing duplicate suitsets and sequences, respectively.
+     * @param setGroups
+     * @return
+     */
     public List<SetGroup> removeDuplicateSuitSets(List<SetGroup> setGroups){
         return setGroups.stream().filter(distinctByKey(o -> o.getSuit().getIdentifier())).collect(Collectors.toList());
     }
-
     public List<SequenceGroup> removeDuplicateSuitSequences(List<SequenceGroup> sequenceGroups){
         return sequenceGroups.stream().filter(distinctByKey(o -> o.getSuit().getIdentifier())).collect(Collectors.toList());
     }
 
 
-
+    /**
+     * Returns true if we have one triplet of every color, example S111W111P111
+     * @param groupList
+     * @return
+     */
     public boolean hasTripletColors(List<SetGroup> groupList){
         List<SetGroup> newGroupList = removeDuplicateSuitSets(groupList);
         newGroupList.stream().map(Group::toString).forEach(System.out::println);
@@ -80,7 +127,6 @@ public class ValuationHan {
         List<Group> groups = new ArrayList<>();
         groups.addAll(newGroupList);
         groups = filterOutHonors(groups);
-        groups.stream().map(Group::toString).forEach(System.out::println);
         boolean threeSuits = groups.stream()
                 .map(z -> z.getSuit().getIdentifier())
                 .distinct()
@@ -94,6 +140,11 @@ public class ValuationHan {
 
     }
 
+    /**
+     * Returns true if there are three sequencegroups with the same tiles, example: S123W123P123
+     * @param sequenceGroups
+     * @return
+     */
     public boolean sameSequenceInThreeSuits( List<SequenceGroup> sequenceGroups){
         if(sequenceGroups.size() <= 2){
             return false;
@@ -109,6 +160,11 @@ public class ValuationHan {
 
     }
 
+    /**
+     * Returns true if we have two sets of identical sequences. Example: S112233W112233
+     * @param sequenceGroups
+     * @return
+     */
     public boolean twoSetsOfIdenticalSequences(List<SequenceGroup> sequenceGroups){
         boolean WAN = oneSetOfIdenticalSequencesSameSuit(sequenceGroups,new Suit("Wan"));
         boolean PIN = oneSetOfIdenticalSequencesSameSuit(sequenceGroups,new Suit("Pin"));
@@ -118,6 +174,12 @@ public class ValuationHan {
 
     }
 
+    /**
+     * Returns true if we have one set of identical sequences of the same suit. Example: S112233
+     * @param sequenceGroups
+     * @param suit
+     * @return
+     */
     public boolean oneSetOfIdenticalSequencesSameSuit(List<SequenceGroup> sequenceGroups, Suit suit){
         List<SequenceGroup> filteredSequenceGroups = sequenceGroups.stream()
                 .filter(z -> z.getSuit().getIdentifier() == suit.getIdentifier())
@@ -130,7 +192,11 @@ public class ValuationHan {
                     .count() == filteredSequenceGroups.size() - 1;
         }
 
-
+    /**
+     * No terminals, no honors. Example: S234567W234567P22
+     * @param groups
+     * @return
+     */
     public boolean hasAllSimples(List<Group> groups){
         List<Integer> disqualifyingNumbers = new ArrayList<>();
         disqualifyingNumbers.add(1);
@@ -145,6 +211,11 @@ public class ValuationHan {
 
     }
 
+    /**
+     * Amount of sets of colors. Distinctions do not matter for them.
+     * @param groups
+     * @return
+     */
     public Integer findColorSetAmount(List<Group> groups){
         Integer colorCount = 0;
         if(hasHonorSet(groups,new Suit("Green"))){
@@ -170,6 +241,13 @@ public class ValuationHan {
     public boolean hasEastWind(List<Group> groups){
         return hasHonorSet(groups,new Suit("East"));
     }
+
+    /**
+     * Finds amount of winds. They have their own functions because their value is different depending on
+     * the given table wind and player wind.
+     * @param groups
+     * @return
+     */
     public Integer findWindSetAmount(List<Group> groups){
         Integer windCount = 0;
         if(hasSouthWind(groups)){
@@ -186,22 +264,44 @@ public class ValuationHan {
         }
         return windCount;
     }
+
+    /**
+     * Finds a set of given honor suit. Used by the color finding function
+     * @param groups
+     * @param suit
+     * @return
+     */
     public boolean hasHonorSet(List<Group> groups, Suit suit){
         return groups.stream()
                 .filter(z -> z.getSuit() == suit)
                 .count() == 1;
     }
 
+    /**
+     * Chanta is a hand where you have a terminal in each set. Honors can be used. Example: S123W123P123789C11
+     * @param groups
+     * @return
+     */
     public boolean hasChanta(List<Group> groups){
         groups = ValuationHan.filterOutHonors(groups);
         return allGroupsHaveATerminal(groups) && (groups.stream().anyMatch(z -> z.getClass() == SequenceGroup.class));
     }
 
+    /**
+     * Helper function for chanta. checks that all given groups have terminal entries within them.
+     * @param groups
+     * @return
+     */
     public boolean allGroupsHaveATerminal(List<Group> groups){
         return groups.stream().allMatch(z -> z.getFirstMember().getTileNumber() == 9
                 || z.getThirdMember().getTileNumber() == 1);
     }
 
+    /**
+     * Same as chanta but has the additional condition of no honors.
+     * @param groups
+     * @return
+     */
     public boolean hasTerminalInEachSet(List<Group> groups){
         boolean noHonors = groups.stream()
                 .noneMatch( z -> honors.contains(z.getSuit().getIdentifier()) );
@@ -210,6 +310,11 @@ public class ValuationHan {
         return noHonors && chanta;
     }
 
+    /**
+     * All terminals hand. Example: S111W111P999C222V22
+     * @param groups
+     * @return
+     */
     public boolean allTerminalsAndHonors(List<Group> groups){
         groups = ValuationHan.filterOutHonors(groups);
         boolean hasFour = groups.size() == 4;
@@ -219,6 +324,11 @@ public class ValuationHan {
         return hasFour && allGroupsAreSets && allGroupsHaveATerminal;
     }
 
+    /**
+     * Checks for a straight in the sequence groups. Example: S123456789
+     * @param sequenceGroups
+     * @return
+     */
     public boolean hasStraight(List<SequenceGroup> sequenceGroups){
 
         List<Integer> disqualifyingNumbers = new ArrayList<>();
@@ -236,6 +346,11 @@ public class ValuationHan {
                 .count() >= 3;
     }
 
+    /**
+     * Filters out the largest suit. Helper function.
+     * @param sequenceGroups
+     * @return
+     */
     public List<SequenceGroup> filterLargestSuit(List<SequenceGroup> sequenceGroups){
         Map<String, List<SequenceGroup>> stringListMap =
                 sequenceGroups.stream()
@@ -253,7 +368,12 @@ public class ValuationHan {
     //}
 
 
-
+    /**
+     * Checks for a flush. Returns half flush if honors are involved, Full flush otherwise, and no flush
+     * if there isnt one.
+     * @param groupList
+     * @return
+     */
     public String checkFlush(List<Group> groupList){
 
         List<Group> filteredGroupList = filterOutHonors(groupList);
@@ -275,6 +395,14 @@ public class ValuationHan {
         return "No Flush";
         }
 
+    /**
+     * Conditions upon winning. Just a template.
+     * @param RICHII Having declared richii
+     * @param doraAmount The amount of Dora tiles.
+     * @param hand Needed for assessing 7 pairs
+     * @param NAGASHI Special hand based on discards.
+     * @return
+     */
     public Integer assessConditions(boolean RICHII, Integer doraAmount, Hand hand, boolean NAGASHI){
         Integer amountOfHan = 0;
         if(RICHII){
