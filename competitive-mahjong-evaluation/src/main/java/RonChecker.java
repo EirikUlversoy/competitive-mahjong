@@ -1,4 +1,8 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Supposed to check if the given hand is in a state ready to go out.
@@ -6,31 +10,33 @@ import java.util.List;
 public class RonChecker {
     private Gamerules gamerules;
     private ValuationHan hanEvaluator;
-
-    RonChecker(Gamerules gamerules){
+    private HandEvaluator handEvaluator;
+    RonChecker(Gamerules gamerules, Hand hand){
         this.gamerules = gamerules;
         this.hanEvaluator = new ValuationHan();
+        this.handEvaluator = new HandEvaluator(hand);
     }
 
-    public boolean checkIfValid(Hand hand, List<Group> groups){
-        if(groups.size() == 4){
-            /*
-            if(hanEvaluator(hand, groups) >= 1){
-                return true;
-            } else if(ValuationFu.calculateFu(hand, groups) >= 40) {
-                    return true;
-                } else {
-                return false;
-            }
-        }
+    public boolean basicValidityCheck(List<Tile> tiles){
+        List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
+        List<SetGroup> setGroups = handEvaluator.findSets(tiles);
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(sequenceGroups);
+        groups.addAll(setGroups);
+        Optional<Pair> pair = handEvaluator.findPair(tiles);
+        return groups.size() == 4 && pair.isPresent();
 
-        if (ValuationHan.sevenPairs(hand)) {
-            return true;
-        } else {
-            return false;
-        }
-        return false;
-        */
     }
-    return false;
-}}
+
+    public boolean sevenPairsCheck(List<Tile> tiles){
+        Map<Integer, List<Tile>> integerListMap= handEvaluator.findTileCount(tiles);
+
+        boolean sevenPairs = false;
+        List<Integer> integers =  integerListMap.keySet().stream()
+                .filter(z -> integerListMap.get(z).size() == 2)
+                .collect(Collectors.toList());
+
+        return integers.size() == 7;
+    }
+
+}

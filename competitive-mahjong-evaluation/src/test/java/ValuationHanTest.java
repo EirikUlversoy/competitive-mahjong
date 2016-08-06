@@ -32,6 +32,7 @@ public class ValuationHanTest {
     }
 
 
+
     @Test
     public void checkFlushFunction(){
         straightSequences = handEvaluator.findSequences(straight);
