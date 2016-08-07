@@ -9,6 +9,7 @@ public class HandEvaluatorTest {
     private TileSet tileSet;
     private Hand hand;
     private TilesFromFile tilesFromFile;
+    private HandEvaluator handEvaluator;
     @BeforeTest
     public void setupTestEnvironment(){
         tileSet = new TileSet();
@@ -16,7 +17,7 @@ public class HandEvaluatorTest {
         hand = new Hand(1,120);
         hand.initializeHand(tileSet);
         tilesFromFile = new TilesFromFile();
-
+        handEvaluator = new HandEvaluator();
     }
 
     @Test
@@ -151,5 +152,15 @@ public class HandEvaluatorTest {
 
         Assert.assertEquals(groups.size(),4);
 
+    }
+
+    @Test
+    public void testGroupAmountCounterReturnsCorrectAnswer(){
+        List<Tile> tiles = tilesFromFile.analyzeString("S123456789123");
+        List<SequenceGroup> straightSequences = handEvaluator.findSequences(tiles);
+        straightSequences = handEvaluator.findMaxValidSequences(straightSequences,tiles);
+        List<Group> groups = new ArrayList<>();
+        groups.addAll(straightSequences);
+        Assert.assertEquals(handEvaluator.groupAmountCounter(groups,SouTile.class).intValue(),4);
     }
 }

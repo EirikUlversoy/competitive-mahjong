@@ -10,12 +10,24 @@ import java.util.stream.Collectors;
  */
 public class HandEvaluator {
     private Hand hand;
+    private List<String> honors;
     private int[] tileNumbers = {1,2,3,4,5,6,7,8,9};
 
     HandEvaluator(){
-
+        honors = new ArrayList<>();
+        honors.add("Red");
+        honors.add("White");
+        honors.add("Green");
+        honors.add("Wind");
+        honors.add("Color");
+        honors.add("North");
+        honors.add("South");
+        honors.add("West");
+        honors.add("East");
     }
-
+    public List<String> getHonors(){
+        return this.honors;
+    }
     /**
      * These functions filter out various tiles. TODO: own filter class?
      * @param tiles
@@ -414,5 +426,137 @@ public class HandEvaluator {
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
+    /**
+     * Counts the amount of groups of a given class
+     * @param groupList
+     * @param aClass
+     * @return
+     */
+    public Integer groupAmountCounter(List<Group> groupList, Class aClass){
+        System.out.println(groupList.get(0).getSecondMember().getClass().toString());
+        System.out.println(aClass.toString());
+        List<Group> setGroups = groupList.stream().filter(z -> z.getSecondMember().getClass().toString() != aClass.toString()).collect(Collectors.toList());
+        return setGroups.size();
+    }
+
+    /**
+     * Amount of sets of colors. Distinctions do not matter for them.
+     * @param groups
+     * @return
+     */
+    public Integer findColorSetAmount(List<Group> groups){
+        Integer colorCount = 0;
+        if(hasHonorSet(groups,new Suit("Green"))){
+            colorCount += 1;
+        }
+        if(hasHonorSet(groups,new Suit("White"))){
+            colorCount += 1;
+        }
+        if(hasHonorSet(groups,new Suit("Red"))){
+            colorCount += 1;
+        }
+        return colorCount;
+    }
+    public boolean hasSouthWind(List<Group> groups){
+        return hasHonorSet(groups,new Suit("South"));
+    }
+    public boolean hasNorthWind(List<Group> groups){
+        return hasHonorSet(groups,new Suit("North"));
+    }
+    public boolean hasWestWind(List<Group> groups){
+        return hasHonorSet(groups,new Suit("West"));
+    }
+    public boolean hasEastWind(List<Group> groups){
+        return hasHonorSet(groups,new Suit("East"));
+    }
+
+    /**
+     * Finds amount of winds. They have their own functions because their value is different depending on
+     * the given table wind and player wind.
+     * @param groups
+     * @return
+     */
+    public Integer findWindSetAmount(List<Group> groups){
+        Integer windCount = 0;
+        if(hasSouthWind(groups)){
+            windCount+=1;
+        }
+        if(hasEastWind(groups)){
+            windCount+=1;
+        }
+        if(hasNorthWind(groups)){
+            windCount+=1;
+        }
+        if(hasWestWind(groups)){
+            windCount+=1;
+        }
+        return windCount;
+    }
+
+    /**
+     * Finds a set of given honor suit. Used by the color finding function
+     * @param groups
+     * @param suit
+     * @return
+     */
+    public boolean hasHonorSet(List<Group> groups, Suit suit){
+        return groups.stream()
+                .filter(z -> z.getFirstMember().getSuit().getIdentifier().equals(suit.getIdentifier()))
+                .count() == 1;
+    }
+
+
+
+    /**
+     * Helper function. checks if the pair is a terminal or an honor tile. Only checks one of the tiles because
+     * a pair must have two equal(except for id of course) tiles in it.
+     * @param pair
+     * @return
+     */
+    public boolean pairIsTerminalOrHonor(Pair pair){
+        return honors.contains(pair.getFirstMember().getSuit().getIdentifier())
+                || pair.getFirstMember().getTileNumber() == 1
+                || pair.getFirstMember().getTileNumber() == 9;
+
+    }
+    /**
+     * Helper function for chanta. checks that all given groups have terminal entries within them.
+     * @param groups
+     * @return
+     */
+    public boolean allGroupsHaveATerminal(List<Group> groups){
+        return groups.stream().allMatch(z -> z.getFirstMember().getTileNumber() == 9
+                || z.getThirdMember().getTileNumber() == 1);
+    }
+
+
+    /**
+     * Checks if the pair is a dragon pair
+     * @param pair
+     * @return
+     */
+    public boolean pairIsDragonPair(Pair pair){
+        List<String> dragons = new ArrayList<>();
+        dragons.add("Red");
+        dragons.add("White");
+        dragons.add("Green");
+
+        return dragons.contains(pair.getFirstMember().getSuit().getIdentifier());
+    }
+
+    /**
+     * Checks if pair is of the given suit.
+     */
+    public boolean pairIsGivenSuit(Pair pair, Suit suit){
+        return pair.getFirstMember().getSuit().getIdentifier().equals(suit.getIdentifier());
+    }
+
+    public boolean pairIsGivenClass(Pair pair, Class aClass){
+        return pair.getFirstMember().getClass() == aClass;
+    }
+
+    public boolean pairIsHonorPair(Pair pair){
+        return honors.contains(pair.getFirstMember().getSuit().getIdentifier());
+    }
     }
 

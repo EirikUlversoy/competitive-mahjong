@@ -10,10 +10,13 @@ public class YakumanChecker {
     private ValuationHan valuationHan;
     private HandEvaluator handEvaluator;
     private TilesFromFile tilesFromFile;
+    private HandIdentifier handIdentifier;
+
     public YakumanChecker(Hand hand){
         this.valuationHan = new ValuationHan();
         this.handEvaluator = new HandEvaluator();
         this.tilesFromFile = new TilesFromFile();
+        this.handIdentifier = new HandIdentifier();
     }
 
     public String findYakumanIfAny(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
@@ -79,7 +82,7 @@ public class YakumanChecker {
         .collect(Collectors.toList()).contains(z));
 
 
-        return thirtheenOrphans && valuationHan.pairIsTerminalOrHonor(pair);
+        return thirtheenOrphans && handEvaluator.pairIsTerminalOrHonor(pair);
 
     }
 
@@ -97,7 +100,7 @@ public class YakumanChecker {
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
         List<Group> groups = new ArrayList<>();
         groups.addAll(setGroups);
-        return valuationHan.findColorSetAmount(groups) == 3;
+        return handEvaluator.findColorSetAmount(groups) == 3;
     }
 
     public boolean littleFourWinds(List<Tile> tiles){
@@ -105,14 +108,14 @@ public class YakumanChecker {
         List<Group> groups = new ArrayList<>();
         groups.addAll(setGroups);
         Optional<Pair> pair = handEvaluator.findPair(tiles);
-        return valuationHan.findWindSetAmount(groups) == 3 && valuationHan.pairIsGivenClass(pair.get(),WindTile.class);
+        return handEvaluator.findWindSetAmount(groups) == 3 && handEvaluator.pairIsGivenClass(pair.get(),WindTile.class);
     }
 
     public boolean bigFourWinds(List<Tile> tiles){
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
         List<Group> groups = new ArrayList<>();
         groups.addAll(setGroups);
-        return valuationHan.findWindSetAmount(groups) == 4;
+        return handEvaluator.findWindSetAmount(groups) == 4;
     }
 
     public boolean allHonors(List<Tile> tiles){
@@ -156,7 +159,7 @@ public class YakumanChecker {
         groups.addAll(sequenceGroups);
 
         Pair pair = handEvaluator.findPair(tiles).get();
-        boolean isFlush =  valuationHan.checkFullFlush(groups,pair);
+        boolean isFlush =  handIdentifier.checkFullFlush(groups,pair);
 
         return hasAllRequiredTiles && isFlush;
     }
