@@ -1,11 +1,87 @@
+import java.security.acl.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class HandIdentifier {
     private HandEvaluator handEvaluator;
+    private YakumanChecker yakumanChecker;
     public HandIdentifier(){
         handEvaluator = new HandEvaluator();
+    }
+
+    public List<String> identifyMatchingHands(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
+        List<SetGroup> setGroups = handEvaluator.findSets(tiles);
+        List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
+        sequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroups,tiles);
+
+        List<Group> allGroups = new ArrayList<>();
+        allGroups.addAll(setGroups);
+        allGroups.addAll(sequenceGroups);
+
+        List<String> matchingHands = new ArrayList<>();
+        Pair pair = handEvaluator.findPair(tiles).get();
+
+        String yakuman = yakumanChecker.findYakumanIfAny(tiles,singleWait,closed,nineWait);
+
+        if(yakuman != "No Yakuman"){
+            matchingHands.add(yakuman);
+            return matchingHands;
+        }
+
+        if(hasChanta(allGroups,pair)){
+            matchingHands.add("Chanta");
+        }
+
+        if(hasThreeQuads(setGroups)){
+            matchingHands.add("Three Quads");
+        }
+
+        if(isAllTriplets(setGroups)){
+            matchingHands.add("All Triplets");
+        }
+
+        if(hasTripletColors(setGroups)){
+            matchingHands.add("Triplet In Each Color");
+        }
+
+        if(sameSequenceInThreeSuits(sequenceGroups)){
+            matchingHands.add("Sequence In Each Suit");
+        }
+
+        if(twoSetsOfIdenticalSequences(sequenceGroups)){
+            matchingHands.add("Two Sets Of Identical Sequences");
+        }
+
+        if(hasAllSimples(allGroups,pair)){
+            matchingHands.add("All Simples");
+        }
+
+        if(hasTerminalInEachSet(allGroups,pair)){
+            matchingHands.add("Terminal In Each Set");
+        }
+
+        if(allTerminalsAndHonors(allGroups,pair)){
+            matchingHands.add("All Terminals And Honors");
+        }
+
+        if(hasStraight(sequenceGroups)){
+            matchingHands.add("Straight");
+        }
+
+        if(hasHalfFlush(allGroups,pair)){
+            matchingHands.add("Half Flush");
+        }
+
+        if(hasFullFlush(allGroups,pair)){
+            matchingHands.add("Full Flush");
+        }
+
+        if(hasThreeLittleDragons(allGroups,pair)){
+            matchingHands.add("Three Little Dragons");
+        }
+
+        return matchingHands;
     }
     /**
      * Chanta is a hand where you have a terminal in each set. Honors can be used. Example: S123W123P123789C11
@@ -191,7 +267,7 @@ public class HandIdentifier {
      * @param groupList
      * @return
      */
-    public boolean checkHalfFlush(List<Group> groupList, Pair pair){
+    public boolean hasHalfFlush(List<Group> groupList, Pair pair){
         List<Group> filteredGroupList = HandEvaluator.filterOutHonors(groupList);
         boolean wanHalfFlush = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
                 && (handEvaluator.pairIsGivenSuit(pair,new Suit("Wan")) || handEvaluator.pairIsHonorPair(pair));
@@ -220,7 +296,7 @@ public class HandIdentifier {
      * @param groupList
      * @return
      */
-    public boolean checkFullFlush(List<Group> groupList, Pair pair){
+    public boolean hasFullFlush(List<Group> groupList, Pair pair){
         boolean WAN = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Wan"));
         boolean PIN = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")

@@ -159,7 +159,7 @@ public class YakumanChecker {
         groups.addAll(sequenceGroups);
 
         Pair pair = handEvaluator.findPair(tiles).get();
-        boolean isFlush =  handIdentifier.checkFullFlush(groups,pair);
+        boolean isFlush =  handIdentifier.hasFullFlush(groups,pair);
 
         return hasAllRequiredTiles && isFlush;
     }
