@@ -32,7 +32,7 @@ public class RonChecker {
         HandIdentifier handIdentifier = new HandIdentifier();
         List<String> matchingHands = handIdentifier.identifyMatchingHands(tiles,singleWait,closed,nineWait);
 
-        return matchingHands.isEmpty();
+        return !matchingHands.isEmpty();
 
     }
     public boolean hasSevenPairs(List<Tile> tiles){
