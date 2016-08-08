@@ -17,7 +17,7 @@ public class RonChecker {
         this.handEvaluator = new HandEvaluator();
     }
 
-    public boolean basicValidityCheck(List<Tile> tiles){
+    public boolean handIsValid(List<Tile> tiles){
         List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
         List<Group> groups = new ArrayList<>();
@@ -28,7 +28,14 @@ public class RonChecker {
 
     }
 
-    public boolean sevenPairsCheck(List<Tile> tiles){
+    public boolean handMeetsMinimumValue(List<Tile> tiles, Pair pair, Integer minimumHandValue, boolean singleWait, boolean nineWait, boolean closed ){
+        HandIdentifier handIdentifier = new HandIdentifier();
+        List<String> matchingHands = handIdentifier.identifyMatchingHands(tiles,singleWait,closed,nineWait);
+
+        return matchingHands.isEmpty();
+
+    }
+    public boolean hasSevenPairs(List<Tile> tiles){
         Map<Integer, List<Tile>> integerListMap= handEvaluator.findTileCount(tiles);
 
         List<Integer> integers =  integerListMap.keySet().stream()
@@ -37,5 +44,7 @@ public class RonChecker {
 
         return integers.size() == 7;
     }
+
+
 
 }
