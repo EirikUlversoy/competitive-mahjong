@@ -19,56 +19,61 @@ public class YakumanChecker {
         this.handIdentifier = new HandIdentifier();
     }
 
-    public String findYakumanIfAny(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
+    public List<String> findYakumanIfAny(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
+        List<String> yakumanMatches = new ArrayList<>();
         if(thirtheenOrphans(tiles)){
-            return "Thirtheen Orphans";
+            yakumanMatches.add("Thirtheen Orphans");
         }
 
         if(fourKans(tiles)){
-            return "Four Quads";
+            yakumanMatches.add("Four Kans");
+
         }
 
         if(fourConcealedTripletsSingleWait(tiles,singleWait,closed)){
-            return "Four Concealed Triplets With Single Wait";
+            yakumanMatches.add("Four Concealed Triplets With Single Wait");
+
         }
 
         if(fourConcealedTriplets(tiles,closed)){
-            return "Four Concealed Triplets";
+            yakumanMatches.add("Four Concealed Triplets");
+
         }
 
         if(threeBigDragons(tiles)){
-            return "DaiSanGen";
+            yakumanMatches.add("Three Big Dragons");
+
         }
 
         if(bigFourWinds(tiles)){
-            return "Big Four Winds";
+            yakumanMatches.add("Big Four Winds");
         }
 
         if(littleFourWinds(tiles)){
-            return "Little Four Winds";
+            yakumanMatches.add("Little Four Winds");
         }
 
         if(doubleNineGates(tiles,nineWait)){
-            return "Double Nine Gates";
+            yakumanMatches.add("Double Nine Gates");
         }
 
         if(nineGates(tiles)){
-            return "Nine Gates";
+            yakumanMatches.add("Nine Gates");
         }
 
         if(allHonors(tiles)){
-            return "All Honors";
+            yakumanMatches.add("All Honors");
         }
 
         if(allTerminals(tiles)){
-            return "All Terminals";
+            yakumanMatches.add("All Terminals");
         }
 
         if(allGreen(tiles)){
-            return "All green";
+            yakumanMatches.add("All Green");
         }
-
-        return "Not A Yakuman";
+        yakumanMatches.add("Not A Yakuman");
+        return yakumanMatches;
     }
 
     public boolean thirtheenOrphans(List<Tile> tiles){
