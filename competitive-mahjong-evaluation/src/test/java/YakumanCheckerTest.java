@@ -20,7 +20,7 @@ public class YakumanCheckerTest {
         valuationHan = new ValuationHan();
         handEvaluator = new HandEvaluator();
         tilesFromFile = new TilesFromFile();
-        yakumanChecker = new YakumanChecker(hand);
+        yakumanChecker = new YakumanChecker(new HandIdentifier());
     }
 
     @Test

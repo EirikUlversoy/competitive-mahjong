@@ -8,6 +8,7 @@ public class HandIdentifier {
     private YakumanChecker yakumanChecker;
     public HandIdentifier(){
         handEvaluator = new HandEvaluator();
+        yakumanChecker = new YakumanChecker(this);
     }
 
     public List<String> identifyMatchingHands(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
@@ -22,11 +23,13 @@ public class HandIdentifier {
         List<String> matchingHands = new ArrayList<>();
         Pair pair = handEvaluator.findPair(tiles).get();
 
-        String yakuman = yakumanChecker.findYakumanIfAny(tiles,singleWait,closed,nineWait);
+        List<String> matchingYakumanHands = new ArrayList<>();
 
-        if(yakuman != "No Yakuman"){
-            matchingHands.add(yakuman);
-            return matchingHands;
+        matchingYakumanHands = yakumanChecker.findYakumanIfAny(tiles,singleWait,closed,nineWait);
+
+        if(!matchingYakumanHands.contains("No Yakuman")){
+            matchingHands.addAll(matchingYakumanHands);
+            //return matchingHands;
         }
 
         if(hasChanta(allGroups,pair)){

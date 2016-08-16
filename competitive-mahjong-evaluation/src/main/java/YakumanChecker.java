@@ -12,18 +12,18 @@ public class YakumanChecker {
     private TilesFromFile tilesFromFile;
     private HandIdentifier handIdentifier;
 
-    public YakumanChecker(Hand hand){
+    public YakumanChecker(HandIdentifier handIdentifier){
         this.valuationHan = new ValuationHan();
         this.handEvaluator = new HandEvaluator();
         this.tilesFromFile = new TilesFromFile();
-        this.handIdentifier = new HandIdentifier();
+        this.handIdentifier = handIdentifier;
     }
 
     public List<String> findYakumanIfAny(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
         List<String> yakumanMatches = new ArrayList<>();
-        if(thirtheenOrphans(tiles)){
-            yakumanMatches.add("Thirtheen Orphans");
-        }
+        //if(thirtheenOrphans(tiles)){
+        //    yakumanMatches.add("Thirtheen Orphans");
+        //}
 
         if(fourKans(tiles)){
             yakumanMatches.add("Four Kans");
@@ -73,6 +73,7 @@ public class YakumanChecker {
             yakumanMatches.add("All Green");
         }
         yakumanMatches.add("Not A Yakuman");
+        System.out.println("here?");
         return yakumanMatches;
     }
 
