@@ -95,8 +95,8 @@ public class HandIdentifier {
         groups = HandEvaluator.filterOutHonors(groups);
 
         return handEvaluator.pairIsTerminalOrHonor(pair)
-                || handEvaluator.allGroupsHaveATerminal(groups)
-                && (groups.stream().anyMatch(z -> z.getClass() == SequenceGroup.class));
+                && handEvaluator.allGroupsHaveATerminal(groups);
+               // && (groups.stream().anyMatch(z -> z.getClass() == SequenceGroup.class));
 
     }
 
@@ -156,6 +156,9 @@ public class HandIdentifier {
         List<Group> newGroups = new ArrayList<>();
         newGroups.addAll(newSequenceGroups);
         newGroups = HandEvaluator.filterOutHonors(newGroups);
+        if(newGroups.size() <= 2){
+            return false;
+        }
         return newGroups.stream()
                 .map(z -> z.getFirstMember().getTileNumber())
                 .distinct()

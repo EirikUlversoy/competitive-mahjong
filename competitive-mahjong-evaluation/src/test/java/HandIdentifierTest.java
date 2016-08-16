@@ -33,7 +33,32 @@ public class HandIdentifierTest {
     }
 
 
+    @Test
+    public void checkChantaFunction(){
+        List<Tile> correctTiles = tilesFromFile.analyzeString("S123W123P123S123C2C2");
+        List<Tile> incorrectTiles = tilesFromFile.analyzeString("S123456P123W123C2C2");
 
+        List<SequenceGroup> cSequenceGroups = handEvaluator.findSequences(correctTiles);
+        List<SequenceGroup> iSequenceGroups = handEvaluator.findSequences(incorrectTiles);
+        cSequenceGroups = handEvaluator.findMaxValidSequences(cSequenceGroups,correctTiles);
+        iSequenceGroups = handEvaluator.findMaxValidSequences(iSequenceGroups,incorrectTiles);
+        List<SetGroup> cSetGroups = handEvaluator.findSets(correctTiles);
+        List<SetGroup> iSetGroups = handEvaluator.findSets(incorrectTiles);
+
+        Pair cPair = handEvaluator.findPair(correctTiles).get();
+
+        List<Group> correctGroups = new ArrayList<>();
+        correctGroups.addAll(cSequenceGroups);
+        correctGroups.addAll(cSetGroups);
+
+        List<Group> inCorrectGroups = new ArrayList<>();
+        inCorrectGroups.addAll(iSequenceGroups);
+        inCorrectGroups.addAll(iSetGroups);
+
+        Assert.assertTrue(handIdentifier.hasChanta(correctGroups,cPair));
+        Assert.assertFalse(handIdentifier.hasChanta(inCorrectGroups,cPair));
+
+    }
     @Test
     public void checkFlushFunction(){
         straightSequences = handEvaluator.findSequences(straight);
@@ -118,7 +143,8 @@ public class HandIdentifierTest {
     @Test
     public void sameSequenceInThreeSuitsTest(){
         List<Tile> tiles = tilesFromFile.analyzeString("S123W123P123");
-        List<Tile> incorrectTiles = tilesFromFile.analyzeString("S123W123C1C2C3");
+        List<Tile> incorrectTiles = tilesFromFile.analyzeString("S123456789123C2C2");
+        //List<Tile> incorrectTiles = tilesFromFile.analyzeString("S123W123C1C2C3");
         List<Tile> correctTiles = tilesFromFile.analyzeString("S1234W123P1234V1V2V3");
 
         List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
@@ -128,9 +154,9 @@ public class HandIdentifierTest {
         Assert.assertTrue(handIdentifier.sameSequenceInThreeSuits(sequenceGroups));
 
         List<SequenceGroup> sequenceGroupsIncorrect = handEvaluator.findSequences(incorrectTiles);
-        Assert.assertEquals(sequenceGroupsIncorrect.size(),2);
+        //Assert.assertEquals(sequenceGroupsIncorrect.size(),2);
         sequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroupsIncorrect,incorrectTiles);
-        Assert.assertEquals(sequenceGroupsIncorrect.size(),2);
+        //Assert.assertEquals(sequenceGroupsIncorrect.size(),2);
         Assert.assertFalse(handIdentifier.sameSequenceInThreeSuits(sequenceGroupsIncorrect));
 
         List<SequenceGroup> sequenceGroupsCorrect = handEvaluator.findMaxValidSequences(handEvaluator.findSequences(correctTiles),correctTiles);
