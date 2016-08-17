@@ -215,6 +215,32 @@ public class HandEvaluator {
         if(potentialPairs.size() == 0){
             potentialPairs.add(Optional.empty());
         }
+
+        if(potentialPairs.size() >= 1){
+            List<SequenceGroup> sequenceGroups = this.findSequences(tiles);
+            List<SetGroup> setGroups = this.findSets(tiles);
+            sequenceGroups = this.findMaxValidSequences(sequenceGroups,tiles);
+
+            List<Tile> tilesToMatch = new ArrayList<>();
+
+            for (SequenceGroup sequenceGroup : sequenceGroups){
+                tilesToMatch.add(sequenceGroup.getFirstMember());
+                tilesToMatch.add(sequenceGroup.getSecondMember());
+                tilesToMatch.add(sequenceGroup.getThirdMember());
+
+            }
+
+            for (SetGroup setGroup : setGroups){
+                tilesToMatch.add(setGroup.getFirstMember());
+            }
+            potentialPairs = potentialPairs.stream()
+                    .filter(z -> {
+                        return tilesToMatch.stream()
+                                .map(x -> x.getTileNumber()+x.getSuit().getIdentifier())
+                                .noneMatch(x -> x.equals(z.get().getFirstMember().getTileNumber()+z.get().getFirstMember().getSuit().getIdentifier()));
+                    })
+                    .collect(Collectors.toList());
+        }
         return potentialPairs.get(0);
     }
 

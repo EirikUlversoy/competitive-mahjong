@@ -21,9 +21,9 @@ public class YakumanChecker {
 
     public List<String> findYakumanIfAny(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
         List<String> yakumanMatches = new ArrayList<>();
-        //if(thirtheenOrphans(tiles)){
-        //    yakumanMatches.add("Thirtheen Orphans");
-        //}
+        if(thirtheenOrphans(tiles)){
+            yakumanMatches.add("Thirtheen Orphans");
+        }
 
         if(fourKans(tiles)){
             yakumanMatches.add("Four Kans");
@@ -81,14 +81,26 @@ public class YakumanChecker {
         Pair pair = handEvaluator.findPair(tiles).get();
 
         List<Tile> thirtheenOrphansExample = tilesFromFile.analyzeString("V1234C1234S19W19P19");
+        boolean didContain = false;
+        boolean listDidNotContain = false;
+        for (Tile tile : tiles){
+            didContain = thirtheenOrphansExample.contains(tile);
+            if(didContain){
+                listDidNotContain = true;
+            }
+        }
 
-        boolean thirtheenOrphans = thirtheenOrphansExample.stream()
+        boolean onlyTwoOfOne = tiles.stream()
                 .map(z -> z.getTileNumber() + z.getSuit().getIdentifier())
-                .anyMatch(z -> tiles.stream().map(x -> x.getTileNumber() + x.getSuit().getIdentifier())
-        .collect(Collectors.toList()).contains(z));
+                .distinct()
+                .count() == 13;
+        //boolean thirtheenOrphans = thirtheenOrphansExample.stream()
+        //        .map(z -> z.getTileNumber() + z.getSuit().getIdentifier())
+        //        .allMatch(z -> tiles.stream().map(x -> x.getTileNumber() + x.getSuit().getIdentifier())
+        //.collect(Collectors.toList()).contains(z));
 
 
-        return thirtheenOrphans && handEvaluator.pairIsTerminalOrHonor(pair);
+        return !listDidNotContain && onlyTwoOfOne && handEvaluator.pairIsTerminalOrHonor(pair);
 
     }
 
