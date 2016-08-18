@@ -74,6 +74,7 @@ public class ValuationHan {
                 .map(z -> { if(closed) {
                     return z.getValue_closed();
                 } else if(!closed){
+                    System.out.println(z.toString());
                     return z.getValue_open();
                 }  else {
                     return 0;

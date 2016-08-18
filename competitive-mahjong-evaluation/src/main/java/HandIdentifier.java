@@ -23,6 +23,7 @@ public class HandIdentifier {
         List<String> matchingHands = new ArrayList<>();
         Pair pair = handEvaluator.findPair(tiles).get();
 
+
         List<String> matchingYakumanHands = new ArrayList<>();
 
         matchingYakumanHands = yakumanChecker.findYakumanIfAny(tiles,singleWait,closed,nineWait);

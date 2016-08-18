@@ -79,7 +79,6 @@ public class HandEvaluator {
         honors.add("East");
 
         return groupList.stream()
-                .peek(z -> System.out.println(z.getSecondMember().getSuit().getIdentifier()))
                 .filter(z -> !honors.contains(z.getSuit().getIdentifier()))
                 .collect(Collectors.toList());
     }
@@ -200,6 +199,10 @@ public class HandEvaluator {
         if(tiles.size() <= 13 || tiles.size() >=19 ){
             return Optional.empty();
         }
+
+        List<SequenceGroup> sequenceGroups = this.findMaxValidSequences(this.findSequences(tiles),tiles);
+        List<SetGroup> setGroups = this.findSets(tiles);
+
         List<Tile> wanTiles = filterWan(tiles);
         List<Tile> souTiles = filterSou(tiles);
         List<Tile> pinTiles = filterPin(tiles);
@@ -217,11 +220,34 @@ public class HandEvaluator {
         }
 
         if(potentialPairs.size() >= 1){
-
+            List<Tile> usedTiles = this.decomposeGroups(sequenceGroups,setGroups);
+            potentialPairs.stream()
+                    .filter(z -> z.isPresent())
+            .filter(z -> !usedTiles.contains(z.get().getFirstMember()))
+            .filter(z -> !usedTiles.contains(z.get().getSecondMember()));
         }
         return potentialPairs.get(0);
     }
 
+    public List<Tile> decomposeGroups(List<SequenceGroup> sequenceGroups, List<SetGroup> setGroups){
+        List<Tile> tiles = new ArrayList<>();
+        sequenceGroups.stream()
+                .forEach( z -> {
+                    tiles.add(z.getFirstMember());
+                    tiles.add(z.getSecondMember());
+                    tiles.add(z.getThirdMember());
+                });
+
+        setGroups.stream()
+                .forEach( z -> {
+                    tiles.add(z.getFirstMember());
+                    tiles.add(z.getSecondMember());
+                    tiles.add(z.getThirdMember());
+                    tiles.add(z.getFourthMember());
+                });
+
+        return tiles;
+    }
     /**
      * Finds the pair in the given tile list of the given class/suit
      * @param tiles
@@ -231,7 +257,7 @@ public class HandEvaluator {
     public List<Optional<Pair>> findPairInSuit(List<Tile> tiles, Class aClass){
         List<Optional<Pair>> potentialPairs = new ArrayList<>();
 
-        
+
 
         Map<Integer, List<Tile>> integerTileMap= tiles.stream()
                 .filter(z -> z.getClass() == aClass)
@@ -242,6 +268,7 @@ public class HandEvaluator {
                 potentialPairs.add(Optional.ofNullable(new Pair(z.get(0),z.get(1))));
             }
         });
+
 
         return potentialPairs;
 
@@ -438,8 +465,8 @@ public class HandEvaluator {
      * @return
      */
     public Integer groupAmountCounter(List<Group> groupList, Class aClass){
-        System.out.println(groupList.get(0).getSecondMember().getClass().toString());
-        System.out.println(aClass.toString());
+        //System.out.println(groupList.get(0).getSecondMember().getClass().toString());
+        //System.out.println(aClass.toString());
         List<Group> setGroups = groupList.stream().filter(z -> z.getSecondMember().getClass().toString() != aClass.toString()).collect(Collectors.toList());
         return setGroups.size();
     }

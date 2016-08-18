@@ -23,6 +23,9 @@ public class SetGroup extends Group {
         return KAN;
     }
 
+    public Tile getFourthMember(){
+        return FourthMember.orElse(new Tile());
+    }
     public String toString(){
         String returnString = "";
         returnString = returnString.concat(FirstMember.toString()).concat(" + "+SecondMember.toString())

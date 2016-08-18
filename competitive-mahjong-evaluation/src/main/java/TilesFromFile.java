@@ -30,7 +30,7 @@ public class TilesFromFile {
 
         List<String> strings= new ArrayList<>();
         List<List<Tile>> tileLists = new ArrayList<>();
-        System.out.println(System.getProperty("user.dir"));
+        //System.out.println(System.getProperty("user.dir"));
         File file = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\samplehands");
         Files.lines(Paths.get(System.getProperty("user.dir")+"\\src\\test\\resources\\samplehands"))
                 .filter(z -> !z.contains("#"))
@@ -40,7 +40,7 @@ public class TilesFromFile {
             tileLists.add(analyzeString(string));
         }
 
-        System.out.println(tileLists.toString());
+       //System.out.println(tileLists.toString());
 
 
         return tileLists;

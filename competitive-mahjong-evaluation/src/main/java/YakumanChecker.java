@@ -78,6 +78,7 @@ public class YakumanChecker {
     }
 
     public boolean thirtheenOrphans(List<Tile> tiles){
+
         Pair pair = handEvaluator.findPair(tiles).get();
 
         List<Tile> thirtheenOrphansExample = tilesFromFile.analyzeString("V1234C1234S19W19P19");
@@ -107,6 +108,7 @@ public class YakumanChecker {
     public boolean fourConcealedTriplets(List<Tile> tiles, boolean closed){
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
         Optional<Pair> pair = handEvaluator.findPair(tiles);
+
         return setGroups.size() == 4 && pair.isPresent() && closed;
     }
 
@@ -125,8 +127,8 @@ public class YakumanChecker {
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
         List<Group> groups = new ArrayList<>();
         groups.addAll(setGroups);
-        Optional<Pair> pair = handEvaluator.findPair(tiles);
-        return handEvaluator.findWindSetAmount(groups) == 3 && handEvaluator.pairIsGivenClass(pair.get(),WindTile.class);
+        Pair pair = handEvaluator.findPair(tiles).get();
+        return handEvaluator.findWindSetAmount(groups) == 3 && handEvaluator.pairIsGivenClass(pair,WindTile.class);
     }
 
     public boolean bigFourWinds(List<Tile> tiles){
@@ -177,6 +179,7 @@ public class YakumanChecker {
         groups.addAll(sequenceGroups);
 
         Pair pair = handEvaluator.findPair(tiles).get();
+
         boolean isFlush =  handIdentifier.hasFullFlush(groups,pair);
 
         return hasAllRequiredTiles && isFlush;

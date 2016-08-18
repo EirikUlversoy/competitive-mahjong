@@ -79,6 +79,18 @@ public class HandIdentifierTest {
 
         Assert.assertEquals(handIdentifier.hasFullFlush(groups,pair),false);
 
+        List<Tile> testTiles = tilesFromFile.analyzeString("S123456789123C1C1");
+        List<SequenceGroup> testSequences = handEvaluator.findSequences(testTiles);
+        testSequences = handEvaluator.findMaxValidSequences(testSequences,testTiles);
+
+        List<SetGroup> setGroupsList = handEvaluator.findSets(testTiles);
+
+        List<Group> allGroups = new ArrayList<>();
+        allGroups.addAll(testSequences);
+        allGroups.addAll(setGroupsList);
+        Pair icPair = handEvaluator.findPair(testTiles).get();
+        Assert.assertFalse(handIdentifier.hasFullFlush(allGroups,icPair));
+
 
     }
 
