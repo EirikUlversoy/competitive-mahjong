@@ -67,7 +67,6 @@ public class HandIdentifierTest {
         straightCombinations.addAll(this.straightSequences);
         straightCombinations.addAll(setGroups);
         Pair pair = handEvaluator.findPair(straight).get();
-        Assert.assertEquals(handIdentifier.hasFullFlush(this.straightCombinations,pair),true);
 
         List<Tile> tiles = tilesFromFile.analyzeString("S123456789123W456P111");
         List<SequenceGroup> wrongSequences = handEvaluator.findSequences(tiles);
@@ -76,7 +75,7 @@ public class HandIdentifierTest {
         List<Group> groups = new ArrayList<>();
         groups.addAll(wrongSequences);
         groups.addAll(wrongSetGroups);
-
+        System.out.println(pair.toString());
         Assert.assertEquals(handIdentifier.hasFullFlush(groups,pair),false);
 
         List<Tile> testTiles = tilesFromFile.analyzeString("S123456789123C1C1");

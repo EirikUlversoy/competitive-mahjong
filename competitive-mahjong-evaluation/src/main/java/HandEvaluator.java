@@ -218,15 +218,23 @@ public class HandEvaluator {
         if(potentialPairs.size() == 0){
             potentialPairs.add(Optional.empty());
         }
+        List<Optional<Pair>> newOptionalPairs = new ArrayList<>();
+
 
         if(potentialPairs.size() >= 1){
             List<Tile> usedTiles = this.decomposeGroups(sequenceGroups,setGroups);
-            potentialPairs.stream()
-                    .filter(z -> z.isPresent())
-            .filter(z -> !usedTiles.contains(z.get().getFirstMember()))
-            .filter(z -> !usedTiles.contains(z.get().getSecondMember()));
+            for (Optional<Pair> pair : potentialPairs){
+                if(pair.isPresent()) {
+                    if (!usedTiles.contains(pair.get().getFirstMember()) && !usedTiles.contains(pair.get().getSecondMember())) {
+                        newOptionalPairs.add(pair);
+                    }
+                }
+            }
         }
-        return potentialPairs.get(0);
+        if(newOptionalPairs.size() == 0){
+            newOptionalPairs.add(Optional.empty());
+        }
+        return newOptionalPairs.get(0);
     }
 
     public List<Tile> decomposeGroups(List<SequenceGroup> sequenceGroups, List<SetGroup> setGroups){

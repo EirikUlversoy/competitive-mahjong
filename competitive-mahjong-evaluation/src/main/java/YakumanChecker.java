@@ -178,9 +178,12 @@ public class YakumanChecker {
         groups.addAll(setGroups);
         groups.addAll(sequenceGroups);
 
-        Pair pair = handEvaluator.findPair(tiles).get();
 
-        boolean isFlush =  handIdentifier.hasFullFlush(groups,pair);
+        Optional<Pair> pair = handEvaluator.findPair(tiles);
+        boolean isFlush = false;
+        if(pair.isPresent()){
+            isFlush =  handIdentifier.hasFullFlush(groups,pair.get());
+        }
 
         return hasAllRequiredTiles && isFlush;
     }

@@ -38,8 +38,8 @@ public class ValuationHanTest {
     public void testCalculateHan(){
         TilesFromFile tilesFromFile = new TilesFromFile();
         List<Tile> tiles = tilesFromFile.analyzeString("S123456789123C2C2");
-        Assert.assertEquals(valuationHan.calculateHan(tiles,false).intValue(),1);
-        Assert.assertEquals(valuationHan.calculateHan(tiles,true).intValue(),3);
+        Assert.assertEquals(valuationHan.calculateHan(tiles,false).intValue(),3);
+        Assert.assertEquals(valuationHan.calculateHan(tiles,true).intValue(),5);
 
     }
 }
