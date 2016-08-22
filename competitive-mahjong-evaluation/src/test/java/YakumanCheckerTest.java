@@ -3,6 +3,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class YakumanCheckerTest {
     private ValuationHan valuationHan;

@@ -169,7 +169,7 @@ public class YakumanChecker {
         Map<Integer, List<Tile>> tilesCount = handEvaluator.findTileCount(tiles);
         boolean hasAllRequiredTiles = nineGatesExampleMap.keySet().stream()
                 .allMatch(z -> {
-                    return tilesCount.get(z).size() >= nineGatesExampleMap.get(z).size();
+                    return tilesCount.get(z).size() >= nineGatesExampleMap.get(z).size()+1;
                 });
 
         List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);

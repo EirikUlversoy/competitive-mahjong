@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,12 +8,14 @@ public class Group {
     protected Tile SecondMember;
     protected Tile ThirdMember;
     protected Optional<Tile> FourthMember;
+    protected boolean closed;
 
-    Group(Tile firstMember, Tile secondMember, Tile thirdMember){
+    public Group(Tile firstMember, Tile secondMember, Tile thirdMember){
         this.FirstMember = firstMember;
         this.SecondMember = secondMember;
         this.ThirdMember = thirdMember;
         this.suit = secondMember.getSuit();
+        this.closed = true;
     }
 
     public Group(List<Tile> tiles){
@@ -27,8 +30,23 @@ public class Group {
         }
         this.suit = SecondMember.getSuit();
 
+        this.closed = true;
+    }
 
+    public SetGroup getSetGroup (){
+        List<Tile> tiles = new ArrayList<>();
+        tiles.add(FirstMember);
+        tiles.add(SecondMember);
+        tiles.add(ThirdMember);
+        tiles.add(FourthMember.orElse(new Tile()));
+        return new SetGroup(tiles);
+    }
+    public void setStatus(boolean status){
+        this.closed = status;
+    }
 
+    public boolean getStatus(){
+        return this.closed;
     }
 
     public Suit getSuit() {
