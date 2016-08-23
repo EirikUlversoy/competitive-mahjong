@@ -4,7 +4,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class ValuationFu {
-    
+
     private Integer winningHandFu = 20;
     private Integer menzen_kafu = 10;
     private Integer single_wait = 2;
@@ -58,6 +58,8 @@ public class ValuationFu {
             }
 
         }
+
+        return fuValue;
 
 
     }
