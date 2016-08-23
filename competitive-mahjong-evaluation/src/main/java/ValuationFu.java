@@ -16,22 +16,22 @@ public class ValuationFu {
     public ValuationFu(){
         this.handEvaluator = new HandEvaluator();
     }
-    public void calculateFu(Hand hand, List<Group> groupList){
+    public void calculateFu(Hand hand){
     }
 
-    public Integer fuFromMelds(Pair pair, List<Group> groupList, Integer prevailingWind, Integer seatWind){
-        Integer fuValue = groupList.stream()
-                .filter(z -> z.getClass() == SetGroup.class)
-                .map(z -> z.getSetGroup())
+    public Integer fuFromMelds(Hand hand, Integer prevailingWind, Integer seatWind){
+        Pair pair = hand.getPair();
+
+        Integer fuValue = hand.getSetGroups().stream()
                 .map(z -> {
                     if(z.isKAN()){
                         if(z.getFirstMember().getClass() == ColorTile.class
                                 || z.getFirstMember().getClass() == WindTile.class
                                 || z.getFirstMember().getTileNumber() == 9
                                 || z.getFirstMember().getTileNumber() == 1){
-                            return z.getStatus() ? 32 : 16;
+                            return z.isClosed() ? 32 : 16;
                         } else {
-                            return z.getStatus() ? 16 : 8;
+                            return z.isClosed() ? 16 : 8;
 
                         }
 
@@ -40,9 +40,9 @@ public class ValuationFu {
                                 || z.getFirstMember().getClass() == WindTile.class
                                 || z.getFirstMember().getTileNumber() == 9
                                 || z.getFirstMember().getTileNumber() == 1){
-                            return z.getStatus() ? 8 : 4;
+                            return z.isClosed() ? 8 : 4;
                         } else {
-                            return z.getStatus() ? 4 : 2;
+                            return z.isClosed() ? 4 : 2;
                     }
                 }})
                 .mapToInt(i -> i).sum();

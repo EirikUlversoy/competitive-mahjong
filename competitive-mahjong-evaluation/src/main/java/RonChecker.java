@@ -20,17 +20,16 @@ public class RonChecker {
     public boolean handIsValid(List<Tile> tiles){
         List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(sequenceGroups);
-        groups.addAll(setGroups);
         Optional<Pair> pair = handEvaluator.findPair(tiles);
-        return groups.size() == 4 && pair.isPresent();
+        return setGroups.size() + sequenceGroups.size() == 4 && pair.isPresent();
 
     }
 
     public boolean handMeetsMinimumValue(List<Tile> tiles, Pair pair, Integer minimumHandValue, boolean singleWait, boolean nineWait, boolean closed ){
         HandIdentifier handIdentifier = new HandIdentifier();
-        List<String> matchingHands = handIdentifier.identifyMatchingHands(tiles,singleWait,closed,nineWait);
+        Hand hand = new Hand(4);
+        hand.setTiles(tiles);
+        List<String> matchingHands = handIdentifier.identifyMatchingHands(hand,singleWait,closed,nineWait);
 
         return !matchingHands.isEmpty();
 

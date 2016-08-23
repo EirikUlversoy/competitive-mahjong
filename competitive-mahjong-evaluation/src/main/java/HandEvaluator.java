@@ -62,10 +62,9 @@ public class HandEvaluator {
     }
     /**
      * Returns all non-honor groups.
-     * @param groupList
      * @return
      */
-    public static List<Group> filterOutHonors(List<Group> groupList){
+    public static List<SetGroup> filterOutHonors(List<SetGroup> setGroups){
 
         List<String> honors = new ArrayList<>();
         honors.add("Red");
@@ -78,7 +77,7 @@ public class HandEvaluator {
         honors.add("West");
         honors.add("East");
 
-        return groupList.stream()
+        return setGroups.stream()
                 .filter(z -> !honors.contains(z.getSuit().getIdentifier()))
                 .collect(Collectors.toList());
     }
@@ -264,7 +263,7 @@ public class HandEvaluator {
      */
     public List<Optional<Pair>> findPairInSuit(List<Tile> tiles, Class aClass){
         List<Optional<Pair>> potentialPairs = new ArrayList<>();
-
+        
 
 
         Map<Integer, List<Tile>> integerTileMap= tiles.stream()
@@ -326,7 +325,6 @@ public class HandEvaluator {
         mrsTiles.addAll(sinkingSequenceTiles);
         mrsTiles.addAll(risingSequenceTiles);
 
-        List<Tile> newMrsTiles = mrsTiles.stream().distinct().collect(Collectors.toList());
 
         Map<Integer, List<Tile>> tilemap = this.findTileCount(mrsTiles);
 
@@ -359,8 +357,7 @@ public class HandEvaluator {
         });
 
 
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(possibleSeqGroups);
+        List<SetGroup> groups = new ArrayList<>();
 
         groups = filterOutHonors(groups);
         possibleSeqGroups.clear();
@@ -468,45 +465,46 @@ public class HandEvaluator {
 
     /**
      * Counts the amount of groups of a given class
-     * @param groupList
      * @param aClass
      * @return
      */
-    public Integer groupAmountCounter(List<Group> groupList, Class aClass){
-        //System.out.println(groupList.get(0).getSecondMember().getClass().toString());
-        //System.out.println(aClass.toString());
-        List<Group> setGroups = groupList.stream().filter(z -> z.getSecondMember().getClass().toString() != aClass.toString()).collect(Collectors.toList());
-        return setGroups.size();
+    public Integer groupAmountCounterSets(List<SetGroup> setGroups, Class aClass){
+        List<SetGroup> newSetGroups = setGroups.stream().filter(z -> z.getSecondMember().getClass().toString() != aClass.toString()).collect(Collectors.toList());
+        return newSetGroups.size();
+    }
+
+    public Integer groupAmountCounterSequences(List<SequenceGroup> sequenceGroups, Class aClass){
+        List<SequenceGroup> newSetGroups = sequenceGroups.stream().filter(z -> z.getSecondMember().getClass().toString() != aClass.toString()).collect(Collectors.toList());
+        return newSetGroups.size();
     }
 
     /**
      * Amount of sets of colors. Distinctions do not matter for them.
-     * @param groups
      * @return
      */
-    public Integer findColorSetAmount(List<Group> groups){
+    public Integer findColorSetAmount(List<SetGroup> setGroups){
         Integer colorCount = 0;
-        if(hasHonorSet(groups,new Suit("Green"))){
+        if(hasHonorSet(setGroups,new Suit("Green"))){
             colorCount += 1;
         }
-        if(hasHonorSet(groups,new Suit("White"))){
+        if(hasHonorSet(setGroups,new Suit("White"))){
             colorCount += 1;
         }
-        if(hasHonorSet(groups,new Suit("Red"))){
+        if(hasHonorSet(setGroups,new Suit("Red"))){
             colorCount += 1;
         }
         return colorCount;
     }
-    public boolean hasSouthWind(List<Group> groups){
+    public boolean hasSouthWind(List<SetGroup> groups){
         return hasHonorSet(groups,new Suit("South"));
     }
-    public boolean hasNorthWind(List<Group> groups){
+    public boolean hasNorthWind(List<SetGroup> groups){
         return hasHonorSet(groups,new Suit("North"));
     }
-    public boolean hasWestWind(List<Group> groups){
+    public boolean hasWestWind(List<SetGroup> groups){
         return hasHonorSet(groups,new Suit("West"));
     }
-    public boolean hasEastWind(List<Group> groups){
+    public boolean hasEastWind(List<SetGroup> groups){
         return hasHonorSet(groups,new Suit("East"));
     }
 
@@ -516,7 +514,7 @@ public class HandEvaluator {
      * @param groups
      * @return
      */
-    public Integer findWindSetAmount(List<Group> groups){
+    public Integer findWindSetAmount(List<SetGroup> groups){
         Integer windCount = 0;
         if(hasSouthWind(groups)){
             windCount+=1;
@@ -539,7 +537,7 @@ public class HandEvaluator {
      * @param suit
      * @return
      */
-    public boolean hasHonorSet(List<Group> groups, Suit suit){
+    public boolean hasHonorSet(List<SetGroup> groups, Suit suit){
         return groups.stream()
                 .filter(z -> z.getFirstMember().getSuit().getIdentifier().equals(suit.getIdentifier()))
                 .count() == 1;
@@ -564,7 +562,14 @@ public class HandEvaluator {
      * @param groups
      * @return
      */
-    public boolean allGroupsHaveATerminal(List<Group> groups){
+    public boolean allSetGroupsHaveATerminal(List<SetGroup> groups){
+        return groups.stream().allMatch(z -> z.getFirstMember().getClass() == ColorTile.class
+                || z.getThirdMember().getTileNumber() == 1
+                || z.getThirdMember().getTileNumber() == 9
+                || z.getFirstMember().getClass() == WindTile.class) ;
+    }
+
+    public boolean allSequenceGroupsHaveATerminal(List<SequenceGroup> groups){
         return groups.stream().allMatch(z -> z.getFirstMember().getTileNumber() == 9
                 || z.getThirdMember().getTileNumber() == 1);
     }

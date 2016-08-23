@@ -118,24 +118,18 @@ public class YakumanChecker {
 
     public boolean threeBigDragons(List<Tile> tiles){
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(setGroups);
-        return handEvaluator.findColorSetAmount(groups) == 3;
+        return handEvaluator.findColorSetAmount(setGroups) == 3;
     }
 
     public boolean littleFourWinds(List<Tile> tiles){
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(setGroups);
         Pair pair = handEvaluator.findPair(tiles).get();
-        return handEvaluator.findWindSetAmount(groups) == 3 && handEvaluator.pairIsGivenClass(pair,WindTile.class);
+        return handEvaluator.findWindSetAmount(setGroups) == 3 && handEvaluator.pairIsGivenClass(pair,WindTile.class);
     }
 
     public boolean bigFourWinds(List<Tile> tiles){
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(setGroups);
-        return handEvaluator.findWindSetAmount(groups) == 4;
+        return handEvaluator.findWindSetAmount(setGroups) == 4;
     }
 
     public boolean allHonors(List<Tile> tiles){
@@ -174,15 +168,12 @@ public class YakumanChecker {
 
         List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(setGroups);
-        groups.addAll(sequenceGroups);
 
 
         Optional<Pair> pair = handEvaluator.findPair(tiles);
         boolean isFlush = false;
         if(pair.isPresent()){
-            isFlush =  handIdentifier.hasFullFlush(groups,pair.get());
+            isFlush =  handIdentifier.hasFullFlush(setGroups,sequenceGroups,pair.get());
         }
 
         return hasAllRequiredTiles && isFlush;
