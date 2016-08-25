@@ -317,7 +317,7 @@ public class HandEvaluator {
 
         List<Tile> sinkingSequenceTiles = tiles.stream()
                 .filter(z -> previousTiles.contains(z.getTileNumber()-1) && previousTiles.contains(z.getTileNumber()-2))
-                .peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()-1),z, new Tile(z.getTileNumber()-2))))
+                .peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()-1,4,z.getSuit()),z, new Tile(z.getTileNumber()-2,4,z.getSuit()))))
                 .collect(Collectors.toList());
 
         List<Tile> mrsTiles = new ArrayList<>();

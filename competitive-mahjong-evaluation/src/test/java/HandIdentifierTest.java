@@ -107,8 +107,8 @@ public class HandIdentifierTest {
 
     @Test
     public void testFilterOutHonors(){
-        List<Tile> listWithHonors = tilesFromFile.analyzeString("S123456C111C222");
-        List<Tile> listWithHonorsForSets = tilesFromFile.analyzeString("S123456C111C222");
+        List<Tile> listWithHonors = tilesFromFile.analyzeString("S123332C111C222");
+        List<Tile> listWithHonorsForSets = tilesFromFile.analyzeString("S123332C111C222");
 
         List<SequenceGroup> honorGroup = handEvaluator.findSequences(listWithHonors);
         honorGroup = handEvaluator.findMaxValidSequences(honorGroup,listWithHonors);
@@ -116,7 +116,7 @@ public class HandIdentifierTest {
 
 
         List<SetGroup> filteredGroups = HandEvaluator.filterOutHonors(honorGroupSets);
-        Assert.assertEquals(filteredGroups.size(),2);
+        Assert.assertEquals(filteredGroups.size(),1);
     }
 
     @Test

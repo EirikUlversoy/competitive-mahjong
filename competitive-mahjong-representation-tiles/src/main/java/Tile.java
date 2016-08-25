@@ -32,6 +32,14 @@ public class Tile {
         this.tileId = tileId;
     }
 
+    public Tile(Integer tileNumber, Integer tileId, Suit suit){
+        this.tileNumber = tileNumber;
+        this.identifier = "not set";
+        this.position = new Position();
+        this.tileId = tileId;
+        this.suit = suit;
+    }
+
 
     public Suit getSuit() {
         return suit;

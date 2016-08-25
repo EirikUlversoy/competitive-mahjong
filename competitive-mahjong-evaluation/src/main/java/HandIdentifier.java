@@ -184,8 +184,9 @@ public class HandIdentifier {
      * @return
      */
     public boolean oneSetOfIdenticalSequencesSameSuit(List<SequenceGroup> sequenceGroups, Suit suit){
+        System.out.println(sequenceGroups.get(0).getSuit().getIdentifier() + " and " + suit.getIdentifier());
         List<SequenceGroup> filteredSequenceGroups = sequenceGroups.stream()
-                .filter(z -> z.getSuit().getIdentifier() == suit.getIdentifier())
+                .filter(z -> z.getSuit().getIdentifier().equals(suit.getIdentifier()))
                 .collect(Collectors.toList());
 
         return filteredSequenceGroups.size() >= 2 && filteredSequenceGroups.stream()
@@ -254,14 +255,31 @@ public class HandIdentifier {
         disqualifyingNumbers.add(3);
         disqualifyingNumbers.add(5);
         disqualifyingNumbers.add(6);
+        List<SetGroup> setGroups = new ArrayList<>();
+
+        List<Tile> tiles = handEvaluator.decomposeGroups(sequenceGroups,setGroups);
+        List<SequenceGroup> wanSequences = handEvaluator.findSequences(handEvaluator.filterWan(tiles));
+        List<SequenceGroup> pinSequences = handEvaluator.findSequences(handEvaluator.filterPin(tiles));
+        List<SequenceGroup> souSequences = handEvaluator.findSequences(handEvaluator.filterSou(tiles));
 
         List<SequenceGroup> newSequenceGroups = handEvaluator.filterLargestSuit(sequenceGroups);
 
-        return newSequenceGroups.stream()
+        boolean wanHasStraight = wanSequences.stream()
                 .map(SequenceGroup::getThirdMember)
                 .filter(z -> !disqualifyingNumbers.contains(z.getTileNumber()))
                 .distinct()
                 .count() >= 3;
+        boolean pinHasStraight = pinSequences.stream()
+                .map(SequenceGroup::getThirdMember)
+                .filter(z -> !disqualifyingNumbers.contains(z.getTileNumber()))
+                .distinct()
+                .count() >= 3;
+        boolean souHasStraight = souSequences.stream()
+                .map(SequenceGroup::getThirdMember)
+                .filter(z -> !disqualifyingNumbers.contains(z.getTileNumber()))
+                .distinct()
+                .count() >= 3;
+        return wanHasStraight || pinHasStraight || souHasStraight;
     }
 
     /**

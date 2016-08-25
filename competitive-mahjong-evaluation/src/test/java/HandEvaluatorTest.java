@@ -147,7 +147,7 @@ public class HandEvaluatorTest {
         Assert.assertEquals(validSequenceGroups.size(),2);
         List<SetGroup> setGroups = handEvaluator.findSets(tiles2);
 
-        Assert.assertEquals(setGroups.size()+sequenceGroups.size(),4);
+        Assert.assertEquals(setGroups.size()+validSequenceGroups.size(),4);
 
     }
 
