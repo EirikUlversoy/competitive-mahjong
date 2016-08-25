@@ -163,20 +163,20 @@ public class YakumanChecker {
         Map<Integer, List<Tile>> tilesCount = handEvaluator.findTileCount(tiles);
         boolean hasAllRequiredTiles = nineGatesExampleMap.keySet().stream()
                 .allMatch(z -> {
-                    return tilesCount.get(z).size() >= nineGatesExampleMap.get(z).size()+1;
+                    return tilesCount.get(z).size() >= nineGatesExampleMap.get(z).size();
                 });
+        boolean thereIsAPair = tilesCount.keySet().stream()
+                .map(z -> tilesCount.get(z))
+                .anyMatch(z -> z.size() == 2);
 
         List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
 
-
         Optional<Pair> pair = handEvaluator.findPair(tiles);
         boolean isFlush = false;
-        if(pair.isPresent()){
-            isFlush =  handIdentifier.hasFullFlush(setGroups,sequenceGroups,pair.get());
-        }
+        isFlush =  handIdentifier.hasFullFlush(setGroups,sequenceGroups,pair.get());
 
-        return hasAllRequiredTiles && isFlush;
+        return hasAllRequiredTiles && isFlush && thereIsAPair;
     }
 
     public boolean fourKans(List<Tile> tiles) {

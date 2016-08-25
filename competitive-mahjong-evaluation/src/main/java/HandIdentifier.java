@@ -175,6 +175,8 @@ public class HandIdentifier {
 
         return WAN && (PIN || SOU) || (PIN && SOU);
 
+
+
     }
 
     /**

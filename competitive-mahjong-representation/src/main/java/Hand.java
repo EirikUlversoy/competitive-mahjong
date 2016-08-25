@@ -9,7 +9,13 @@ public class Hand {
     private List<SequenceGroup> sequenceGroups = new ArrayList<>();
 
     private Pair pair;
-    private boolean closed = true;
+    public boolean closed = true;
+    public boolean tsumo = true;
+    public boolean menzenkafu = true;
+    public boolean singleWait = true;
+    public boolean openPinfu = true;
+    public boolean sevenPairs = true;
+
     private Integer handsize = 13;
     Hand(Integer playerId){
         this.playerId = playerId;
@@ -19,6 +25,18 @@ public class Hand {
     public List<SetGroup> getSetGroups() {
         return setGroups;
     }
+
+    public void setConditions(boolean closed, boolean tsumo, boolean menzenkafu, boolean singleWait, boolean openPinfu
+    , boolean sevenPairs){
+        this.closed = closed;
+        this.tsumo = tsumo;
+        this.menzenkafu = menzenkafu;
+        this.singleWait = singleWait;
+        this.openPinfu = openPinfu;
+        this.sevenPairs = sevenPairs;
+
+    }
+
 
     public void setSetGroups(List<SetGroup> setGroups) {
         this.setGroups = setGroups;
