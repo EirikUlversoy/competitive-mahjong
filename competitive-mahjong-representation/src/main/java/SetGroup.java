@@ -9,7 +9,7 @@ public class SetGroup{
     private Tile FirstMember;
     private Tile SecondMember;
     private Tile ThirdMember;
-    private Optional<Tile> FourthMember;
+    private Optional<Tile> FourthMember = Optional.empty();
     private boolean closed = true;
     private Suit suit;
 
@@ -49,6 +49,13 @@ public class SetGroup{
     }
 
     public SetGroup(List<Tile> tiles){
+        this.FirstMember = tiles.get(0);
+        this.SecondMember = tiles.get(1);
+        this.ThirdMember = tiles.get(2);
+        this.suit = FirstMember.getSuit();
+        if(tiles.size() == 4){
+            this.FourthMember = Optional.ofNullable(tiles.get(3));
+        }
         try {
             if(FourthMember.isPresent()){
                 this.KAN = true;

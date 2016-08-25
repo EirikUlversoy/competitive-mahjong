@@ -357,14 +357,11 @@ public class HandEvaluator {
         });
 
 
-        List<SetGroup> groups = new ArrayList<>();
 
-        groups = filterOutHonors(groups);
-        possibleSeqGroups.clear();
 
-        groups.stream().forEach(z -> {
-            possibleSeqGroups.add(new SequenceGroup(z.getFirstMember(),z.getSecondMember(),z.getThirdMember()));
-        });
+        //groups.stream().forEach(z -> {
+        //    possibleSeqGroups.add(new SequenceGroup(z.getFirstMember(),z.getSecondMember(),z.getThirdMember()));
+        //});
         return possibleSeqGroups;
     }
 

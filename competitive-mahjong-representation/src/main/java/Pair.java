@@ -18,7 +18,7 @@ public class Pair {
     public Pair(Tile firstMember, Tile secondMember){
         this.firstMember = firstMember;
         this.secondMember = secondMember;
-
+        this.suit = firstMember.getSuit();
     }
 
     @Override

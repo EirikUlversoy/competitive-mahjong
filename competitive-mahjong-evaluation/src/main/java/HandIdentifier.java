@@ -91,11 +91,11 @@ public class HandIdentifier {
      * @return
      */
     public boolean hasChanta(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){
-        List<SetGroup> groups = HandEvaluator.filterOutHonors(setGroups);
+        //List<SetGroup> groups = HandEvaluator.filterOutHonors(setGroups);
 
 
         return handEvaluator.pairIsTerminalOrHonor(pair)
-                && handEvaluator.allSetGroupsHaveATerminal(groups)
+                && handEvaluator.allSetGroupsHaveATerminal(setGroups)
                 && handEvaluator.allSequenceGroupsHaveATerminal(sequenceGroups)
                 && sequenceGroups.size() >= 1;
 
@@ -306,7 +306,7 @@ public class HandIdentifier {
      * @return
      */
     public boolean hasFullFlush(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){
-        boolean WANSets = setGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
+        boolean WANSets = setGroups.stream().allMatch(group -> group.getFirstMember().getSuit().getIdentifier() == "Wan")
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Wan"));
         boolean PINSets = setGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Pin"));
