@@ -1,6 +1,7 @@
 import java.security.acl.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class HandIdentifier {
@@ -11,14 +12,12 @@ public class HandIdentifier {
         yakumanChecker = new YakumanChecker(this);
     }
 
-    public List<String> identifyMatchingHands(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
+    public List<String> identifyMatchingHands(Hand hand, boolean singleWait, boolean closed, boolean nineWait){
+        List<Tile> tiles = hand.getTiles();
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
         List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
         sequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroups,tiles);
 
-        List<Group> allGroups = new ArrayList<>();
-        allGroups.addAll(setGroups);
-        allGroups.addAll(sequenceGroups);
 
         List<String> matchingHands = new ArrayList<>();
         Pair pair = handEvaluator.findPair(tiles).get();
@@ -33,7 +32,7 @@ public class HandIdentifier {
             //return matchingHands;
         }
 
-        if(hasChanta(allGroups,pair)){
+        if(hasChanta(setGroups,sequenceGroups,pair)){
             matchingHands.add("Chanta");
         }
 
@@ -57,15 +56,15 @@ public class HandIdentifier {
             matchingHands.add("Two Sets Of Identical Sequences");
         }
 
-        if(hasAllSimples(allGroups,pair)){
+        if(hasAllSimples(setGroups,sequenceGroups,pair)){
             matchingHands.add("All Simples");
         }
 
-        if(hasTerminalInEachSet(allGroups,pair)){
+        if(hasTerminalInEachSet(setGroups,sequenceGroups,pair)){
             matchingHands.add("Terminal In Each Set");
         }
 
-        if(allTerminalsAndHonors(allGroups,pair)){
+        if(allTerminalsAndHonors(setGroups,sequenceGroups,pair)){
             matchingHands.add("All Terminals And Honors");
         }
 
@@ -73,15 +72,15 @@ public class HandIdentifier {
             matchingHands.add("Straight");
         }
 
-        if(hasHalfFlush(allGroups,pair)){
+        if(hasHalfFlush(setGroups,sequenceGroups,pair)){
             matchingHands.add("Half Flush");
         }
 
-        if(hasFullFlush(allGroups,pair)){
+        if(hasFullFlush(setGroups,sequenceGroups,pair)){
             matchingHands.add("Full Flush");
         }
 
-        if(hasThreeLittleDragons(allGroups,pair)){
+        if(hasThreeLittleDragons(setGroups,sequenceGroups,pair)){
             matchingHands.add("Three Little Dragons");
         }
 
@@ -89,15 +88,16 @@ public class HandIdentifier {
     }
     /**
      * Chanta is a hand where you have a terminal in each set. Honors can be used. Example: S123W123P123789C11
-     * @param groups
      * @return
      */
-    public boolean hasChanta(List<Group> groups, Pair pair){
-        groups = HandEvaluator.filterOutHonors(groups);
+    public boolean hasChanta(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){
+        //List<SetGroup> groups = HandEvaluator.filterOutHonors(setGroups);
+
 
         return handEvaluator.pairIsTerminalOrHonor(pair)
-                && handEvaluator.allGroupsHaveATerminal(groups);
-               // && (groups.stream().anyMatch(z -> z.getClass() == SequenceGroup.class));
+                && handEvaluator.allSetGroupsHaveATerminal(setGroups)
+                && handEvaluator.allSequenceGroupsHaveATerminal(sequenceGroups)
+                && sequenceGroups.size() >= 1;
 
     }
 
@@ -127,18 +127,17 @@ public class HandIdentifier {
      */
     public boolean hasTripletColors(List<SetGroup> groupList){
         List<SetGroup> newGroupList = handEvaluator.removeDuplicateSuitSets(groupList);
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(newGroupList);
 
-        groups = handEvaluator.filterOutHonors(groups);
-        boolean threeSuits = groups.stream()
+        newGroupList = handEvaluator.filterOutHonors(newGroupList);
+        List<SetGroup> otherList = newGroupList;
+        boolean threeSuits = newGroupList.stream()
                 .map(z -> z.getSuit().getIdentifier())
                 .distinct()
                 .collect(Collectors.toList()).size() == 3;
 
         boolean sameNumbers = newGroupList.stream()
                 .map(z -> z.getFirstMember().getTileNumber())
-                .allMatch(z -> newGroupList.get(0).getFirstMember().getTileNumber().equals(z));
+                .allMatch(z -> otherList.get(0).getFirstMember().getTileNumber().equals(z));
 
         return threeSuits && sameNumbers;
 
@@ -154,13 +153,10 @@ public class HandIdentifier {
             return false;
         }
         List<SequenceGroup> newSequenceGroups = handEvaluator.removeDuplicateSuitSequences(sequenceGroups);
-        List<Group> newGroups = new ArrayList<>();
-        newGroups.addAll(newSequenceGroups);
-        newGroups = HandEvaluator.filterOutHonors(newGroups);
-        if(newGroups.size() <= 2){
+        if(sequenceGroups.size() <= 2){
             return false;
         }
-        return newGroups.stream()
+        return sequenceGroups.stream()
                 .map(z -> z.getFirstMember().getTileNumber())
                 .distinct()
                 .count() == 1;
@@ -179,6 +175,8 @@ public class HandIdentifier {
 
         return WAN && (PIN || SOU) || (PIN && SOU);
 
+
+
     }
 
     /**
@@ -188,8 +186,9 @@ public class HandIdentifier {
      * @return
      */
     public boolean oneSetOfIdenticalSequencesSameSuit(List<SequenceGroup> sequenceGroups, Suit suit){
+        System.out.println(sequenceGroups.get(0).getSuit().getIdentifier() + " and " + suit.getIdentifier());
         List<SequenceGroup> filteredSequenceGroups = sequenceGroups.stream()
-                .filter(z -> z.getSuit().getIdentifier() == suit.getIdentifier())
+                .filter(z -> z.getSuit().getIdentifier().equals(suit.getIdentifier()))
                 .collect(Collectors.toList());
 
         return filteredSequenceGroups.size() >= 2 && filteredSequenceGroups.stream()
@@ -201,50 +200,49 @@ public class HandIdentifier {
 
     /**
      * No terminals, no honors. Example: S234567W234567P22
-     * @param groups
      * @return
      */
-    public boolean hasAllSimples(List<Group> groups, Pair pair){
+    public boolean hasAllSimples(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){
         List<Integer> disqualifyingNumbers = new ArrayList<>();
         disqualifyingNumbers.add(1);
         disqualifyingNumbers.add(9);
-        boolean noHonors = groups.stream()
+        boolean noHonors = setGroups.stream()
                 .noneMatch( z -> handEvaluator.getHonors().contains(z.getSuit().getIdentifier()) );
 
-        boolean isAllSimples = groups.stream()
+        boolean setsAreAllSimples = setGroups.stream()
+                .noneMatch( z -> disqualifyingNumbers.contains(z.getThirdMember().getTileNumber()));
+
+        boolean sequencesAreAllSimples = sequenceGroups.stream()
                 .noneMatch( z -> disqualifyingNumbers.contains(z.getThirdMember().getTileNumber()));
 
         boolean pairIsSimplePair = !disqualifyingNumbers.contains(pair.getFirstMember().getTileNumber());
 
-        return noHonors && isAllSimples && pairIsSimplePair;
+        return noHonors && setsAreAllSimples && sequencesAreAllSimples && pairIsSimplePair;
 
     }
 
     /**
      * Same as chanta but has the additional condition of no honors.
-     * @param groups
      * @return
      */
-    public boolean hasTerminalInEachSet(List<Group> groups, Pair pair){
-        boolean noHonors = groups.stream()
+    public boolean hasTerminalInEachSet(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){
+        boolean noHonorsSets = setGroups.stream()
                 .noneMatch( z -> handEvaluator.getHonors().contains(z.getSuit().getIdentifier()) );
-        boolean chanta = hasChanta(groups, pair);
+        boolean chanta = hasChanta(setGroups, sequenceGroups, pair);
 
-        return noHonors && chanta && !handEvaluator.pairIsTerminalOrHonor(pair);
+        return noHonorsSets && chanta && !handEvaluator.pairIsTerminalOrHonor(pair);
     }
 
     /**
      * All terminals hand. Example: S111W111P999C222V22
-     * @param groups
      * @return
      */
-    public boolean allTerminalsAndHonors(List<Group> groups, Pair pair){
-        groups = HandEvaluator.filterOutHonors(groups);
-        boolean hasFour = groups.size() == 4;
-        boolean allGroupsAreSets = groups.stream().allMatch(z -> z.getClass() == SetGroup.class);
-        boolean allGroupsHaveATerminal = handEvaluator.allGroupsHaveATerminal(groups);
+    public boolean allTerminalsAndHonors(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){
+        setGroups = HandEvaluator.filterOutHonors(setGroups);
+        boolean hasFour = setGroups.size() == 4;
+        boolean allGroupsHaveATerminal = handEvaluator.allSetGroupsHaveATerminal(setGroups);
 
-        return hasFour && allGroupsAreSets && allGroupsHaveATerminal && handEvaluator.pairIsTerminalOrHonor(pair);
+        return hasFour && allGroupsHaveATerminal && handEvaluator.pairIsTerminalOrHonor(pair);
     }
 
     /**
@@ -259,14 +257,31 @@ public class HandIdentifier {
         disqualifyingNumbers.add(3);
         disqualifyingNumbers.add(5);
         disqualifyingNumbers.add(6);
+        List<SetGroup> setGroups = new ArrayList<>();
+
+        List<Tile> tiles = handEvaluator.decomposeGroups(sequenceGroups,setGroups);
+        List<SequenceGroup> wanSequences = handEvaluator.findSequences(handEvaluator.filterWan(tiles));
+        List<SequenceGroup> pinSequences = handEvaluator.findSequences(handEvaluator.filterPin(tiles));
+        List<SequenceGroup> souSequences = handEvaluator.findSequences(handEvaluator.filterSou(tiles));
 
         List<SequenceGroup> newSequenceGroups = handEvaluator.filterLargestSuit(sequenceGroups);
 
-        return newSequenceGroups.stream()
-                .map(Group::getThirdMember)
+        boolean wanHasStraight = wanSequences.stream()
+                .map(SequenceGroup::getThirdMember)
                 .filter(z -> !disqualifyingNumbers.contains(z.getTileNumber()))
                 .distinct()
                 .count() >= 3;
+        boolean pinHasStraight = pinSequences.stream()
+                .map(SequenceGroup::getThirdMember)
+                .filter(z -> !disqualifyingNumbers.contains(z.getTileNumber()))
+                .distinct()
+                .count() >= 3;
+        boolean souHasStraight = souSequences.stream()
+                .map(SequenceGroup::getThirdMember)
+                .filter(z -> !disqualifyingNumbers.contains(z.getTileNumber()))
+                .distinct()
+                .count() >= 3;
+        return wanHasStraight || pinHasStraight || souHasStraight;
     }
 
     /**
@@ -274,43 +289,57 @@ public class HandIdentifier {
      * @param groupList
      * @return
      */
-    public boolean hasHalfFlush(List<Group> groupList, Pair pair){
-        List<Group> filteredGroupList = HandEvaluator.filterOutHonors(groupList);
-        boolean wanHalfFlush = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
+    public boolean hasHalfFlush(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){
+        List<SetGroup> filteredGroupList = HandEvaluator.filterOutHonors(setGroups);
+        boolean wanHalfFlushSets = setGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
                 && (handEvaluator.pairIsGivenSuit(pair,new Suit("Wan")) || handEvaluator.pairIsHonorPair(pair));
-        boolean pinHalfFlush = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
+        boolean pinHalfFlushSets = setGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
                 && (handEvaluator.pairIsGivenSuit(pair,new Suit("Pin")) || handEvaluator.pairIsHonorPair(pair));
-        boolean souHalfFlush = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
+        boolean souHalfFlushSets = setGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
                 && (handEvaluator.pairIsGivenSuit(pair,new Suit("Sou")) || handEvaluator.pairIsHonorPair(pair));
 
-        return wanHalfFlush || pinHalfFlush || souHalfFlush;
+        boolean wanHalfFlushSequences = sequenceGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
+                && (handEvaluator.pairIsGivenSuit(pair,new Suit("Wan")) || handEvaluator.pairIsHonorPair(pair));
+
+        boolean pinHalfFlushSequences = sequenceGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
+                && (handEvaluator.pairIsGivenSuit(pair,new Suit("Pin")) || handEvaluator.pairIsHonorPair(pair));
+        boolean souHalfFlushSequences = sequenceGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
+                && (handEvaluator.pairIsGivenSuit(pair,new Suit("Sou")) || handEvaluator.pairIsHonorPair(pair));
+
+        return (wanHalfFlushSets && wanHalfFlushSequences) ||( pinHalfFlushSets && pinHalfFlushSequences)
+                || (souHalfFlushSets && souHalfFlushSequences);
 
 
     }
 
     /**
      * Three little dragons. Example: C111C222C33*
-     * @param groups
      * @param pair
      * @return
      */
-    public boolean hasThreeLittleDragons(List<Group> groups, Pair pair){
-        return (handEvaluator.findColorSetAmount(groups)== 2) && handEvaluator.pairIsDragonPair(pair);
+    public boolean hasThreeLittleDragons(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){
+        return (handEvaluator.findColorSetAmount(setGroups)== 2) && handEvaluator.pairIsDragonPair(pair);
     }
 
     /**
      * Checks for full flush.
-     * @param groupList
      * @return
      */
-    public boolean hasFullFlush(List<Group> groupList, Pair pair){
-        boolean WAN = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
+    public boolean hasFullFlush(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){
+        boolean WANSets = setGroups.stream().allMatch(group -> group.getFirstMember().getSuit().getIdentifier() == "Wan")
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Wan"));
-        boolean PIN = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
+        boolean PINSets = setGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Pin"));
-        boolean SOU = groupList.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
+        boolean SOUSets = setGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Sou"));
 
-        return WAN || PIN || SOU;
+        boolean WANSeq = sequenceGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Wan")
+                && handEvaluator.pairIsGivenSuit(pair,new Suit("Wan"));
+        boolean PINSeq = sequenceGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Pin")
+                && handEvaluator.pairIsGivenSuit(pair,new Suit("Pin"));
+        boolean SOUSeq = sequenceGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
+                && handEvaluator.pairIsGivenSuit(pair,new Suit("Sou"));
+
+        return (WANSets && WANSeq) || (PINSets && PINSeq) || (SOUSets && SOUSeq);
     }
 }

@@ -146,11 +146,8 @@ public class HandEvaluatorTest {
         List<SequenceGroup> validSequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroups,tiles);
         Assert.assertEquals(validSequenceGroups.size(),2);
         List<SetGroup> setGroups = handEvaluator.findSets(tiles2);
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(validSequenceGroups);
-        groups.addAll(setGroups);
 
-        Assert.assertEquals(groups.size(),4);
+        Assert.assertEquals(setGroups.size()+validSequenceGroups.size(),4);
 
     }
 
@@ -159,8 +156,6 @@ public class HandEvaluatorTest {
         List<Tile> tiles = tilesFromFile.analyzeString("S123456789123");
         List<SequenceGroup> straightSequences = handEvaluator.findSequences(tiles);
         straightSequences = handEvaluator.findMaxValidSequences(straightSequences,tiles);
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(straightSequences);
-        Assert.assertEquals(handEvaluator.groupAmountCounter(groups,SouTile.class).intValue(),4);
+        Assert.assertEquals(handEvaluator.groupAmountCounterSequences(straightSequences,SouTile.class).intValue(),4);
     }
 }

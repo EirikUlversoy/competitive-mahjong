@@ -8,31 +8,17 @@ public class Pair {
         return firstMember;
     }
 
-    public void setFirstMember(Tile firstMember) {
-        this.firstMember = firstMember;
-    }
-
     public Tile getSecondMember() {
         return secondMember;
     }
-
-    public void setSecondMember(Tile secondMember) {
-        this.secondMember = secondMember;
-    }
-
-    public Suit getSuit() {
-        return suit;
-    }
-
-    public void setSuit(Suit suit) {
-        this.suit = suit;
+    public Suit getSuit(){
+        return firstMember.getSuit();
     }
 
     public Pair(Tile firstMember, Tile secondMember){
         this.firstMember = firstMember;
         this.secondMember = secondMember;
         this.suit = firstMember.getSuit();
-
     }
 
     @Override

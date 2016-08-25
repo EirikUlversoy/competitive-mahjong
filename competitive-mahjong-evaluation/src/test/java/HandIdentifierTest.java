@@ -11,7 +11,7 @@ public class HandIdentifierTest {
     private Hand hand;
     private ValuationHan valuationHan;
     private List<SequenceGroup> straightSequences;
-    private List<Group> straightCombinations = new ArrayList<>();
+    private List<SequenceGroup> straightCombinations = new ArrayList<>();
     private List<Tile> straight = new ArrayList<>();
     private TilesFromFile tilesFromFile;
     private HandIdentifier handIdentifier;
@@ -47,16 +47,8 @@ public class HandIdentifierTest {
 
         Pair cPair = handEvaluator.findPair(correctTiles).get();
 
-        List<Group> correctGroups = new ArrayList<>();
-        correctGroups.addAll(cSequenceGroups);
-        correctGroups.addAll(cSetGroups);
-
-        List<Group> inCorrectGroups = new ArrayList<>();
-        inCorrectGroups.addAll(iSequenceGroups);
-        inCorrectGroups.addAll(iSetGroups);
-
-        Assert.assertTrue(handIdentifier.hasChanta(correctGroups,cPair));
-        Assert.assertFalse(handIdentifier.hasChanta(inCorrectGroups,cPair));
+        Assert.assertTrue(handIdentifier.hasChanta(cSetGroups,cSequenceGroups,cPair));
+        Assert.assertFalse(handIdentifier.hasChanta(iSetGroups,iSequenceGroups,cPair));
 
     }
     @Test
@@ -65,18 +57,14 @@ public class HandIdentifierTest {
         List<SetGroup> setGroups = handEvaluator.findSets(straight);
         straightSequences = handEvaluator.findMaxValidSequences(straightSequences,straight);
         straightCombinations.addAll(this.straightSequences);
-        straightCombinations.addAll(setGroups);
         Pair pair = handEvaluator.findPair(straight).get();
 
         List<Tile> tiles = tilesFromFile.analyzeString("S123456789123W456P111");
         List<SequenceGroup> wrongSequences = handEvaluator.findSequences(tiles);
         wrongSequences = handEvaluator.findMaxValidSequences(wrongSequences,tiles);
         List<SetGroup> wrongSetGroups = handEvaluator.findSets(tiles);
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(wrongSequences);
-        groups.addAll(wrongSetGroups);
         System.out.println(pair.toString());
-        Assert.assertEquals(handIdentifier.hasFullFlush(groups,pair),false);
+        Assert.assertEquals(handIdentifier.hasFullFlush(setGroups,straightSequences,pair),false);
 
         List<Tile> testTiles = tilesFromFile.analyzeString("S123456789123C1C1");
         List<SequenceGroup> testSequences = handEvaluator.findSequences(testTiles);
@@ -84,11 +72,8 @@ public class HandIdentifierTest {
 
         List<SetGroup> setGroupsList = handEvaluator.findSets(testTiles);
 
-        List<Group> allGroups = new ArrayList<>();
-        allGroups.addAll(testSequences);
-        allGroups.addAll(setGroupsList);
         Pair icPair = handEvaluator.findPair(testTiles).get();
-        Assert.assertFalse(handIdentifier.hasFullFlush(allGroups,icPair));
+        Assert.assertFalse(handIdentifier.hasFullFlush(wrongSetGroups,testSequences,icPair));
 
 
     }
@@ -122,19 +107,16 @@ public class HandIdentifierTest {
 
     @Test
     public void testFilterOutHonors(){
-        List<Tile> listWithHonors = tilesFromFile.analyzeString("S123456C111C222");
-        List<Tile> listWithHonorsForSets = tilesFromFile.analyzeString("S123456C111C222");
+        List<Tile> listWithHonors = tilesFromFile.analyzeString("S123332C111C222");
+        List<Tile> listWithHonorsForSets = tilesFromFile.analyzeString("S123332C111C222");
 
         List<SequenceGroup> honorGroup = handEvaluator.findSequences(listWithHonors);
         honorGroup = handEvaluator.findMaxValidSequences(honorGroup,listWithHonors);
         List<SetGroup> honorGroupSets = handEvaluator.findSets(listWithHonorsForSets);
 
-        List<Group> groups = new ArrayList<>();
-        groups.addAll(honorGroup);
-        groups.addAll(honorGroupSets);
 
-        List<Group> filteredGroups = HandEvaluator.filterOutHonors(groups);
-        Assert.assertEquals(filteredGroups.size(),2);
+        List<SetGroup> filteredGroups = HandEvaluator.filterOutHonors(honorGroupSets);
+        Assert.assertEquals(filteredGroups.size(),1);
     }
 
     @Test

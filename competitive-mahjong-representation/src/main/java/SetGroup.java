@@ -2,14 +2,60 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class SetGroup extends Group {
+public class SetGroup{
 
 
     protected boolean KAN = false;
+    private Tile FirstMember;
+    private Tile SecondMember;
+    private Tile ThirdMember;
+    private Optional<Tile> FourthMember = Optional.empty();
+    private boolean closed = true;
+    private Suit suit;
+
+    public Suit getSuit(){
+        return suit;
+    }
+
+    public boolean isClosed(){
+        return closed;
+    }
+    public Tile getFirstMember() {
+        return FirstMember;
+    }
+
+    public void setFirstMember(Tile firstMember) {
+        FirstMember = firstMember;
+    }
+
+    public Tile getSecondMember() {
+        return SecondMember;
+    }
+
+    public void setSecondMember(Tile secondMember) {
+        SecondMember = secondMember;
+    }
+
+    public Tile getThirdMember() {
+        return ThirdMember;
+    }
+
+    public void setThirdMember(Tile thirdMember) {
+        ThirdMember = thirdMember;
+    }
+
+    public void setFourthMember(Optional<Tile> fourthMember) {
+        FourthMember = fourthMember;
+    }
 
     public SetGroup(List<Tile> tiles){
-        super(tiles);
-        this.setSuit(tiles.get(0).getSuit());
+        this.FirstMember = tiles.get(0);
+        this.SecondMember = tiles.get(1);
+        this.ThirdMember = tiles.get(2);
+        this.suit = FirstMember.getSuit();
+        if(tiles.size() == 4){
+            this.FourthMember = Optional.ofNullable(tiles.get(3));
+        }
         try {
             if(FourthMember.isPresent()){
                 this.KAN = true;

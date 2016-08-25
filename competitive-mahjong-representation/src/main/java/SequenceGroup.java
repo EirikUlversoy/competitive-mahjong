@@ -1,21 +1,24 @@
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class SequenceGroup extends Group {
+public class SequenceGroup {
     private Optional<Integer> realMember;
+    private Tile FirstMember;
+    private Tile SecondMember;
+    private Tile ThirdMember;
+    private Suit suit;
+
     SequenceGroup(Tile firstMember, Tile secondMember, Tile thirdMember){
-        super(firstMember,secondMember,thirdMember);
-        this.suit = secondMember.getSuit();
-        this.setSuit(secondMember.getSuit());
-        System.out.println(secondMember.getSuit().getIdentifier());
-        System.out.println(suit.getIdentifier().toString());
-
-
+        this.FirstMember = firstMember;
+        this.SecondMember = secondMember;
+        this.ThirdMember = thirdMember;
+        this.suit = firstMember.getSuit();
     }
     SequenceGroup(Tile firstMember, Tile secondMember, Tile thirdMember, Integer realMember){
-        super(firstMember,secondMember,thirdMember);
-        this.realMember = Optional.ofNullable(realMember);
-
+        this.FirstMember = firstMember;
+        this.SecondMember = secondMember;
+        this.ThirdMember = thirdMember;
+        this.suit = firstMember.getSuit();
     }
 
 

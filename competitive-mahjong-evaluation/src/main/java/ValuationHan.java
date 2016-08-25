@@ -61,7 +61,9 @@ public class ValuationHan {
     public Integer calculateHan(List<Tile> tiles, boolean closed){
         stringHandValueObjectMap.putAll(stringYakumanHandValueObjectMap);
         HandIdentifier handIdentifier = new HandIdentifier();
-        List<String> hands = handIdentifier.identifyMatchingHands(tiles,true,false,true);
+        Hand hand = new Hand(4);
+        hand.setTiles(tiles);
+        List<String> hands = handIdentifier.identifyMatchingHands(hand,true,false,true);
         System.out.println(hands);
         stringHandValueObjectMap.keySet().stream()
                 .map(z -> stringHandValueObjectMap.get(z))
