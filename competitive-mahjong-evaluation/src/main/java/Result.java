@@ -14,4 +14,8 @@ public class Result {
         return playerIdToMultiplier.get(playerId).doubleValue()*basicPoints;
     }
 
+    public double getBasicPoints(){
+        return basicPoints;
+    }
+
 }
