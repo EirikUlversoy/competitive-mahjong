@@ -43,8 +43,9 @@ public class Main extends Application
     public void displayMainStage(List<Tile> tiles) throws IOException{
         Pane page = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
         Tile firstTile = tiles.get(0);
-        System.out.println(firstTile.getImage().isError());
+        //System.out.println(firstTile.getImage().isError());
         ImageView imv = new ImageView(firstTile.getImage());
+        ImageView otherImv = new ImageView(tiles.get(1).getImage());
         Stage mainStage = new Stage();
 
         Group mainGroup = new Group();
@@ -52,6 +53,7 @@ public class Main extends Application
         Scene mainScene = new Scene(page);
 
         mainGroup.getChildren().add(imv);
+        mainGroup.getChildren().add(otherImv);
 
         mainStage.setScene(mainScene);
 

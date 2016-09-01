@@ -45,13 +45,13 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <Pane fx:id="eastPond" layoutX="531.0" layoutY="282.0" prefHeight="168.0" prefWidth="152.0" />
-      <Pane fx:id="westPond" layoutX="280.0" layoutY="282.0" prefHeight="168.0" prefWidth="166.0" />
-      <Pane fx:id="northPond" layoutX="389.0" layoutY="114.0" prefHeight="168.0" prefWidth="166.0" />
+      <Pane fx:id="eastPond" layoutX="500.0" layoutY="300.0" prefHeight="168.0" prefWidth="152.0" />
+      <Pane fx:id="westPond" layoutX="300.0" layoutY="300.0" prefHeight="168.0" prefWidth="166.0" />
+      <Pane fx:id="northPond" layoutX="400.0" layoutY="100.0" prefHeight="168.0" prefWidth="166.0" />
       <Pane fx:id="southPond" layoutX="403.0" layoutY="411.0" prefHeight="179.0" prefWidth="166.0" />
-      <Pane fx:id="southWall" layoutX="316.0" layoutY="600.0" prefHeight="32.0" prefWidth="340.0" />
-      <Pane fx:id="northWall" layoutX="302.0" layoutY="82.0" prefHeight="32.0" prefWidth="340.0" />
-      <Pane fx:id="westWall" layoutX="236.0" layoutY="211.0" prefHeight="310.0" prefWidth="36.0" />
+      <Pane fx:id="southWall" layoutX="300.0" layoutY="600.0" prefHeight="32.0" prefWidth="340.0" />
+      <Pane fx:id="northWall" layoutX="300.0" layoutY="100.0" prefHeight="32.0" prefWidth="340.0" />
+      <Pane fx:id="westWall" layoutX="250.0" layoutY="211.0" prefHeight="310.0" prefWidth="36.0" />
       <Pane fx:id="eastWall" layoutX="683.0" layoutY="220.0" prefHeight="310.0" prefWidth="36.0" />
       <Pane fx:id="westCallArea" layoutX="83.0" layoutY="57.0" prefHeight="141.0" prefWidth="138.0" />
       <Pane fx:id="northCallArea" layoutX="819.0" layoutY="57.0" prefHeight="141.0" prefWidth="138.0" />
