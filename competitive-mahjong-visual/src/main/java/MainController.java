@@ -17,7 +17,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.RectangleBuilder;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
     @FXML private Pane mainStage;
@@ -57,21 +60,21 @@ public class MainController implements Initializable {
     }
 
     public void setDefaultBackgrounds(){
-        northPond.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        westPond.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        eastPond.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        southPond.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
+        northPond.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+        westPond.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+        eastPond.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+        southPond.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        northWall.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        westWall.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        eastWall.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        southWall.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
+        northWall.setBackground(new Background(new BackgroundFill(Color.GOLDENROD, CornerRadii.EMPTY, Insets.EMPTY)));
+        westWall.setBackground(new Background(new BackgroundFill(Color.GOLDENROD, CornerRadii.EMPTY, Insets.EMPTY)));
+        eastWall.setBackground(new Background(new BackgroundFill(Color.GOLDENROD, CornerRadii.EMPTY, Insets.EMPTY)));
+        southWall.setBackground(new Background(new BackgroundFill(Color.GOLDENROD, CornerRadii.EMPTY, Insets.EMPTY)));
 
         //northCallArea.toString();
-        northCallArea.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        westCallArea.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        eastCallArea.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        southCallArea.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
+        northCallArea.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        westCallArea.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        eastCallArea.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        southCallArea.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         //northPond.setStyle("-fx-background-image: url(http://www.bogotobogo.com/images/java/tutorial/java_images/Duke256.png");
 
 
@@ -96,19 +99,20 @@ public class MainController implements Initializable {
         Game game = new Game();
         Gameboard board = new Gameboard();
         board.startGame();
-        card =
-                RectangleBuilder.create()
-                        .x(-100)
-                        .y(-100)
-                        .width(200)
-                        .height(200)
-                        .fill(
-                                new ImagePattern(
-                                        board.getTileSet().getUnusedTiles().get(10).getImage(), 0, 0, 1, 1, true
-                                )
-                        )
-                        .build();
-        System.out.println(board.getTileSet().getUsedTiles().get(10).getImage().errorProperty().toString());
+        List<GraphicalTile> graphicalTiles = board.getTileSet().getUnusedTiles().stream()
+                .map(z -> new GraphicalTile(30,30,board,z))
+                .collect(Collectors.toList());
+        int x = 500;
+        int y = 500;
+
+        for (GraphicalTile graphicalTile : graphicalTiles){
+            x += 30;
+            graphicalTile.x = x;
+            graphicalTile.y = y;
+
+        }
+
+
     }
 
     private void handlePondClick(MouseEvent event) {

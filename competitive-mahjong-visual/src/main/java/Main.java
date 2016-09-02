@@ -23,10 +23,10 @@ public class Main extends Application
 
     public void start(Stage theStage) throws IOException
     {
-        theStage.setTitle("Hello, World!");
-        theStage.show();
-        theStage.setMaxHeight(1000);
-        theStage.setMaxWidth(1000);
+        //theStage.setTitle("Hello, World!");
+        //theStage.show();
+        //theStage.setMaxHeight(1000);
+        //theStage.setMaxWidth(1000);
         Game game = new Game();
         board = new Gameboard();
         board.startGame();
