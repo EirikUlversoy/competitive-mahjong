@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 /**
  * Supposed to check if the given hand is in a state ready to go out.
+ * In a way it does the same as ReadyChecker but for one more tile so that class,
+ * this one, and RonProximityChecker can probably be combined.
  */
 public class RonChecker {
     private Gamerules gamerules;

@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Reading the file is not really used, using analyzeString directly in the tests
+ * is better.
+ */
 public class TilesFromFile {
     List<Tile> tiles = new ArrayList<>();
     boolean WAN, SOU, PIN, COLOR, WIND = false;
