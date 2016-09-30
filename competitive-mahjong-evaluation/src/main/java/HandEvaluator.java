@@ -29,7 +29,7 @@ public class HandEvaluator {
         return this.honors;
     }
     /**
-     * These functions filter out various tiles. TODO: own filter class?
+     * These functions filter out various tiles.
      * @param tiles
      * @return
      */
@@ -284,7 +284,6 @@ public class HandEvaluator {
     }
     /**
      * Finds the sequences in the given tile list. The tilelist passed in should be of only one suit.
-     * Todo: This function can be cleaned pretty extensively...
      * @param tiles
      * @return
      */
