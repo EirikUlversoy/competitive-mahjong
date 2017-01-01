@@ -32,6 +32,7 @@ public class MainController implements Initializable {
     private List<Rectangle> pondRectangles = new ArrayList<>();
     //@FXML private List<Rectangle> rectangles;
     private Node currentNode;
+    private Node secondNode;
     private TileSet tileset;
 
    // public Pane getMainStage() {
@@ -50,7 +51,9 @@ public class MainController implements Initializable {
         testPond.setOnMouseEntered(this::testTwo);
         //testPond.setOnMouseEntered(this::lift);
        testPond.getChildren().stream().forEach(z -> {
-            z.setOnMouseEntered(this::lift);
+            z.setOnMouseClicked(this::lift);
+           //z.setOnMouseExited(this::sink);
+
         });
         //testPond.getChildren().removeIf(z -> true);
 
@@ -73,30 +76,29 @@ public class MainController implements Initializable {
     }
 
     public void sink(MouseEvent event){
+        Rectangle target = (Rectangle)event.getSource();
+        if(this.secondNode == target){
 
+        } else {
+            target.setTranslateY(0);
+            this.secondNode = target;
+        }
     }
     public void lift(MouseEvent event){
-        Double x = event.getX();
-        Double y = event.getY();
-        System.out.println(x);
-        System.out.println(y);
-        System.out.println(testPond.localToScreen(x,y));
 
-        pondRectangles.stream()
-                .filter(z -> {
-            if(z.getBoundsInParent().contains(testPond.localToScreen(x,y))){
 
-                //System.out.println(x);
-                //System.out.println(y);
-                //System.out.println("was true");
-                return true;
-            } else {
-                return false;
-            }
-        }).forEach(z -> z.setTranslateY(-25));
-        //testPond.getChildren().get(0).relocate(0,20);
-        //testPond.resize(-10,-10);
-        //node.setVisible();
+        Rectangle target = (Rectangle)event.getSource();
+        if(this.currentNode == target){
+            target.setTranslateY(0);
+            this.currentNode = null;
+        } else {
+            target.setTranslateY(-25);
+            this.currentNode = target;
+            target.toFront();
+
+        }
+
+
     }
 
     public void testTwo(MouseEvent event){
