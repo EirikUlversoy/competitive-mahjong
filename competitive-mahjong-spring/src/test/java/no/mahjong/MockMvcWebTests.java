@@ -32,7 +32,6 @@ public class MockMvcWebTests {
     public void setupMockMvc(){
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webContext)
-                .apply(springSecurity())
                 .build();
     }
 

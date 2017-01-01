@@ -23,42 +23,38 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
-    @FXML private Pane mainStage;
-    @FXML private Button Win;
 
-    @FXML private Pane southPond;
-    @FXML private Pane northPond;
-    @FXML private Pane eastPond;
-    @FXML private Pane westPond;
-
-    @FXML private Pane northWall;
-    @FXML private Pane eastWall;
-    @FXML private Pane westWall;
-    @FXML private Pane southWall;
-
-    @FXML private Pane northCallArea;
-    @FXML private Pane southCallArea;
-    @FXML private Pane eastCallArea;
-    @FXML private Pane westCallArea;
 
     @FXML private Rectangle card;
 
+    @FXML private Pane testPond;
+
     private TileSet tileset;
 
-    public Pane getMainStage() {
-        return mainStage;
-    }
+   // public Pane getMainStage() {
+    //    return mainStage;
+   // }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        assert Win != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        Win.setOnAction(this::handleButtonAction);
-        southPond.setOnMouseClicked(this::handlePondClick);
-        setDefaultBackgrounds();
+       // assert Win != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
+       // Win.setOnAction(this::handleButtonAction);
+
+        //southPond.setOnMouseClicked(this::handlePondClick);
+        //setDefaultBackgrounds();
+        setupTestStage();
         // initialize your logic here: all @FXML variables will have been injected
 
     }
 
+    public void setupTestStage(){
+        testPond.setVisible(true);
+        testPond.getChildren().stream().forEach(z -> z.setDisable(true));
+
+        testPond.getChildren().removeIf(z -> z.isDisable());
+        testPond.getChildren().get(0).setVisible(true);
+        System.out.println("hey");
+    }
     public void setDefaultBackgrounds(){
         northPond.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
         westPond.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -117,6 +113,10 @@ public class MainController implements Initializable {
 
     private void handlePondClick(MouseEvent event) {
         southPond.setBackground(new Background(new BackgroundFill(Color.web("#" + "abc"), CornerRadii.EMPTY, Insets.EMPTY)));
+
+    }
+
+    private void handleTileMouseOver(MouseEvent event){
 
     }
 }

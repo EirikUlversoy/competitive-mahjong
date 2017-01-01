@@ -30,7 +30,7 @@ public class Main extends Application
         Game game = new Game();
         board = new Gameboard();
         board.startGame();
-        displayMainStage(board.getTileSet().getUnusedTiles());
+        displayAltStage(board.getTileSet().getUnusedTiles());
         for(Tile tile : board.getTileSet().getUnusedTiles()){
             System.out.println("Trying to display:" + tile.getTileId());
             ImageView imv = new ImageView();
@@ -40,6 +40,15 @@ public class Main extends Application
         }
     }
 
+    public void displayAltStage(List<Tile> tiles) throws IOException{
+        Pane testPage = FXMLLoader.load(getClass().getClassLoader().getResource("testSample.fxml"));
+        Stage testStage = new Stage();
+        Scene testScene = new Scene(testPage);
+
+        testStage.setScene(testScene);
+        testStage.show();
+
+    }
     public void displayMainStage(List<Tile> tiles) throws IOException{
         Pane page = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
         Tile firstTile = tiles.get(0);
