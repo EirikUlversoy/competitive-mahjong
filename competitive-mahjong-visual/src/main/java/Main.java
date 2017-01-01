@@ -31,20 +31,12 @@ public class Main extends Application
         board = new Gameboard();
         board.startGame();
         displayAltStage(board.getTileSet().getUnusedTiles());
-        for(Tile tile : board.getTileSet().getUnusedTiles()){
-            System.out.println("Trying to display:" + tile.getTileId());
-            ImageView imv = new ImageView();
-            imv.setImage(tile.getImage());
-
-
-        }
     }
 
     public void displayAltStage(List<Tile> tiles) throws IOException{
-        Pane testPage = FXMLLoader.load(getClass().getClassLoader().getResource("testSample.fxml"));
+        Pane testPage = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
         Stage testStage = new Stage();
         Scene testScene = new Scene(testPage);
-
         testStage.setScene(testScene);
         testStage.show();
 
