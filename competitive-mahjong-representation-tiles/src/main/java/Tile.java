@@ -90,4 +90,16 @@ public class Tile {
 
         return returnString;
     }
+
+    public void fixImage(){
+        if(this.getClass() != ColorTile.class && this.getClass() != WindTile.class){
+            this.setImagePath("/images/"+this.getTileNumber()+this.getSuit().getIdentifier()+".png");
+            //System.out.println(this.toString());
+
+            System.out.println(this.imagePath);
+            this.findImage();
+            System.out.println(this.image);
+        }
+
+    }
 }

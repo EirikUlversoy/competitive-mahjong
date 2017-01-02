@@ -1,17 +1,22 @@
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main extends Application
 {
@@ -34,12 +39,27 @@ public class Main extends Application
     }
 
     public void displayAltStage(List<Tile> tiles) throws IOException{
-        Pane testPage = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("sample.fxml"));
+        Pane testPage = fxmlLoader.load();
+        MainController main = fxmlLoader.getController();
+        //Pane testPage = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
         Stage testStage = new Stage();
         Scene testScene = new Scene(testPage);
         testStage.setScene(testScene);
+        TileSet testTileSet = new TileSet();
+        testTileSet.initializeTiles();
+        testTileSet.getUnusedTiles().forEach(z -> z.fixImage());
+        main.fillHandRectangles(testTileSet.getRandomTiles(14).stream().filter(z -> {
+            if(z.getClass() == ColorTile.class || z.getClass() == WindTile.class){
+                //System.out.println(z.toString());
+                return false;
+            } else{
+                //System.out.println(z.toString());
+                return true;
+            }
+        }).collect(Collectors.toList()));
         testStage.show();
-
     }
     public void displayMainStage(List<Tile> tiles) throws IOException{
         Pane page = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
