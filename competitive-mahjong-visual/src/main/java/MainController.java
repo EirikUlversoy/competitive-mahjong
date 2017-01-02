@@ -15,9 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.RectangleBuilder;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -35,6 +33,8 @@ public class MainController implements Initializable {
     private Node currentNode;
     private Node secondNode;
     private TileSet tileset;
+    private Map<Tile, Rectangle> rectangleMap = new HashMap<>();
+    private Map<Rectangle, Tile> rectangleTileMap = new HashMap<>();
 
    // public Pane getMainStage() {
     //    return mainStage;
@@ -118,9 +118,79 @@ public class MainController implements Initializable {
                 target.setStroke(Paint.valueOf("red"));
                 target.toFront();
             }
+
+            findConnections(target);
+            findSetConnections(target);
         }
 
     }
+    public void liftTrigger(Rectangle target){
+
+            target.setTranslateY(-25);
+            target.setStroke(Paint.valueOf("red"));
+            //this.currentNode = target;
+            target.toFront();
+
+        }
+    public void findSetConnections(Rectangle target){
+        Tile tile = rectangleTileMap.get(target);
+        HandEvaluator handEvaluator = new HandEvaluator();
+        List<Tile> allTiles = rectangleMap.keySet().stream().collect(Collectors.toList());
+        List<SetGroup> setGroups = handEvaluator.findSets(allTiles);
+        List<SetGroup> validSets = setGroups.stream()
+                .peek(z -> {
+                    System.out.println(z.getFirstMember().getIdentifier());
+                    System.out.println(tile.getIdentifier());
+                })
+                .filter(z -> z.getFirstMember().getIdentifier().equals(tile.getIdentifier()))
+                .collect(Collectors.toList());
+        System.out.println(validSets.size());
+        if(validSets.size() != 0){
+            validSets.forEach(z -> {
+                Tile first = z.getFirstMember();
+                Tile second = z.getSecondMember();
+                Tile third = z.getThirdMember();
+                liftTrigger(rectangleMap.get(first));
+                liftTrigger(rectangleMap.get(second));
+                liftTrigger(rectangleMap.get(third));
+            });
+        }
+    }
+    public void findConnections(Rectangle target){
+        Tile tile = rectangleTileMap.get(target);
+        HandEvaluator handEvaluator = new HandEvaluator();
+        List<Tile> allTiles = rectangleMap.keySet().stream().collect(Collectors.toList());
+        List<Tile> wanTiles = handEvaluator.filterWan(allTiles);
+        List<Tile> souTiles = handEvaluator.filterSou(allTiles);
+        List<Tile> pinTiles = handEvaluator.filterPin(allTiles);
+
+        List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(wanTiles);
+        sequenceGroups.addAll(handEvaluator.findSequences(souTiles));
+        sequenceGroups.addAll(handEvaluator.findSequences(pinTiles));
+
+        //List<SequenceGroup> sequenceGroups.stream().
+        //rectangleMap.keySet().stream().forEach(z -> sequenceGroups.stream().forEach(x -> x.isMember(z)) );
+        List<SequenceGroup> validSequences = sequenceGroups.stream().filter(z -> z.isMember(tile)).collect(Collectors.toList());
+        System.out.println(validSequences.size());
+        if(validSequences.size() != 0){
+            //liftTrigger(rectangleMap.get(validSequences.get(0)));
+            validSequences.stream().forEach(z -> {
+                Tile first = z.getFirstMember();
+                Tile second = z.getSecondMember();
+                Tile third = z.getThirdMember();
+                liftTrigger(rectangleMap.get(first));
+                liftTrigger(rectangleMap.get(second));
+                liftTrigger(rectangleMap.get(third));
+                System.out.println(tile.getSuit().getIdentifier()+tile.getTileNumber()+tile.getTileId());
+
+                System.out.println(first.getSuit().getIdentifier()+first.getTileNumber()+first.getTileId());
+                System.out.println(second.getSuit().getIdentifier()+second.getTileNumber()+second.getTileId());
+                System.out.println(third.getSuit().getIdentifier()+third.getTileNumber()+third.getTileId());
+
+            });
+        }
+    }
+
     public void lift(MouseEvent event){
 
 
@@ -143,6 +213,11 @@ public class MainController implements Initializable {
 
         }
 
+        findConnections(target);
+        findSetConnections(target);
+
+
+
 
     }
 
@@ -153,14 +228,20 @@ public class MainController implements Initializable {
         // Button was clicked, do something...
         System.out.println("test");
     }
-    public void fillHandRectangles(List<Tile> tiles){
+    public Map<Rectangle, Tile> fillHandRectangles(List<Tile> tiles){
+        //Map<Rectangle, Tile> rectangleTileMap = new HashMap<>();
+
         p1hand.getChildren().stream().map(z -> (Rectangle)z).forEach(z ->{
             if(tiles.size() != 0){
+                rectangleTileMap.put((Rectangle)z,tiles.get(0));
+                rectangleMap.put(tiles.get(0),(Rectangle)z);
                 z.setFill(new ImagePattern(tiles.get(0).getImage()));
                 tiles.remove(0);
+
             }
 
         });
+        return rectangleTileMap;
     }
     private void handleCardClick(MouseEvent event) {
 

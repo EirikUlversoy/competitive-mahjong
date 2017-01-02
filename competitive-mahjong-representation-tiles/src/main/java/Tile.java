@@ -93,12 +93,21 @@ public class Tile {
 
     public void fixImage(){
         if(this.getClass() != ColorTile.class && this.getClass() != WindTile.class){
-            this.setImagePath("/images/"+this.getTileNumber()+this.getSuit().getIdentifier()+".png");
+            if(this.getClass().equals(WanTile.class) || this.getSuit().getIdentifier().equals("Wan")){
+                this.setImagePath("/images/"+this.getTileNumber()+"Wan.png");
+                System.out.println(this.getSuit().getIdentifier());
+            } else {
+                this.setImagePath("/images/"+this.getTileNumber()+this.getSuit().getIdentifier()+".png");
+
+            }
             //System.out.println(this.toString());
 
             System.out.println(this.imagePath);
             this.findImage();
             System.out.println(this.image);
+        } else {
+            this.setImagePath("/images/"+this.getIdentifier()+".png");
+            this.findImage();
         }
 
     }

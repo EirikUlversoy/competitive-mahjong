@@ -94,8 +94,15 @@ public class HandEvaluatorTest {
         sequenceGroupList = handEvaluator.findSequences(tilesFromFile.analyzeString("S123W123P123"));
         Assert.assertEquals(sequenceGroupList.size(),3);
 
+
+
         testList.clear();
         sequenceGroupList.clear();
+
+        testList = tilesFromFile.analyzeString("S234P123W876");
+        sequenceGroupList = handEvaluator.findSequences(testList);
+        sequenceGroupList.stream().forEach(z -> System.out.println(z.toString()));
+        Assert.assertEquals(sequenceGroupList.size(),3);
         testList = tilesFromFile.analyzeString("S123456789");
         sequenceGroupList = handEvaluator.findSequences(testList);
         Assert.assertEquals(sequenceGroupList.size(),7);

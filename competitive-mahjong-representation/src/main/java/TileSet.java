@@ -61,11 +61,11 @@ public class TileSet {
                 for (int tile_id = 1; tile_id <= amountPerTile; tile_id++) {
                     Position position = new Position();
                     Tile tile = new Tile();
-                    if(suit.getIdentifier() == "Wan"){
+                    if(suit.getIdentifier().equals("Wan")){
                         tile = new WanTile();
-                    } else if(suit.getIdentifier() == "Sou") {
+                    } else if(suit.getIdentifier().equals("Sou")) {
                         tile = new SouTile();
-                    } else if(suit.getIdentifier() == "Pin"){
+                    } else if(suit.getIdentifier().equals("Pin")){
                         tile = new PinTile();
                     }
                     tile.setSuit(suit);
@@ -124,6 +124,7 @@ public class TileSet {
                 tile.setImagePath(windPath);
                 switch (i){
                     case 0:
+                        tile = new WindTile("West",tile_id);
                         tile.setIdentifier("West");
                         //tile.setImage(image);
                         tile.setTileNumber(tile_id+1);
@@ -131,6 +132,7 @@ public class TileSet {
                         windTiles.add(tile);
                         break;
                     case 1:
+                        tile = new WindTile("East",tile_id);
                         tile.setIdentifier("East");
                         //tile.setImage(image);
                         tile.setTileNumber(tile_id+1);
@@ -138,6 +140,7 @@ public class TileSet {
                         windTiles.add(tile);
                         break;
                     case 2:
+                        tile = new WindTile("North",tile_id);
                         tile.setIdentifier("North");
                         //tile.setImage(image);
                         tile.setTileNumber(tile_id+1);
@@ -145,6 +148,7 @@ public class TileSet {
                         windTiles.add(tile);
                         break;
                     case 3:
+                        tile = new WindTile("South",tile_id);
                         tile.setIdentifier("South");
                         //tile.setImage(image);
                         tile.setTileNumber(tile_id+1);
@@ -179,17 +183,20 @@ public class TileSet {
 
                 switch (i){
                     case 0:
-                        tile.setIdentifier("Chun");
+                        tile = new ColorTile("Red",0,tile_id);
+                        tile.setIdentifier("Red");
                         //tile.setImage(image);
                         colorTiles.add(tile);
                         break;
                     case 1:
-                        tile.setIdentifier("Haku");
+                        tile = new ColorTile("White",1,tile_id);
+                        tile.setIdentifier("White");
                         //tile.setImage(image);
                         colorTiles.add(tile);
                         break;
                     case 2:
-                        tile.setIdentifier("Hatsu");
+                        tile = new ColorTile("Green",2,tile_id);
+                        tile.setIdentifier("Green");
                         //tile.setImage(image);
                         colorTiles.add(tile);
                         break;

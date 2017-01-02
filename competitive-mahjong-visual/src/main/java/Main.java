@@ -15,7 +15,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Main extends Application
@@ -50,15 +52,15 @@ public class Main extends Application
         TileSet testTileSet = new TileSet();
         testTileSet.initializeTiles();
         testTileSet.getUnusedTiles().forEach(z -> z.fixImage());
-        main.fillHandRectangles(testTileSet.getRandomTiles(14).stream().filter(z -> {
-            if(z.getClass() == ColorTile.class || z.getClass() == WindTile.class){
-                //System.out.println(z.toString());
-                return false;
-            } else{
-                //System.out.println(z.toString());
-                return true;
-            }
-        }).collect(Collectors.toList()));
+        List<Tile> initialTiles = testTileSet.getRandomTiles(14);
+        initialTiles.stream().forEach(z -> System.out.println(z.getSuit().getIdentifier()+z.getTileNumber()));
+        Map<Rectangle, Tile> rectangleTileMap = new HashMap<>();
+
+        rectangleTileMap = main.fillHandRectangles(initialTiles);
+        Map<Tile, Rectangle> tileRectangleMap = new HashMap<>();
+        Map<Rectangle, Tile> copyRectangleTileMap = rectangleTileMap;
+        rectangleTileMap.keySet().stream().forEach(z -> tileRectangleMap.put(copyRectangleTileMap.get(z),z));
+
         testStage.show();
     }
     public void displayMainStage(List<Tile> tiles) throws IOException{
