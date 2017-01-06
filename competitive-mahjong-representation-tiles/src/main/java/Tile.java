@@ -20,22 +20,19 @@ public class Tile {
 
     public Tile(Integer tileNumber){
         this.tileNumber = tileNumber;
-        this.identifier = "not set";
-        this.position = new Position();
+        //this.identifier = "not set";
         this.tileId = 0;
     }
 
     public Tile(Integer tileNumber, Integer tileId){
         this.tileNumber = tileNumber;
-        this.identifier = "not set";
-        this.position = new Position();
+        //this.identifier = "not set";
         this.tileId = tileId;
     }
 
     public Tile(Integer tileNumber, Integer tileId, Suit suit){
         this.tileNumber = tileNumber;
-        this.identifier = "not set";
-        this.position = new Position();
+        this.identifier = suit.getIdentifier()+tileNumber+tileId;
         this.tileId = tileId;
         this.suit = suit;
     }
@@ -76,12 +73,6 @@ public class Tile {
     }
     public void setTileId(Integer tileId) {
         this.tileId = tileId;
-    }
-    public Position getPosition() {
-        return position;
-    }
-    public void setPosition(Position position) {
-        this.position = position;
     }
 
     public String toString(){

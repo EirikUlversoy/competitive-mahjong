@@ -13,7 +13,7 @@ public class ColorTile extends Tile {
         this.setSuit(new Suit(color));
     }
     ColorTile(String color, Integer colorId, Integer tile_id){
-        super(colorId,tile_id);
-        this.setSuit(new Suit(color));
+        super(colorId,tile_id, new Suit(color));
+        //this.setSuit(new Suit(color));
     }
 }

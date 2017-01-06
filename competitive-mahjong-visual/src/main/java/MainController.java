@@ -1,9 +1,13 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +32,11 @@ public class MainController implements Initializable {
     @FXML private GridPane testPond;
     @FXML private GridPane p1hand;
     @FXML private HBox p1handbox;
+    @FXML private Label sequenceLabel;
+    @FXML private Label setLabel;
+    @FXML private ListView<List<Rectangle>> sequenceList;
+    @FXML private ListView<List<Rectangle>> setList;
+
     private List<Rectangle> pondRectangles = new ArrayList<>();
     //@FXML private List<Rectangle> rectangles;
     private Node currentNode;
@@ -35,16 +44,25 @@ public class MainController implements Initializable {
     private TileSet tileset;
     private Map<Tile, Rectangle> rectangleMap = new HashMap<>();
     private Map<Rectangle, Tile> rectangleTileMap = new HashMap<>();
-
+    private List<List<Tile>> rectobs = new ArrayList<>(new ArrayList<>());
+    private ObservableList<List<Tile>> obsRectangles = FXCollections.observableList(rectobs);
    // public Pane getMainStage() {
     //    return mainStage;
    // }
 
     @Override // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+        //rectobs = new ArrayList<>(new ArrayList<>());
+        //obsRectangles = FXCollections.observableList(rectobs);
+
+        sequenceList.setItems(obsRectangles.get(0));
        // assert Win != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
        // Win.setOnAction(this::handleButtonAction);
         testPond.getChildren().stream().forEach(z -> pondRectangles.add((Rectangle)z));
+
+        sequenceLabel.setText("Sequences");
+        setLabel.setText("Sets");
+
 
         //southPond.setOnMouseClicked(this::handlePondClick);
         //setDefaultBackgrounds();
@@ -124,19 +142,35 @@ public class MainController implements Initializable {
         }
 
     }
-    public void liftTrigger(Rectangle target){
+    public void liftTrigger(Rectangle target, String color){
 
             target.setTranslateY(-25);
-            target.setStroke(Paint.valueOf("red"));
+            target.setStroke(Paint.valueOf(color));
             //this.currentNode = target;
             target.toFront();
 
         }
     public void findSetConnections(Rectangle target){
+        String setColor = "blue";
         Tile tile = rectangleTileMap.get(target);
         HandEvaluator handEvaluator = new HandEvaluator();
         List<Tile> allTiles = rectangleMap.keySet().stream().collect(Collectors.toList());
         List<SetGroup> setGroups = handEvaluator.findSets(allTiles);
+        setGroups.stream().forEach(z -> {
+            List<Rectangle> newList = new ArrayList<Rectangle>();
+            Tile first = z.getFirstMember();
+            Tile second = z.getSecondMember();
+            Tile third = z.getThirdMember();
+            List<Tile> newTileList = new ArrayList<Tile>();
+            newTileList.add(first);
+            newTileList.add(second);
+            newTileList.add(third);
+            newList.add(rectangleMap.get(first));
+            newList.add(rectangleMap.get(second));
+            newList.add(rectangleMap.get(third));
+            rectobs.add(newList);
+            obsRectangles.add(newTileList);
+        });
         List<SetGroup> validSets = setGroups.stream()
                 .peek(z -> {
                     System.out.println(z.getFirstMember().getIdentifier());
@@ -150,13 +184,14 @@ public class MainController implements Initializable {
                 Tile first = z.getFirstMember();
                 Tile second = z.getSecondMember();
                 Tile third = z.getThirdMember();
-                liftTrigger(rectangleMap.get(first));
-                liftTrigger(rectangleMap.get(second));
-                liftTrigger(rectangleMap.get(third));
+                liftTrigger(rectangleMap.get(first),setColor);
+                liftTrigger(rectangleMap.get(second),setColor);
+                liftTrigger(rectangleMap.get(third),setColor);
             });
         }
     }
     public void findConnections(Rectangle target){
+        String sequenceColor = "yellow";
         Tile tile = rectangleTileMap.get(target);
         HandEvaluator handEvaluator = new HandEvaluator();
         List<Tile> allTiles = rectangleMap.keySet().stream().collect(Collectors.toList());
@@ -168,6 +203,7 @@ public class MainController implements Initializable {
         sequenceGroups.addAll(handEvaluator.findSequences(souTiles));
         sequenceGroups.addAll(handEvaluator.findSequences(pinTiles));
 
+
         //List<SequenceGroup> sequenceGroups.stream().
         //rectangleMap.keySet().stream().forEach(z -> sequenceGroups.stream().forEach(x -> x.isMember(z)) );
         List<SequenceGroup> validSequences = sequenceGroups.stream().filter(z -> z.isMember(tile)).collect(Collectors.toList());
@@ -178,9 +214,9 @@ public class MainController implements Initializable {
                 Tile first = z.getFirstMember();
                 Tile second = z.getSecondMember();
                 Tile third = z.getThirdMember();
-                liftTrigger(rectangleMap.get(first));
-                liftTrigger(rectangleMap.get(second));
-                liftTrigger(rectangleMap.get(third));
+                liftTrigger(rectangleMap.get(first),sequenceColor);
+                liftTrigger(rectangleMap.get(second),sequenceColor);
+                liftTrigger(rectangleMap.get(third),sequenceColor);
                 System.out.println(tile.getSuit().getIdentifier()+tile.getTileNumber()+tile.getTileId());
 
                 System.out.println(first.getSuit().getIdentifier()+first.getTileNumber()+first.getTileId());

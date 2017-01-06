@@ -10,8 +10,8 @@ public class WindTile extends Tile{
         this.setSuit(new Suit(wind));
     }
     WindTile(String wind, Integer windId,Integer tile_id){
-        super(windId,tile_id);
-        this.setSuit(new Suit(wind));
+        super(windId,tile_id, new Suit(wind));
+        //this.setSuit(new Suit(wind));
     }
 
 }

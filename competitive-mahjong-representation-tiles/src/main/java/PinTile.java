@@ -10,7 +10,6 @@ public class PinTile extends Tile {
 
     public PinTile(Integer tileNumber) {
         super(tileNumber);
-        this.setPosition(new Position());
         this.setIdentifier("???");
 
         this.setSuit(new Suit("Pin"));
@@ -18,8 +17,7 @@ public class PinTile extends Tile {
     }
 
     public PinTile(Integer tileNumber, Integer tileId){
-        super(tileNumber,tileId);
-        this.setSuit(new Suit("Pin"));
+        super(tileNumber,tileId, new Suit("Pin"));
     }
 
     @Override

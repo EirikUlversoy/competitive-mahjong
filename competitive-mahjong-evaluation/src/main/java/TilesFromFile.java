@@ -132,11 +132,11 @@ public class TilesFromFile {
             default : {
                 Integer numericValue = Character.getNumericValue(i);
                 if(this.SOU){
-                    this.tiles.add(new SouTile(numericValue));
+                    this.tiles.add(new SouTile(numericValue,numericValue));
                 } else if (this.WAN) {
-                    this.tiles.add(new WanTile(numericValue));
+                    this.tiles.add(new WanTile(numericValue, numericValue));
                 } else if (this.PIN) {
-                    this.tiles.add(new PinTile(numericValue));
+                    this.tiles.add(new PinTile(numericValue, numericValue));
                 } else if (this.COLOR) {
                     this.tiles.add(new ColorTile(colorIntToString.get(numericValue),numericValue));
                 } else if (this.WIND) {

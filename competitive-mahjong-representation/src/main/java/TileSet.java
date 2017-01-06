@@ -71,7 +71,6 @@ public class TileSet {
                     tile.setSuit(suit);
                     tile.setIdentifier("Suit: "+suit.getIdentifier() + " - Picture: " + tilenumber + " - Iteration: " + tile_id);
                     tile.setTileNumber(tilenumber);
-                    tile.setPosition(position);
                     tile.setTileId(tile_id);
                     URL url = TileSet.class.getClassLoader().getResource(x+suit.getIdentifier()+".png");
                     //String filesPathAndName = url.getPath();
@@ -128,7 +127,6 @@ public class TileSet {
                         tile.setIdentifier("West");
                         //tile.setImage(image);
                         tile.setTileNumber(tile_id+1);
-                        tile.setPosition(position);
                         windTiles.add(tile);
                         break;
                     case 1:
@@ -136,7 +134,6 @@ public class TileSet {
                         tile.setIdentifier("East");
                         //tile.setImage(image);
                         tile.setTileNumber(tile_id+1);
-                        tile.setPosition(position);
                         windTiles.add(tile);
                         break;
                     case 2:
@@ -144,7 +141,6 @@ public class TileSet {
                         tile.setIdentifier("North");
                         //tile.setImage(image);
                         tile.setTileNumber(tile_id+1);
-                        tile.setPosition(position);
                         windTiles.add(tile);
                         break;
                     case 3:
@@ -152,7 +148,6 @@ public class TileSet {
                         tile.setIdentifier("South");
                         //tile.setImage(image);
                         tile.setTileNumber(tile_id+1);
-                        tile.setPosition(position);
                         windTiles.add(tile);
                         break;
                 }
@@ -176,7 +171,6 @@ public class TileSet {
             for(int tile_id = 0; tile_id<amountPerTile; tile_id++){
                 ColorTile tile = new ColorTile();
                 Position position = new Position();
-                tile.setPosition(position);
                 tile.setTileNumber(tile_id+1);
                 //Image image = new Image(colorPath);
                 tile.setImagePath(colorPath);
