@@ -323,7 +323,7 @@ public class HandEvaluator {
         mrsTiles.addAll(middleSequenceTiles);
         mrsTiles.addAll(sinkingSequenceTiles);
         mrsTiles.addAll(risingSequenceTiles);
-
+        System.out.println(possibleSeqGroups);
 
         Map<Integer, List<Tile>> tilemap = this.findTileCount(mrsTiles);
 

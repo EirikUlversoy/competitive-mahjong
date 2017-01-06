@@ -76,10 +76,7 @@ public class Tile {
     }
 
     public String toString(){
-        String returnString = "";
-        returnString = returnString.concat(this.getClass().toString() +tileNumber.toString()+"-"+tileId.toString()).concat("@"+position.toString()).concat(tileNumber.toString());
-
-        return returnString;
+        return this.getIdentifier();
     }
 
     public void fixImage(){

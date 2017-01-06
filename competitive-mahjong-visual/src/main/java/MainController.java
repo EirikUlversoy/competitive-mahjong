@@ -34,8 +34,8 @@ public class MainController implements Initializable {
     @FXML private HBox p1handbox;
     @FXML private Label sequenceLabel;
     @FXML private Label setLabel;
-    @FXML private ListView<List<Rectangle>> sequenceList;
-    @FXML private ListView<List<Rectangle>> setList;
+    @FXML private ListView<List<Tile>> sequenceList;
+    @FXML private ListView<List<Tile>> setList;
 
     private List<Rectangle> pondRectangles = new ArrayList<>();
     //@FXML private List<Rectangle> rectangles;
@@ -55,7 +55,7 @@ public class MainController implements Initializable {
         //rectobs = new ArrayList<>(new ArrayList<>());
         //obsRectangles = FXCollections.observableList(rectobs);
 
-        sequenceList.setItems(obsRectangles.get(0));
+        sequenceList.setItems(obsRectangles);
        // assert Win != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
        // Win.setOnAction(this::handleButtonAction);
         testPond.getChildren().stream().forEach(z -> pondRectangles.add((Rectangle)z));
@@ -168,7 +168,8 @@ public class MainController implements Initializable {
             newList.add(rectangleMap.get(first));
             newList.add(rectangleMap.get(second));
             newList.add(rectangleMap.get(third));
-            rectobs.add(newList);
+            System.out.println(newTileList);
+            //rectobs.add(newTileList);
             obsRectangles.add(newTileList);
         });
         List<SetGroup> validSets = setGroups.stream()
@@ -202,8 +203,28 @@ public class MainController implements Initializable {
         List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(wanTiles);
         sequenceGroups.addAll(handEvaluator.findSequences(souTiles));
         sequenceGroups.addAll(handEvaluator.findSequences(pinTiles));
+        System.out.println(sequenceGroups.size());
+        sequenceGroups.stream().forEach(z -> {
+            List<Rectangle> newList = new ArrayList<Rectangle>();
+            Tile first = z.getFirstMember();
+            Tile second = z.getSecondMember();
+            Tile third = z.getThirdMember();
+            List<Tile> newTileList = new ArrayList<Tile>();
+            newTileList.add(first);
+            newTileList.add(second);
+            newTileList.add(third);
+            newList.add(rectangleMap.get(first));
+            newList.add(rectangleMap.get(second));
+            newList.add(rectangleMap.get(third));
+            System.out.println(newTileList);
+            //rectobs.add(newTileList);
+            if(obsRectangles.contains(newTileList)){
 
+            } else {
+                obsRectangles.add(newTileList);
+            }
 
+        });
         //List<SequenceGroup> sequenceGroups.stream().
         //rectangleMap.keySet().stream().forEach(z -> sequenceGroups.stream().forEach(x -> x.isMember(z)) );
         List<SequenceGroup> validSequences = sequenceGroups.stream().filter(z -> z.isMember(tile)).collect(Collectors.toList());
