@@ -68,6 +68,29 @@ public class HandEvaluatorTest {
         Assert.assertEquals(pairList.size(),1);
         Assert.assertEquals(pairList.get(0).isPresent(),true);
     }
+
+    @Test
+    public void fSeq(){
+        List<Tile> testList = tilesFromFile.analyzeString("S111222333");
+        List<SequenceGroup> sequenceGroups = handEvaluator.fSeq(testList);
+        Assert.assertEquals(sequenceGroups.size(),27);
+
+        List<Tile> tList = tilesFromFile.analyzeString("S123456789");
+        sequenceGroups = handEvaluator.fSeq(tList);
+        Assert.assertEquals(sequenceGroups.size(),7);
+
+        tList = tilesFromFile.analyzeString("S123456778899");
+        sequenceGroups = handEvaluator.fSeq(tList);
+        Assert.assertEquals(sequenceGroups.size(),18);
+
+        tList = tilesFromFile.analyzeString("S122345567899");
+        sequenceGroups = handEvaluator.fSeq(tList);
+        Assert.assertEquals(sequenceGroups.size(),13);
+
+        tList = tilesFromFile.analyzeString("S112233445566778899");
+        sequenceGroups = handEvaluator.fSeq(tList);
+        Assert.assertEquals(sequenceGroups.size(),56);
+    }
     @Test
     public void findSequencesTest(){
         HandEvaluator handEvaluator = new HandEvaluator();

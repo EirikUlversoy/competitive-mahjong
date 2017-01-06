@@ -1,5 +1,4 @@
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 public class SequenceGroup {
     private Optional<Integer> realMember;
@@ -74,6 +73,46 @@ public class SequenceGroup {
     public boolean isStrictMember(Tile tile){
      return false;
     }
+    public Map<Integer, Integer> intInOrder(Object b){
+        Map<Integer, Integer> intsInOrder = new HashMap<>();
+
+        SequenceGroup sequenceGroup = (SequenceGroup)b;
+        intsInOrder.put(sequenceGroup.getFirstMember().getTileNumber(),sequenceGroup.getFirstMember().getTileId());
+        intsInOrder.put(sequenceGroup.getSecondMember().getTileNumber(),sequenceGroup.getSecondMember().getTileId());
+        intsInOrder.put(sequenceGroup.getThirdMember().getTileNumber(),sequenceGroup.getThirdMember().getTileId());
+
+        return intsInOrder;
+
+
+    }
+
+    @Override
+    public int hashCode(){
+        return 5;
+    }
+    @Override
+    public boolean equals(Object b) {
+        Map<Integer, Integer> oldInts = new HashMap<>();
+        oldInts.put(this.getFirstMember().getTileNumber(), this.getFirstMember().getTileId());
+        oldInts.put(this.getSecondMember().getTileNumber(), this.getSecondMember().getTileId());
+        oldInts.put(this.getThirdMember().getTileNumber(), this.getThirdMember().getTileId());
+
+        Map<Integer, Integer> newInts = this.intInOrder(b);
+        Boolean equal = oldInts.keySet().stream().allMatch(z -> {
+            if (newInts.containsKey(z)) {
+                if (newInts.get(z) == oldInts.get(z)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        });
+        return equal;
+    }
+
+
     public boolean isMember(Tile tile){
         String targetString = tile.getSuit().getIdentifier()+tile.getTileNumber()+tile.getTileId();
         String firstMemberString = this.getFirstMember().getSuit().getIdentifier() + this.getFirstMember().getTileNumber() + tile.getTileId();

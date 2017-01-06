@@ -282,6 +282,52 @@ public class HandEvaluator {
 
 
     }
+
+    public List<SequenceGroup> fSeq(List<Tile> tiles){
+        List<Tile> copy = tiles;
+        List<List<SequenceGroup>> allPermutations = new ArrayList<>();
+        tiles.stream().forEach(z -> {
+            List<SequenceGroup> sequenceGroups= this.findSequencesFromTile(tiles,z);
+
+            allPermutations.add(sequenceGroups);
+            System.out.println(sequenceGroups.size());
+        });
+        System.out.println(allPermutations.size());
+         List<SequenceGroup> allFlatPermutations = allPermutations.stream().flatMap(z -> z.stream()).collect(Collectors.toList());
+
+        allFlatPermutations = allFlatPermutations.stream().distinct().collect(Collectors.toList());
+        System.out.println(allFlatPermutations);
+        return allFlatPermutations;
+    }
+
+    public List<SequenceGroup> findSequencesFromTile(List<Tile> tiles, Tile tile){
+        List<Tile> downs = new ArrayList<>();
+        List<Tile> ups = new ArrayList<>();
+        List<Tile> middles = new ArrayList<>();
+
+        Map<Tile, Tile> downUpPair = new HashMap<>();
+
+        tiles.stream().forEach(z -> {
+            if(z.getTileNumber() == tile.getTileNumber()-1){
+                downs.add(z);
+            } else if(z.getTileNumber() == tile.getTileNumber()+1) {
+                ups.add(z);
+            } else if(z.getTileNumber() == tile.getTileNumber()) {
+                middles.add(z);
+            }
+        });
+        List<SequenceGroup> allSequenceGroups = new ArrayList<>();
+
+        for (Tile tileD : downs){
+            for(Tile tileU : ups){
+                for(Tile tileM : middles){
+                    allSequenceGroups.add(new SequenceGroup(tileD,tileM,tileU));
+                }
+            }
+        }
+
+        return allSequenceGroups;
+    }
     /**
      * Finds the sequences in the given tile list. The tilelist passed in should be of only one suit.
      * @param tiles
