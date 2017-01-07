@@ -36,6 +36,9 @@ public class MainController implements Initializable {
     @FXML private Label setLabel;
     @FXML private ListView<List<Tile>> sequenceList;
     @FXML private ListView<List<Tile>> setList;
+    @FXML private Button orderHand;
+    @FXML private Button callRon;
+    @FXML private Button callRichii;
 
     private List<Rectangle> pondRectangles = new ArrayList<>();
     //@FXML private List<Rectangle> rectangles;
@@ -54,7 +57,12 @@ public class MainController implements Initializable {
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         //rectobs = new ArrayList<>(new ArrayList<>());
         //obsRectangles = FXCollections.observableList(rectobs);
+        orderHand.setText("Order hand");
+        callRon.setText("Ron");
+        callRichii.setText("Richii");
 
+        orderHand.setOnMouseClicked(this::clickOrderHand);
+        
         sequenceList.setItems(obsRectangles);
        // assert Win != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
        // Win.setOnAction(this::handleButtonAction);
@@ -108,7 +116,9 @@ public class MainController implements Initializable {
     */
         //pond.translateYProperty().setValue(25);
     }
+    public void clickOrderHand(MouseEvent event){
 
+    }
     public void sink(MouseEvent event){
         Rectangle target = (Rectangle)event.getSource();
         if(this.secondNode == target){

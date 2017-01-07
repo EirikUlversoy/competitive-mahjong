@@ -57,38 +57,14 @@ public class TilesFromFile {
         WIND = false;
     }
     public List<Tile> dealWithDuplicates(List<Tile> tiles){
-        Hand hand = new Hand(1);
-        HandEvaluator handEvaluator = new HandEvaluator();
-        List<Tile> newTiles = new ArrayList<>();
-        List<Map<Integer, List<Tile>>> maps = new ArrayList<>();
+        Map<String, Integer> mapthing = new HashMap<>();
 
-        List<Tile> Wan = handEvaluator.filterWan(tiles);
-        List<Tile> Sou = handEvaluator.filterSou(tiles);
-        List<Tile> Pin = handEvaluator.filterPin(tiles);
-        List<Tile> Color = handEvaluator.filterSuit(ColorTile.class, tiles);
-        List<Tile> Wind = handEvaluator.filterSuit(WindTile.class, tiles);
-
-        maps.add(handEvaluator.findTileCount(Wan));
-        maps.add(handEvaluator.findTileCount(Sou));
-        maps.add(handEvaluator.findTileCount(Pin));
-        maps.add(handEvaluator.findTileCount(Color));
-        maps.add(handEvaluator.findTileCount(Wind));
-
-        //final Map<Integer, List<Tile>> integerToTiles = handEvaluator.findTileCount(tiles);
-        for (Map<Integer, List<Tile>> tileMap : maps){
-            tileMap.keySet().stream()
-                    .map(z -> tileMap.get(z))
-                    .forEach(z -> {
-                        z.stream()
-                                .peek(x ->
-                                        x.setTileId(z.indexOf(x)+1))
-                                .forEach(x -> newTiles.add(x));
-                    });
+        for(Tile tile: tiles){
+            if(mapthing.containsKey(tile.getTileNumber())){
+                tile.setTileId(tile.getTileId()+1);
+            }
         }
-
-        return newTiles;
-
-
+        return tiles;
     }
     public List<Tile> analyzeString(String string){
         this.tiles.clear();

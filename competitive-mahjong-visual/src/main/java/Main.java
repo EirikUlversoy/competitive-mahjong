@@ -60,7 +60,7 @@ public class Main extends Application
         List<Tile> altInitialTiles = tilesFromFile.analyzeString("W12345678911332");
         altInitialTiles.forEach(z -> z.fixImage());
         //rectangleTileMap = main.fillHandRectangles(initialTiles);
-        rectangleTileMap = main.fillHandRectangles(altInitialTiles);
+        rectangleTileMap = main.fillHandRectangles(initialTiles);
 
         Map<Tile, Rectangle> tileRectangleMap = new HashMap<>();
         Map<Rectangle, Tile> copyRectangleTileMap = rectangleTileMap;

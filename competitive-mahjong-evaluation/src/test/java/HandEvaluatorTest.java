@@ -123,7 +123,14 @@ public class HandEvaluatorTest {
         sequenceGroupList.clear();
 
         testList = tilesFromFile.analyzeString("S234P123W876");
-        sequenceGroupList = handEvaluator.findSequences(testList);
+        List<Tile> wanList = handEvaluator.filterWan(testList);
+        List<Tile> pinList = handEvaluator.filterPin(testList);
+        List<Tile> souList = handEvaluator.filterSou(testList);
+
+        sequenceGroupList = handEvaluator.findSequences(wanList);
+        sequenceGroupList.addAll(handEvaluator.findSequences(pinList));
+        sequenceGroupList.addAll(handEvaluator.findSequences(souList));
+
         sequenceGroupList.stream().forEach(z -> System.out.println(z.toString()));
         Assert.assertEquals(sequenceGroupList.size(),3);
         testList = tilesFromFile.analyzeString("S123456789");

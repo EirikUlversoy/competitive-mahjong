@@ -8,14 +8,6 @@ public class PinTile extends Tile {
 
     }
 
-    public PinTile(Integer tileNumber) {
-        super(tileNumber);
-        this.setIdentifier("???");
-
-        this.setSuit(new Suit("Pin"));
-
-    }
-
     public PinTile(Integer tileNumber, Integer tileId){
         super(tileNumber,tileId, new Suit("Pin"));
     }
