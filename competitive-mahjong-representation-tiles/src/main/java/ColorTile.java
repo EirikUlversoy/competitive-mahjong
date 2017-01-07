@@ -3,16 +3,16 @@ import java.util.Map;
 
 public class ColorTile extends Tile {
 
-    ColorTile(){
+    public ColorTile(){
         super();
         this.setSuit(new Suit("A color"));
     }
 
-    ColorTile(String color, Integer colorId){
-        super(colorId);
-        this.setSuit(new Suit(color));
+    public ColorTile(String color, Integer colorId){
+        super(colorId,colorId,new Suit(color));
+        //this.setSuit(new Suit(color));
     }
-    ColorTile(String color, Integer colorId, Integer tile_id){
+    public ColorTile(String color, Integer colorId, Integer tile_id){
         super(colorId,tile_id, new Suit(color));
         //this.setSuit(new Suit(color));
     }
