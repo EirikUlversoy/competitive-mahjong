@@ -73,7 +73,6 @@ public class YakumanChecker {
             yakumanMatches.add("All Green");
         }
         yakumanMatches.add("Not A Yakuman");
-        System.out.println("here?");
         return yakumanMatches;
     }
 
@@ -108,7 +107,6 @@ public class YakumanChecker {
     public boolean fourConcealedTriplets(List<Tile> tiles, boolean closed){
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
         Optional<Pair> pair = handEvaluator.findPair(tiles);
-
         return setGroups.size() == 4 && pair.isPresent() && closed;
     }
 

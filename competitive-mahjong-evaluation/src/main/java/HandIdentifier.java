@@ -25,8 +25,6 @@ public class HandIdentifier {
 
         sequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroups,tiles);
 
-        System.out.println(sequenceGroups);
-
         List<String> matchingHands = new ArrayList<>();
         Pair pair = handEvaluator.findPair(tiles).get();
 
@@ -85,6 +83,9 @@ public class HandIdentifier {
         }
 
         if(hasFullFlush(setGroups,sequenceGroups,pair)){
+            if(matchingHands.contains("Half Flush")){
+                matchingHands.remove("Half Flush");
+            }
             matchingHands.add("Full Flush");
         }
 
@@ -194,7 +195,6 @@ public class HandIdentifier {
      * @return
      */
     public boolean oneSetOfIdenticalSequencesSameSuit(List<SequenceGroup> sequenceGroups, Suit suit){
-        System.out.println(sequenceGroups.get(0).getSuit().getIdentifier() + " and " + suit.getIdentifier());
         List<SequenceGroup> filteredSequenceGroups = sequenceGroups.stream()
                 .filter(z -> z.getSuit().getIdentifier().equals(suit.getIdentifier()))
                 .collect(Collectors.toList());

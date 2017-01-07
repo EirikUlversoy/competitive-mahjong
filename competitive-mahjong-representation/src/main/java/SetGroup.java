@@ -75,7 +75,7 @@ public class SetGroup{
     public String toString(){
         String returnString = "";
         returnString = returnString.concat(FirstMember.toString()).concat(" + "+SecondMember.toString())
-                .concat(" + " + ThirdMember.toString() + FourthMember.map(z -> z.toString()));
+                .concat(" + " + ThirdMember.toString()).concat( " + " + FourthMember.map(z -> z.toString()));
 
         return returnString;
     }

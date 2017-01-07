@@ -103,10 +103,16 @@ public class MainController implements Initializable {
     public void checkForEligibleHand(MouseEvent mouseEvent){
         HandIdentifier handIdentifier = new HandIdentifier();
         List<Tile> tiles = rectangleTileMap.keySet().stream().map(z -> rectangleTileMap.get(z)).collect(Collectors.toList());
-        System.out.println(tiles);
-        List<String> matchingHandNames = handIdentifier.identifyMatchingHands(tiles,false,false,false);
-        if(matchingHandNames.size() != 0){
+        RonChecker ronChecker = new RonChecker(new Gamerules());
+        if(ronChecker.handIsValid(tiles)){
+            System.out.println("Valid hand");
+            List<String> matchingHandNames = handIdentifier.identifyMatchingHands(tiles,false,false,false);
+
+
             System.out.println(matchingHandNames);
+            ValuationHan valuationHan = new ValuationHan();
+            System.out.println(valuationHan.calculateHan(tiles,true));
+
         } else {
             System.out.println("No winning hands");
         }

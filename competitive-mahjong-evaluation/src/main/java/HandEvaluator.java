@@ -92,7 +92,7 @@ public class HandEvaluator {
                 sequenceGroups.stream()
                         .collect(Collectors.groupingBy(z -> z.getSuit().getIdentifier()));
 
-        return stringListMap.get(stringListMap.keySet().stream().max((z,x) -> stringListMap.get(z).size()).get());
+        return stringListMap.get(stringListMap.keySet().stream().max((z, x) -> stringListMap.get(z).size()).get());
 
 
 
@@ -235,6 +235,30 @@ public class HandEvaluator {
         }
         return newOptionalPairs.get(0);
     }
+    public List<Tile> decomposeSetGroups(List<SetGroup> setGroups){
+        List<Tile> tiles = new ArrayList<>();
+        setGroups.stream()
+                .forEach( z -> {
+                    tiles.add(z.getFirstMember());
+                    tiles.add(z.getSecondMember());
+                    tiles.add(z.getThirdMember());
+                    tiles.add(z.getFourthMember());
+                });
+
+        return tiles;
+    }
+
+    public List<Tile> decomposeSequenceGroups(List<SequenceGroup> seqGroups){
+        List<Tile> tiles = new ArrayList<>();
+        seqGroups.stream()
+                .forEach( z -> {
+                    tiles.add(z.getFirstMember());
+                    tiles.add(z.getSecondMember());
+                    tiles.add(z.getThirdMember());
+                });
+
+        return tiles;
+    }
 
     public List<Tile> decomposeGroups(List<SequenceGroup> sequenceGroups, List<SetGroup> setGroups){
         List<Tile> tiles = new ArrayList<>();
@@ -290,13 +314,10 @@ public class HandEvaluator {
             List<SequenceGroup> sequenceGroups= this.findSequencesFromTile(tiles,z);
 
             allPermutations.add(sequenceGroups);
-            System.out.println(sequenceGroups.size());
         });
-        System.out.println(allPermutations.size());
          List<SequenceGroup> allFlatPermutations = allPermutations.stream().flatMap(z -> z.stream()).collect(Collectors.toList());
 
         allFlatPermutations = allFlatPermutations.stream().distinct().collect(Collectors.toList());
-        System.out.println(allFlatPermutations);
         return allFlatPermutations;
     }
 
@@ -371,7 +392,6 @@ public class HandEvaluator {
             mrsTiles.addAll(middleSequenceTiles);
             mrsTiles.addAll(sinkingSequenceTiles);
             mrsTiles.addAll(risingSequenceTiles);
-            System.out.println(possibleSeqGroups);
 
             Map<Integer, List<Tile>> tilemap = this.findTileCount(mrsTiles);
 
@@ -383,7 +403,6 @@ public class HandEvaluator {
                     z.setFirstMember(tilemap.get(z.getSecondMember().getTileNumber() - 1).get(0));
                     z.setThirdMember(tilemap.get(z.getSecondMember().getTileNumber() - 2).get(0));
                 } catch (IndexOutOfBoundsException IOOBE) {
-                    System.out.println("no group possible, out of tiles");
                 }
 
             });
@@ -392,14 +411,12 @@ public class HandEvaluator {
                 try {
                     z = tilemap.get(z.getTileNumber()).get(0);
                 } catch (IndexOutOfBoundsException IOOBE) {
-                    System.out.println("no group possible, out of tiles");
                 }
             });
             possibleSeqGroups.stream().map(SequenceGroup::getThirdMember).forEach(z -> {
                 try {
                     z = tilemap.get(z.getTileNumber()).get(0);
                 } catch (IndexOutOfBoundsException IOOBE) {
-                    System.out.println("no group possible, out of tiles");
                 }
             });
 
@@ -429,12 +446,6 @@ public class HandEvaluator {
         List<SequenceGroup> pinSequences = findSequences(pinTiles);
         List<SequenceGroup> souSequences = findSequences(souTiles);
 
-        System.out.println("wan:");
-        System.out.println(wanSequences);
-        System.out.println("pin:");
-        System.out.println(pinSequences);
-        System.out.println("sou:");
-        System.out.println(souSequences);
         List<SequenceGroup> newList = new ArrayList<>();
         if(wanSequences.size() != 0){
             newList.addAll(findMaxValidSequencesOfSuit(wanSequences,wanTiles));
@@ -465,7 +476,6 @@ public class HandEvaluator {
             if(usedTiles.contains(z.getFirstMember()) ||
                     usedTiles.contains(z.getSecondMember()) ||
                     usedTiles.contains(z.getThirdMember())) {
-                System.out.println("One or more tiles used already");
             } else {
                 validSequences.add(z);
                 usedTiles.add(z.getFirstMember());
@@ -485,8 +495,6 @@ public class HandEvaluator {
 
 
         });
-        System.out.println("Leftover tiles are : ");
-        tiles.stream().map(Tile::toString).forEach(System.out::println);
 
         List<SequenceGroup> additionalGroups = findSequences(tiles);
         List<SequenceGroup> additionalValidSequences = new ArrayList<>();
