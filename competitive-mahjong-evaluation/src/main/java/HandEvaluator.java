@@ -429,9 +429,22 @@ public class HandEvaluator {
         List<SequenceGroup> pinSequences = findSequences(pinTiles);
         List<SequenceGroup> souSequences = findSequences(souTiles);
 
-        List<SequenceGroup> newList = findMaxValidSequencesOfSuit(wanSequences,wanTiles);
-        newList.addAll(findMaxValidSequencesOfSuit(pinSequences,pinTiles));
-        newList.addAll(findMaxValidSequencesOfSuit(souSequences,souTiles));
+        System.out.println("wan:");
+        System.out.println(wanSequences);
+        System.out.println("pin:");
+        System.out.println(pinSequences);
+        System.out.println("sou:");
+        System.out.println(souSequences);
+        List<SequenceGroup> newList = new ArrayList<>();
+        if(wanSequences.size() != 0){
+            newList.addAll(findMaxValidSequencesOfSuit(wanSequences,wanTiles));
+        }
+        if(pinSequences.size() != 0){
+            newList.addAll(findMaxValidSequencesOfSuit(pinSequences,pinTiles));
+        }
+        if(souSequences.size() != 0){
+            newList.addAll(findMaxValidSequencesOfSuit(souSequences,souTiles));
+        }
 
         return newList;
     }

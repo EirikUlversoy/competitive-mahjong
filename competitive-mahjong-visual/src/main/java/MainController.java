@@ -103,6 +103,7 @@ public class MainController implements Initializable {
     public void checkForEligibleHand(MouseEvent mouseEvent){
         HandIdentifier handIdentifier = new HandIdentifier();
         List<Tile> tiles = rectangleTileMap.keySet().stream().map(z -> rectangleTileMap.get(z)).collect(Collectors.toList());
+        System.out.println(tiles);
         List<String> matchingHandNames = handIdentifier.identifyMatchingHands(tiles,false,false,false);
         if(matchingHandNames.size() != 0){
             System.out.println(matchingHandNames);
