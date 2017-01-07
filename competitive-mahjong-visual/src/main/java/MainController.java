@@ -62,7 +62,7 @@ public class MainController implements Initializable {
         callRichii.setText("Richii");
 
         orderHand.setOnMouseClicked(this::clickOrderHand);
-
+        callRon.setOnMouseClicked(this::checkForEligibleHand);
         sequenceList.setItems(obsRectangles);
        // assert Win != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
        // Win.setOnAction(this::handleButtonAction);
@@ -98,6 +98,17 @@ public class MainController implements Initializable {
 
         setupTestStage();
         // initialize your logic here: all @FXML variables will have been injected
+
+    }
+    public void checkForEligibleHand(MouseEvent mouseEvent){
+        HandIdentifier handIdentifier = new HandIdentifier();
+        List<Tile> tiles = rectangleTileMap.keySet().stream().map(z -> rectangleTileMap.get(z)).collect(Collectors.toList());
+        List<String> matchingHandNames = handIdentifier.identifyMatchingHands(tiles,false,false,false);
+        if(matchingHandNames.size() != 0){
+            System.out.println(matchingHandNames);
+        } else {
+            System.out.println("No winning hands");
+        }
 
     }
     public void activateDiscardSlot(Integer slot){

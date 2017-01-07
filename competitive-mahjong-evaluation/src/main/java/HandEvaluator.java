@@ -337,77 +337,80 @@ public class HandEvaluator {
         final List<Integer> previousTiles = tiles.stream()
                 .map(Tile::getTileNumber)
                 .collect(Collectors.toList());
-
-        Map<String, Tile> stringTileMap = new HashMap<>();
-
-        List<SequenceGroup> possibleSeqGroups = new ArrayList<>();
-
-        List<Tile> newTiles = tiles.stream()
-                .peek(z -> stringTileMap.put(z.getTileNumber()+"",z))
-                .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()-1)
-                        || previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()+2)
-                        || previousTiles.contains(z.getTileNumber()-1) && previousTiles.contains(z.getTileNumber()-2))
-        .collect(Collectors.toList());
+        if(tiles.size() > 2) {
 
 
-        List<Tile> middleSequenceTiles = tiles.stream()
-                .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()-1))
-                //.peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()-1))))
-                .collect(Collectors.toList());
+            Map<String, Tile> stringTileMap = new HashMap<>();
 
-        List<Tile> risingSequenceTiles = tiles.stream()
-                .filter(z -> previousTiles.contains(z.getTileNumber()+1) && previousTiles.contains(z.getTileNumber()+2))
-                //.peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()+2))))
-                .collect(Collectors.toList());
+            List<SequenceGroup> possibleSeqGroups = new ArrayList<>();
 
-        List<Tile> sinkingSequenceTiles = tiles.stream()
-                .filter(z -> previousTiles.contains(z.getTileNumber()-1) && previousTiles.contains(z.getTileNumber()-2))
-                .peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()-1,4,z.getSuit()),z, new Tile(z.getTileNumber()-2,4,z.getSuit()))))
-                .collect(Collectors.toList());
+            List<Tile> newTiles = tiles.stream()
+                    .peek(z -> stringTileMap.put(z.getTileNumber() + "", z))
+                    .filter(z -> previousTiles.contains(z.getTileNumber() + 1) && previousTiles.contains(z.getTileNumber() - 1)
+                            || previousTiles.contains(z.getTileNumber() + 1) && previousTiles.contains(z.getTileNumber() + 2)
+                            || previousTiles.contains(z.getTileNumber() - 1) && previousTiles.contains(z.getTileNumber() - 2))
+                    .collect(Collectors.toList());
 
-        List<Tile> mrsTiles = new ArrayList<>();
-        mrsTiles.addAll(middleSequenceTiles);
-        mrsTiles.addAll(sinkingSequenceTiles);
-        mrsTiles.addAll(risingSequenceTiles);
-        System.out.println(possibleSeqGroups);
 
-        Map<Integer, List<Tile>> tilemap = this.findTileCount(mrsTiles);
+            List<Tile> middleSequenceTiles = tiles.stream()
+                    .filter(z -> previousTiles.contains(z.getTileNumber() + 1) && previousTiles.contains(z.getTileNumber() - 1))
+                    //.peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()-1))))
+                    .collect(Collectors.toList());
 
-        List<SequenceGroup> newPossibleSeqGroups = possibleSeqGroups;
-        Integer i = 0;
-        possibleSeqGroups.stream().forEach(z -> {
-            //Integer index = possibleSeqGroups.indexOf(z);
-            try{
-                z.setFirstMember(tilemap.get(z.getSecondMember().getTileNumber()-1).get(0));
-                z.setThirdMember(tilemap.get(z.getSecondMember().getTileNumber()-2).get(0));
-            } catch (IndexOutOfBoundsException IOOBE) {
-                System.out.println("no group possible, out of tiles");
+            List<Tile> risingSequenceTiles = tiles.stream()
+                    .filter(z -> previousTiles.contains(z.getTileNumber() + 1) && previousTiles.contains(z.getTileNumber() + 2))
+                    //.peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber()+1),z, new Tile(z.getTileNumber()+2))))
+                    .collect(Collectors.toList());
+
+            List<Tile> sinkingSequenceTiles = tiles.stream()
+                    .filter(z -> previousTiles.contains(z.getTileNumber() - 1) && previousTiles.contains(z.getTileNumber() - 2))
+                    .peek(z -> possibleSeqGroups.add(new SequenceGroup(new Tile(z.getTileNumber() - 1, 4, z.getSuit()), z, new Tile(z.getTileNumber() - 2, 4, z.getSuit()))))
+                    .collect(Collectors.toList());
+
+            List<Tile> mrsTiles = new ArrayList<>();
+            mrsTiles.addAll(middleSequenceTiles);
+            mrsTiles.addAll(sinkingSequenceTiles);
+            mrsTiles.addAll(risingSequenceTiles);
+            System.out.println(possibleSeqGroups);
+
+            Map<Integer, List<Tile>> tilemap = this.findTileCount(mrsTiles);
+
+            List<SequenceGroup> newPossibleSeqGroups = possibleSeqGroups;
+            Integer i = 0;
+            possibleSeqGroups.stream().forEach(z -> {
+                //Integer index = possibleSeqGroups.indexOf(z);
+                try {
+                    z.setFirstMember(tilemap.get(z.getSecondMember().getTileNumber() - 1).get(0));
+                    z.setThirdMember(tilemap.get(z.getSecondMember().getTileNumber() - 2).get(0));
+                } catch (IndexOutOfBoundsException IOOBE) {
+                    System.out.println("no group possible, out of tiles");
+                }
+
+            });
+            possibleSeqGroups.stream().map(SequenceGroup::getSecondMember).forEach(z ->
+            {
+                try {
+                    z = tilemap.get(z.getTileNumber()).get(0);
+                } catch (IndexOutOfBoundsException IOOBE) {
+                    System.out.println("no group possible, out of tiles");
+                }
+            });
+            possibleSeqGroups.stream().map(SequenceGroup::getThirdMember).forEach(z -> {
+                try {
+                    z = tilemap.get(z.getTileNumber()).get(0);
+                } catch (IndexOutOfBoundsException IOOBE) {
+                    System.out.println("no group possible, out of tiles");
+                }
+            });
+
+
+            //groups.stream().forEach(z -> {
+            //    possibleSeqGroups.add(new SequenceGroup(z.getFirstMember(),z.getSecondMember(),z.getThirdMember()));
+            //});
+            return possibleSeqGroups;
+        } else {
+             return new ArrayList<>();
             }
-
-        });
-        possibleSeqGroups.stream().map(SequenceGroup::getSecondMember).forEach( z->
-        {
-            try {
-                z = tilemap.get(z.getTileNumber()).get(0);
-            } catch (IndexOutOfBoundsException IOOBE) {
-                System.out.println("no group possible, out of tiles");
-            }
-        });
-        possibleSeqGroups.stream().map(SequenceGroup::getThirdMember).forEach( z->{
-            try{
-                z = tilemap.get(z.getTileNumber()).get(0);
-            } catch (IndexOutOfBoundsException IOOBE) {
-                System.out.println("no group possible, out of tiles");
-            }
-        });
-
-
-
-
-        //groups.stream().forEach(z -> {
-        //    possibleSeqGroups.add(new SequenceGroup(z.getFirstMember(),z.getSecondMember(),z.getThirdMember()));
-        //});
-        return possibleSeqGroups;
     }
 
     /**

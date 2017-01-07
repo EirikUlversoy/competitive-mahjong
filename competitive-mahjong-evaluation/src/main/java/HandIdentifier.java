@@ -12,12 +12,20 @@ public class HandIdentifier {
         yakumanChecker = new YakumanChecker(this);
     }
 
-    public List<String> identifyMatchingHands(Hand hand, boolean singleWait, boolean closed, boolean nineWait){
-        List<Tile> tiles = hand.getTiles();
+    public List<String> identifyMatchingHands(List<Tile> tiles, boolean singleWait, boolean closed, boolean nineWait){
         List<SetGroup> setGroups = handEvaluator.findSets(tiles);
-        List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
+
+        List<Tile> wanTiles = handEvaluator.filterWan(tiles);
+        List<Tile> souTiles = handEvaluator.filterPin(tiles);
+        List<Tile> pinTiles = handEvaluator.filterSou(tiles);
+
+        List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(wanTiles);
+        sequenceGroups.addAll(handEvaluator.findSequences(souTiles));
+        sequenceGroups.addAll(handEvaluator.findSequences(pinTiles));
+
         sequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroups,tiles);
 
+        System.out.println(sequenceGroups);
 
         List<String> matchingHands = new ArrayList<>();
         Pair pair = handEvaluator.findPair(tiles).get();

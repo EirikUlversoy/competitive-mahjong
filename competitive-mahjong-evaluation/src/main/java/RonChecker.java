@@ -29,9 +29,9 @@ public class RonChecker {
 
     public boolean handMeetsMinimumValue(List<Tile> tiles, Pair pair, Integer minimumHandValue, boolean singleWait, boolean nineWait, boolean closed ){
         HandIdentifier handIdentifier = new HandIdentifier();
-        Hand hand = new Hand(4);
-        hand.setTiles(tiles);
-        List<String> matchingHands = handIdentifier.identifyMatchingHands(hand,singleWait,closed,nineWait);
+        //Hand hand = new Hand(4);
+        //hand.setTiles(tiles);
+        List<String> matchingHands = handIdentifier.identifyMatchingHands(tiles,singleWait,closed,nineWait);
 
         return !matchingHands.isEmpty();
 
