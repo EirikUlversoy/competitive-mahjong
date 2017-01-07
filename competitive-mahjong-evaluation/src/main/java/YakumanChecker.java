@@ -80,27 +80,18 @@ public class YakumanChecker {
 
         Pair pair = handEvaluator.findPair(tiles).get();
 
-        List<Tile> thirtheenOrphansExample = tilesFromFile.analyzeString("V1234C1234S19W19P19");
+        List<Tile> thirtheenOrphansExample = tilesFromFile.analyzeString("V1234C123S19W19P19");
         boolean didContain = false;
-        boolean listDidNotContain = false;
-        for (Tile tile : tiles){
-            didContain = thirtheenOrphansExample.contains(tile);
-            if(didContain){
-                listDidNotContain = true;
-            }
-        }
-
+        didContain = tiles.stream().distinct().allMatch(z -> thirtheenOrphansExample.contains(z));
+        System.out.println(tiles);
+        System.out.println(thirtheenOrphansExample);
         boolean onlyTwoOfOne = tiles.stream()
                 .map(z -> z.getTileNumber() + z.getSuit().getIdentifier())
                 .distinct()
                 .count() == 13;
-        //boolean thirtheenOrphans = thirtheenOrphansExample.stream()
-        //        .map(z -> z.getTileNumber() + z.getSuit().getIdentifier())
-        //        .allMatch(z -> tiles.stream().map(x -> x.getTileNumber() + x.getSuit().getIdentifier())
-        //.collect(Collectors.toList()).contains(z));
 
 
-        return !listDidNotContain && onlyTwoOfOne && handEvaluator.pairIsTerminalOrHonor(pair);
+        return didContain && onlyTwoOfOne && handEvaluator.pairIsTerminalOrHonor(pair);
 
     }
 

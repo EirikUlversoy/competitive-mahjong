@@ -25,6 +25,12 @@ public class HandIdentifier {
 
         List<String> matchingHands = new ArrayList<>();
         Pair pair = handEvaluator.findPair(tiles).get();
+
+        sequenceGroups = handEvaluator.findSequences(wanTiles);
+        sequenceGroups.addAll(handEvaluator.findSequences(souTiles));
+        sequenceGroups.addAll(handEvaluator.findSequences(pinTiles));
+
+
         if(hasSevenPairs(tiles)){
             matchingHands.add("Seven Pairs");
         }
@@ -301,7 +307,7 @@ public class HandIdentifier {
 
     /**
      * Checks for half flush.
-     * @param groupList
+     *
      * @return
      */
     public boolean hasHalfFlush(List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair){

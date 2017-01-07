@@ -72,8 +72,11 @@ public class TilesFromFile {
         string.chars()
                 .mapToObj(i -> (char)i)
                 .forEach(this::analyzeCharacters);
+        System.out.println("before dupl");
+        System.out.println(this.tiles);
         this.tiles = dealWithDuplicates(this.tiles);
-
+        System.out.println("dupl");
+        System.out.println(this.tiles);
         List<Tile> tileOutput = new ArrayList<>();
         tileOutput.addAll(this.tiles);
         return tileOutput;

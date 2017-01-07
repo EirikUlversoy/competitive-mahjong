@@ -29,7 +29,11 @@ public class YakumanCheckerTest {
         List<Tile> trueTiles = tilesFromFile.analyzeString("V11V2S1S9W1W9V3V4P1P9C1C2C3");
         List<Tile> falseTiles = tilesFromFile.analyzeString("S123V1V2V3V4C1C2C3W9133");
         Assert.assertTrue(yakumanChecker.thirtheenOrphans(trueTiles));
+        System.out.println("true tiles");
+        System.out.println(trueTiles);
         Assert.assertFalse(yakumanChecker.thirtheenOrphans(falseTiles));
+        List<Tile> tiles = tilesFromFile.analyzeString("S123W987P345P678V11");
+        Assert.assertFalse(yakumanChecker.thirtheenOrphans(tiles));
 
     }
 
