@@ -104,13 +104,15 @@ public class MainController implements Initializable {
         HandIdentifier handIdentifier = new HandIdentifier();
         List<Tile> tiles = rectangleTileMap.keySet().stream().map(z -> rectangleTileMap.get(z)).collect(Collectors.toList());
         RonChecker ronChecker = new RonChecker(new Gamerules());
-        if(ronChecker.handIsValid(tiles)){
+        if(ronChecker.handIsValid(tiles) || ronChecker.hasSevenPairs(tiles)){
             System.out.println("Valid hand");
+
             List<String> matchingHandNames = handIdentifier.identifyMatchingHands(tiles,false,false,false);
 
 
             System.out.println(matchingHandNames);
             ValuationHan valuationHan = new ValuationHan();
+
             System.out.println(valuationHan.calculateHan(tiles,true));
 
         } else {

@@ -49,7 +49,7 @@ public class HandIdentifierTest {
 
         Assert.assertTrue(handIdentifier.hasChanta(cSetGroups,cSequenceGroups,cPair));
         Assert.assertFalse(handIdentifier.hasChanta(iSetGroups,iSequenceGroups,cPair));
-
+        Assert.assertFalse(handIdentifier.hasChanta(iSetGroups,iSequenceGroups,cPair));
     }
     @Test
     public void checkFlushFunction(){

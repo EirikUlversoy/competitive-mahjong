@@ -62,23 +62,22 @@ public class RonChecker {
 
     }
 
-    public boolean handMeetsMinimumValue(List<Tile> tiles, Pair pair, Integer minimumHandValue, boolean singleWait, boolean nineWait, boolean closed ){
+    public boolean handMeetsMinimumValue(List<Tile> tiles, boolean closed){
         HandIdentifier handIdentifier = new HandIdentifier();
         //Hand hand = new Hand(4);
         //hand.setTiles(tiles);
-        List<String> matchingHands = handIdentifier.identifyMatchingHands(tiles,singleWait,closed,nineWait);
-
-        return !matchingHands.isEmpty();
+        if(hasSevenPairs(tiles)){
+            return true;
+        }
+        List<String> matchingHands = handIdentifier.identifyMatchingHands(tiles,true,closed,false);
+        System.out.println(matchingHands);
+        return matchingHands.size() > 1;
 
     }
     public boolean hasSevenPairs(List<Tile> tiles){
         Map<Integer, List<Tile>> integerListMap= handEvaluator.findTileCount(tiles);
-
-        List<Integer> integers =  integerListMap.keySet().stream()
-                .filter(z -> integerListMap.get(z).size() == 2)
-                .collect(Collectors.toList());
-
-        return integers.size() == 7;
+        List<Optional<Pair>> listOfPairs = handEvaluator.findPairs(tiles);
+        return listOfPairs.size() == 7;
     }
 
 

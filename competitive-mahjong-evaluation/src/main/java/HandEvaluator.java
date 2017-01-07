@@ -235,6 +235,50 @@ public class HandEvaluator {
         }
         return newOptionalPairs.get(0);
     }
+
+    public List<Optional<Pair>> findPairs(List<Tile> tiles){
+        List<Optional<Pair>> potentialPairs = new ArrayList<>();
+        if(tiles.size() <= 13 || tiles.size() >=19 ){
+            potentialPairs.add(Optional.empty());
+            return potentialPairs;
+        }
+
+        List<SequenceGroup> sequenceGroups = this.findMaxValidSequences(this.findSequences(tiles),tiles);
+        List<SetGroup> setGroups = this.findSets(tiles);
+
+        List<Tile> wanTiles = filterWan(tiles);
+        List<Tile> souTiles = filterSou(tiles);
+        List<Tile> pinTiles = filterPin(tiles);
+        List<Tile> colorTiles = filterSuit(ColorTile.class, tiles);
+        List<Tile> windTiles = filterSuit(WindTile.class, tiles);
+
+        potentialPairs = findPairInSuit(wanTiles, WanTile.class);
+        potentialPairs.addAll(findPairInSuit(souTiles,SouTile.class));
+        potentialPairs.addAll(findPairInSuit(pinTiles,PinTile.class));
+        potentialPairs.addAll(findPairInSuit(colorTiles,ColorTile.class));
+        potentialPairs.addAll(findPairInSuit(windTiles,WindTile.class));
+
+        if(potentialPairs.size() == 0){
+            potentialPairs.add(Optional.empty());
+        }
+        List<Optional<Pair>> newOptionalPairs = new ArrayList<>();
+
+
+        if(potentialPairs.size() >= 1){
+            List<Tile> usedTiles = this.decomposeGroups(sequenceGroups,setGroups);
+            for (Optional<Pair> pair : potentialPairs){
+                if(pair.isPresent()) {
+                    if (!usedTiles.contains(pair.get().getFirstMember()) && !usedTiles.contains(pair.get().getSecondMember())) {
+                        newOptionalPairs.add(pair);
+                    }
+                }
+            }
+        }
+        if(newOptionalPairs.size() == 0){
+            newOptionalPairs.add(Optional.empty());
+        }
+        return newOptionalPairs;
+    }
     public List<Tile> decomposeSetGroups(List<SetGroup> setGroups){
         List<Tile> tiles = new ArrayList<>();
         setGroups.stream()

@@ -1,7 +1,5 @@
 import java.security.acl.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HandIdentifier {
@@ -27,6 +25,9 @@ public class HandIdentifier {
 
         List<String> matchingHands = new ArrayList<>();
         Pair pair = handEvaluator.findPair(tiles).get();
+        if(hasSevenPairs(tiles)){
+            matchingHands.add("Seven Pairs");
+        }
 
 
         List<String> matchingYakumanHands = new ArrayList<>();
@@ -94,6 +95,12 @@ public class HandIdentifier {
         }
 
         return matchingHands;
+    }
+
+    public boolean hasSevenPairs(List<Tile> tiles){
+        Map<Integer, List<Tile>> integerListMap= handEvaluator.findTileCount(tiles);
+        List<Optional<Pair>> listOfPairs = handEvaluator.findPairs(tiles);
+        return listOfPairs.size() == 7;
     }
     /**
      * Chanta is a hand where you have a terminal in each set. Honors can be used. Example: S123W123P123789C11
