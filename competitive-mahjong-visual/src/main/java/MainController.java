@@ -62,7 +62,7 @@ public class MainController implements Initializable {
         callRichii.setText("Richii");
 
         orderHand.setOnMouseClicked(this::clickOrderHand);
-        
+
         sequenceList.setItems(obsRectangles);
        // assert Win != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
        // Win.setOnAction(this::handleButtonAction);
@@ -117,6 +117,36 @@ public class MainController implements Initializable {
         //pond.translateYProperty().setValue(25);
     }
     public void clickOrderHand(MouseEvent event){
+        Map<Tile, String> handMap = new HashMap<>();
+        List<Tile> tiles = new ArrayList<>();
+        p1hand.getChildren().stream().peek(z -> System.out.println(z)).forEach(z -> tiles.add(rectangleTileMap.get(z)) );
+        List<Tile> orderedTiles = tiles.stream().sorted((z,x)-> {
+            Integer extraCost = z.getClass() == ColorTile.class || z.getClass() == WindTile.class ? 5 : 0;
+            Integer extraCostX = x.getClass() == ColorTile.class || x.getClass() == WindTile.class ? 5 : 0;
+            return (extraCost+z.getIdentifier()).compareTo(extraCostX+x.getIdentifier());
+        } ).collect(Collectors.toList());
+
+        Integer x = 0;
+        //p1hand.getChildren().clear();
+        List<Rectangle> orderedRectangles = new ArrayList<>();
+        for(Tile tile : orderedTiles){
+            System.out.println(tile);
+            Rectangle testRect = (Rectangle)p1hand.getChildren().get(x);
+            testRect = rectangleMap.get(tile);
+            orderedRectangles.add(testRect);
+            x += 1;
+        }
+        x = 0;
+        p1hand.getChildren().clear();
+
+        for (Rectangle rect : orderedRectangles){
+            p1hand.add(rect,x,0);
+            x +=1;
+        }
+
+
+        //p1hand.
+
 
     }
     public void sink(MouseEvent event){
