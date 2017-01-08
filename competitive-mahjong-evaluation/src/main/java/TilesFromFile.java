@@ -38,7 +38,7 @@ public class TilesFromFile {
         File file = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\samplehands");
         Files.lines(Paths.get(System.getProperty("user.dir")+"\\src\\test\\resources\\samplehands"))
                 .filter(z -> !z.contains("#"))
-                .forEach(z->strings.add(z));
+                .forEach(z -> strings.add(z));
 
         for(String string : strings){
             tileLists.add(analyzeString(string));
@@ -60,10 +60,19 @@ public class TilesFromFile {
         Map<String, Integer> mapthing = new HashMap<>();
 
         for(Tile tile: tiles){
-            if(mapthing.containsKey(tile.getTileNumber())){
-                tile.setTileId(tile.getTileId()+1);
+            String key = tile.getSuit().getIdentifier()+tile.getTileNumber();
+            if(mapthing.containsKey(key)){
+                System.out.println(tile.getTileId());
+                tile.setTileId(mapthing.get(key) + 1);
+                tile.setIdentifier(tile.getSuit().getIdentifier()+tile.getTileNumber()+tile.getTileId());
+                System.out.println(tile.getTileId());
+                mapthing.replace(key,tile.getTileId());
+            } else {
+                mapthing.put(key,1);
             }
-        }
+
+            }
+        System.out.println(tiles);
         return tiles;
     }
     public List<Tile> analyzeString(String string){
@@ -111,15 +120,15 @@ public class TilesFromFile {
             default : {
                 Integer numericValue = Character.getNumericValue(i);
                 if(this.SOU){
-                    this.tiles.add(new SouTile(numericValue,numericValue));
+                    this.tiles.add(new SouTile(numericValue,1));
                 } else if (this.WAN) {
-                    this.tiles.add(new WanTile(numericValue, numericValue));
+                    this.tiles.add(new WanTile(numericValue,1));
                 } else if (this.PIN) {
-                    this.tiles.add(new PinTile(numericValue, numericValue));
+                    this.tiles.add(new PinTile(numericValue,1));
                 } else if (this.COLOR) {
-                    this.tiles.add(new ColorTile(colorIntToString.get(numericValue),numericValue));
+                    this.tiles.add(new ColorTile(colorIntToString.get(numericValue),numericValue,1));
                 } else if (this.WIND) {
-                    this.tiles.add(new WindTile(windIntToString.get(numericValue),numericValue));
+                    this.tiles.add(new WindTile(windIntToString.get(numericValue),numericValue,1));
     }
             }
         }

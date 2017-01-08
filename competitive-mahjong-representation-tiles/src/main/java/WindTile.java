@@ -13,6 +13,8 @@ public class WindTile extends Tile{
     }
     public WindTile(String wind, Integer windId,Integer tile_id){
         super(windId,tile_id, new Suit(wind));
+        this.setIdentifier(this.getSuit().getIdentifier()+getTileNumber()+getTileId());
+
         //this.setSuit(new Suit(wind));
     }
 
