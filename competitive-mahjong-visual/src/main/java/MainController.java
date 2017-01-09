@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -39,7 +40,7 @@ public class MainController implements Initializable {
     @FXML private Button orderHand;
     @FXML private Button callRon;
     @FXML private Button callRichii;
-
+    @FXML private TextField handNameField;
     private List<Rectangle> pondRectangles = new ArrayList<>();
     //@FXML private List<Rectangle> rectangles;
     private Node currentNode;
@@ -103,19 +104,25 @@ public class MainController implements Initializable {
     public void checkForEligibleHand(MouseEvent mouseEvent){
         HandIdentifier handIdentifier = new HandIdentifier();
         List<Tile> tiles = rectangleTileMap.keySet().stream().map(z -> rectangleTileMap.get(z)).collect(Collectors.toList());
+        System.out.println(tiles);
         RonChecker ronChecker = new RonChecker(new Gamerules());
         if(ronChecker.handIsValid(tiles) || ronChecker.hasSevenPairs(tiles)){
             System.out.println("Valid hand");
 
-            List<String> matchingHandNames = handIdentifier.identifyMatchingHands(tiles,false,false,false);
+            List<String> matchingHandNames = handIdentifier.identifyMatchingHands(tiles, false, false, false);
 
-
+            matchingHandNames.remove("Not A Yakuman");
             System.out.println(matchingHandNames);
+            Optional<String> text = matchingHandNames.stream().reduce((z,x)-> z+ " " +x);
+
+            handNameField.setText(text.orElse("Not a winning hand"));
             ValuationHan valuationHan = new ValuationHan();
 
             System.out.println(valuationHan.calculateHan(tiles,true));
 
         } else {
+            handNameField.setText("No calling ron on an invalid hand!");
+            handNameField.setStyle("-fx-text-inner-color: red;");
             System.out.println("No winning hands");
         }
 

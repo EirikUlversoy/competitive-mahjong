@@ -11,6 +11,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -22,7 +23,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
   <children>
     <MenuBar fx:id="main" VBox.vgrow="NEVER">
       <menus>
@@ -203,6 +204,7 @@
                           </buttons>
                         </ButtonBar>
                         <Button fx:id="discardButton" layoutX="333.0" layoutY="390.0" mnemonicParsing="false" text="Button" />
+                        <TextField fx:id="handNameField" layoutX="20.0" layoutY="479.0" prefHeight="25.0" prefWidth="383.0" />
               </children>
             </AnchorPane>
           </content>

@@ -1,3 +1,5 @@
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
 import java.security.acl.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,6 +42,8 @@ public class HandIdentifier {
 
         matchingYakumanHands = yakumanChecker.findYakumanIfAny(tiles,singleWait,closed,nineWait);
 
+        System.out.println(setGroups);
+        System.out.println(sequenceGroups);
         if(!matchingYakumanHands.contains("No Yakuman")){
             matchingHands.addAll(matchingYakumanHands);
             //return matchingHands;
@@ -280,12 +284,12 @@ public class HandIdentifier {
         disqualifyingNumbers.add(6);
         List<SetGroup> setGroups = new ArrayList<>();
 
-        List<Tile> tiles = handEvaluator.decomposeGroups(sequenceGroups,setGroups);
+        List<Tile> tiles = handEvaluator.decomposeGroups(sequenceGroups, setGroups);
         List<SequenceGroup> wanSequences = handEvaluator.findSequences(handEvaluator.filterWan(tiles));
         List<SequenceGroup> pinSequences = handEvaluator.findSequences(handEvaluator.filterPin(tiles));
         List<SequenceGroup> souSequences = handEvaluator.findSequences(handEvaluator.filterSou(tiles));
 
-        List<SequenceGroup> newSequenceGroups = handEvaluator.filterLargestSuit(sequenceGroups);
+        //List<SequenceGroup> newSequenceGroups = handEvaluator.filterLargestSuit(sequenceGroups);
 
         boolean wanHasStraight = wanSequences.stream()
                 .map(SequenceGroup::getThirdMember)
@@ -360,6 +364,11 @@ public class HandIdentifier {
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Pin"));
         boolean SOUSeq = sequenceGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Sou"));
+        System.out.println(WANSets);
+        System.out.println(WANSeq);
+        System.out.println(PINSeq);
+        System.out.println(PINSets);
+
 
         return (WANSets && WANSeq) || (PINSets && PINSeq) || (SOUSets && SOUSeq);
     }
