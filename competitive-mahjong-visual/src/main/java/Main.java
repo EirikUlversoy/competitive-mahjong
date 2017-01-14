@@ -58,6 +58,7 @@ public class Main extends Application
         TilesFromFile tilesFromFile = new TilesFromFile();
 
         List<Tile> altInitialTiles = tilesFromFile.analyzeString("S556699W22P22P33S33");
+        altInitialTiles = tilesFromFile.analyzeString("P123W123S123S789V22");
         altInitialTiles.forEach(z -> z.fixImage());
         //rectangleTileMap = main.fillHandRectangles(initialTiles);
         rectangleTileMap = main.fillHandRectangles(altInitialTiles);

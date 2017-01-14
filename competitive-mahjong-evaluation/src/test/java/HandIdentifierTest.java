@@ -157,6 +157,9 @@ public class HandIdentifierTest {
         Assert.assertFalse(handIdentifier.sameSequenceInThreeSuits(sequenceGroupsIncorrect));
         Assert.assertTrue(handIdentifier.sameSequenceInThreeSuits(sequenceGroupsCorrect));
 
+        List<Tile> tiles2 = tilesFromFile.analyzeString("S123W123P123V22S789");
+        sequenceGroups = handEvaluator.findSequences(tiles2);
+        Assert.assertTrue(handIdentifier.sameSequenceInThreeSuits(sequenceGroups));
     }
 
     @Test

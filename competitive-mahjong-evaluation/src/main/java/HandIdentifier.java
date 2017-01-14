@@ -49,7 +49,7 @@ public class HandIdentifier {
             //return matchingHands;
         }
 
-        if(hasChanta(setGroups,sequenceGroups,pair)){
+        if(hasChanta(setGroups, sequenceGroups, pair)){
             matchingHands.add("Chanta");
         }
 
@@ -73,15 +73,15 @@ public class HandIdentifier {
             matchingHands.add("Two Sets Of Identical Sequences");
         }
 
-        if(hasAllSimples(setGroups,sequenceGroups,pair)){
+        if(hasAllSimples(setGroups, sequenceGroups, pair)){
             matchingHands.add("All Simples");
         }
 
-        if(hasTerminalInEachSet(setGroups,sequenceGroups,pair)){
+        if(hasTerminalInEachSet(setGroups, sequenceGroups, pair)){
             matchingHands.add("Terminal In Each Set");
         }
 
-        if(allTerminalsAndHonors(setGroups,sequenceGroups,pair)){
+        if(allTerminalsAndHonors(setGroups, sequenceGroups, pair)){
             matchingHands.add("All Terminals And Honors");
         }
 
@@ -89,16 +89,32 @@ public class HandIdentifier {
             matchingHands.add("Straight");
         }
 
-        if(hasHalfFlush(setGroups,sequenceGroups,pair)){
-            matchingHands.add("Half Flush");
+        if(hasSevenPairs(tiles)){
+            if(hasHalfFlushWithSevenPairs(tiles, setGroups, sequenceGroups, pair)) {
+                matchingHands.add("Half Flush");
+            }
+
+        } else {
+            if(hasHalfFlush(setGroups,sequenceGroups,pair)){
+                matchingHands.add("Half Flush");
+            }
+        }
+        if (hasSevenPairs(tiles)) {
+            if(hasFullFlushWithSevenPairs(tiles)){
+                if(matchingHands.contains("Half Flush")){
+                    matchingHands.remove("Half Flush");
+                }
+                matchingHands.add("Full Flush");
+            }
+        } else {
+            if(hasFullFlush(setGroups, sequenceGroups, pair)){
+                if(matchingHands.contains("Half Flush")){
+                    matchingHands.remove("Half Flush");
+                }
+                matchingHands.add("Full Flush");
+            }
         }
 
-        if(hasFullFlush(setGroups,sequenceGroups,pair)){
-            if(matchingHands.contains("Half Flush")){
-                matchingHands.remove("Half Flush");
-            }
-            matchingHands.add("Full Flush");
-        }
 
         if(hasThreeLittleDragons(setGroups,sequenceGroups,pair)){
             matchingHands.add("Three Little Dragons");
@@ -178,15 +194,7 @@ public class HandIdentifier {
         if(sequenceGroups.size() <= 2){
             return false;
         }
-        List<SequenceGroup> newSequenceGroups = handEvaluator.removeDuplicateSuitSequences(sequenceGroups);
-        if(sequenceGroups.size() <= 2){
-            return false;
-        }
-        return sequenceGroups.stream()
-                .map(z -> z.getFirstMember().getTileNumber())
-                .distinct()
-                .count() == 1;
-
+        
     }
 
     /**
@@ -197,7 +205,7 @@ public class HandIdentifier {
     public boolean twoSetsOfIdenticalSequences(List<SequenceGroup> sequenceGroups){
         boolean WAN = oneSetOfIdenticalSequencesSameSuit(sequenceGroups,new Suit("Wan"));
         boolean PIN = oneSetOfIdenticalSequencesSameSuit(sequenceGroups,new Suit("Pin"));
-        boolean SOU = oneSetOfIdenticalSequencesSameSuit(sequenceGroups,new Suit("Sou"));
+        boolean SOU = oneSetOfIdenticalSequencesSameSuit(sequenceGroups, new Suit("Sou"));
 
         return WAN && (PIN || SOU) || (PIN && SOU);
 
@@ -346,6 +354,23 @@ public class HandIdentifier {
         return (handEvaluator.findColorSetAmount(setGroups)== 2) && handEvaluator.pairIsDragonPair(pair);
     }
 
+
+    public boolean hasFullFlushWithSevenPairs(List<Tile> tiles){
+
+        return tiles.stream().map(z -> z.getSuit().getIdentifier()).distinct().count() == 1;
+    }
+
+    public boolean hasHalfFlushWithSevenPairs(List<Tile> tiles, List<SetGroup> setGroups, List<SequenceGroup> sequenceGroups, Pair pair ){
+        boolean honors = this.allTerminalsAndHonors(setGroups,sequenceGroups,pair);
+        if(honors){
+            return false;
+        }
+
+        List<Tile> newTiles = tiles.stream()
+                .filter(z -> z.getSuit().getIdentifier().equals("Wan")
+                        || z.getSuit().getIdentifier().equals("Pin") || z.getSuit().getIdentifier().equals("Sou")).collect(Collectors.toList());
+        return newTiles.stream().map(z -> z.getSuit().getIdentifier()).distinct().count() == 1;
+    }
     /**
      * Checks for full flush.
      * @return
@@ -364,11 +389,11 @@ public class HandIdentifier {
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Pin"));
         boolean SOUSeq = sequenceGroups.stream().allMatch(group -> group.getSuit().getIdentifier() == "Sou")
                 && handEvaluator.pairIsGivenSuit(pair,new Suit("Sou"));
+
         System.out.println(WANSets);
         System.out.println(WANSeq);
         System.out.println(PINSeq);
         System.out.println(PINSets);
-
 
         return (WANSets && WANSeq) || (PINSets && PINSeq) || (SOUSets && SOUSeq);
     }

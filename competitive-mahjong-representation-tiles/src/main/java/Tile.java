@@ -94,7 +94,8 @@ public class Tile {
             this.findImage();
             System.out.println(this.image);
         } else {
-            this.setImagePath("/images/"+this.getIdentifier()+".png");
+            this.setImagePath("/images/"+this.getSuit().getIdentifier()+".png");
+           // this.setImagePath("/images/"+this.getTileNumber()+this.getSuit().getIdentifier());
             this.findImage();
         }
 
