@@ -1,3 +1,6 @@
+import com.typesafe.config.ConfigException;
+
+import javax.crypto.NullCipher;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -446,7 +449,7 @@ public class HandEvaluator {
                 try {
                     z.setFirstMember(tilemap.get(z.getSecondMember().getTileNumber() - 1).get(0));
                     z.setThirdMember(tilemap.get(z.getSecondMember().getTileNumber() - 2).get(0));
-                } catch (IndexOutOfBoundsException IOOBE) {
+                } catch (NullPointerException ex) {
                 }
 
             });
@@ -454,13 +457,13 @@ public class HandEvaluator {
             {
                 try {
                     z = tilemap.get(z.getTileNumber()).get(0);
-                } catch (IndexOutOfBoundsException IOOBE) {
+                } catch (NullPointerException ex) {
                 }
             });
             possibleSeqGroups.stream().map(SequenceGroup::getThirdMember).forEach(z -> {
                 try {
                     z = tilemap.get(z.getTileNumber()).get(0);
-                } catch (IndexOutOfBoundsException IOOBE) {
+                } catch (NullPointerException ex) {
                 }
             });
 

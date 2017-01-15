@@ -194,7 +194,7 @@ public class HandIdentifier {
         if(sequenceGroups.size() <= 2){
             return false;
         }
-        
+        return false;
     }
 
     /**

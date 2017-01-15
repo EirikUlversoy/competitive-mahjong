@@ -41,6 +41,8 @@ public class MainController implements Initializable {
     @FXML private Button callRon;
     @FXML private Button callRichii;
     @FXML private TextField handNameField;
+    @FXML private Rectangle drawnTile;
+    @FXML private Button discardButton;
     private List<Rectangle> pondRectangles = new ArrayList<>();
     //@FXML private List<Rectangle> rectangles;
     private Node currentNode;
@@ -50,6 +52,7 @@ public class MainController implements Initializable {
     private Map<Rectangle, Tile> rectangleTileMap = new HashMap<>();
     private List<List<Tile>> rectobs = new ArrayList<>(new ArrayList<>());
     private ObservableList<List<Tile>> obsRectangles = FXCollections.observableList(rectobs);
+    private Rectangle currentlySelectedRectangle = new Rectangle();
    // public Pane getMainStage() {
     //    return mainStage;
    // }
@@ -89,12 +92,13 @@ public class MainController implements Initializable {
         Image image = new Image("/images/1Char.png");
         Rectangle rekt = (Rectangle)p1hand.getChildren().get(0);
         rekt.setFill(new ImagePattern(image));
-        activateDiscardSlot(1);
-        activateDiscardSlot(0);
+        //activateDiscardSlot(1);
+        //activateDiscardSlot(0);
         p1hand.getChildren().stream().forEach(z -> {
             z.setOnMouseClicked(this::liftHand);
 
         });
+
         //testPond.getChildren().removeIf(z -> true);
 
         setupTestStage();
@@ -143,6 +147,48 @@ public class MainController implements Initializable {
     */
         //pond.translateYProperty().setValue(25);
     }
+
+    public void presentNewTile(){
+        Tile nextTile = tileset.getRandomTiles(1).get(0);
+
+        rectangleTileMap.put(drawnTile,nextTile);
+        rectangleMap.put(nextTile,drawnTile);
+        drawnTile.setFill(new ImagePattern(nextTile.getImage()));
+        drawnTile.setTranslateY(-25);
+        drawnTile.setStroke(Paint.valueOf("red"));
+        drawnTile.toFront();
+        currentlySelectedRectangle = drawnTile;
+    }
+
+    public void acceptNewTile(Rectangle newTile, Rectangle oldSpot){
+        oldSpot.setFill(newTile.getFill());
+        rectangleTileMap.remove(newTile);
+
+
+    }
+
+    public void discardTile(MouseEvent event){
+
+        Rectangle nextPondPlace = pondRectangles.stream().findAny().filter( z -> !z.isVisible()).orElse(new Rectangle());
+        System.out.println(nextPondPlace);
+        nextPondPlace.setFill(currentlySelectedRectangle.getFill());
+        //nextPondPlace.setTranslateX(50);
+        System.out.println(nextPondPlace.getFill());
+        System.out.println(currentlySelectedRectangle.getFill());
+        nextPondPlace.setVisible(true);
+        //currentlySelectedRectangle.setFill()
+        Tile oldTile = rectangleTileMap.get(currentlySelectedRectangle);
+        rectangleMap.remove(oldTile);
+        rectangleMap.put(oldTile,nextPondPlace);
+
+        //rectangleTileMap.remove(target);
+        //rectangleTileMap.put(newTarget,)
+        rectangleTileMap.put(nextPondPlace, oldTile);
+        rectangleTileMap.remove(currentlySelectedRectangle);
+        presentNewTile();
+    }
+
+
     public void clickOrderHand(MouseEvent event){
         Map<Tile, String> handMap = new HashMap<>();
         List<Tile> tiles = new ArrayList<>();
@@ -189,6 +235,7 @@ public class MainController implements Initializable {
     public void liftHand(MouseEvent event){
         if(event.getSource().getClass() != HBox.class){
             Rectangle target = (Rectangle)event.getSource();
+            currentlySelectedRectangle = target;
             if(target.getTranslateY() == -25){
                 target.setTranslateY(0);
                 target.setStroke(Paint.valueOf("black"));
@@ -197,8 +244,10 @@ public class MainController implements Initializable {
                     z.setTranslateY(0);
                     Rectangle newZ = (Rectangle)z;
                     newZ.setStroke(Paint.valueOf("black"));
-                });
 
+                });
+                drawnTile.setTranslateY(0);
+                drawnTile.setStroke(Paint.valueOf("black"));
                 target.setTranslateY(-25);
                 target.setStroke(Paint.valueOf("red"));
                 target.toFront();
@@ -206,6 +255,7 @@ public class MainController implements Initializable {
 
             findConnections(target);
             findSetConnections(target);
+
         }
 
     }
@@ -352,19 +402,23 @@ public class MainController implements Initializable {
         // Button was clicked, do something...
         System.out.println("test");
     }
-    public Map<Rectangle, Tile> fillHandRectangles(List<Tile> tiles){
+    public Map<Rectangle, Tile> fillHandRectangles(List<Tile> tiles, TileSet ts){
         //Map<Rectangle, Tile> rectangleTileMap = new HashMap<>();
-
-        p1hand.getChildren().stream().map(z -> (Rectangle)z).forEach(z ->{
-            if(tiles.size() != 0){
-                rectangleTileMap.put((Rectangle)z,tiles.get(0));
-                rectangleMap.put(tiles.get(0),(Rectangle)z);
+        this.tileset = ts;
+        p1hand.getChildren().stream().map(z -> (Rectangle)z).forEach(z -> {
+            if (tiles.size() != 0) {
+                rectangleTileMap.put((Rectangle) z, tiles.get(0));
+                rectangleMap.put(tiles.get(0), (Rectangle) z);
                 z.setFill(new ImagePattern(tiles.get(0).getImage()));
                 tiles.remove(0);
 
             }
 
         });
+        presentNewTile();
+        drawnTile.setOnMouseClicked(this::liftHand);
+        discardButton.setOnMouseClicked(this::discardTile);
+
         return rectangleTileMap;
     }
     private void handleCardClick(MouseEvent event) {
