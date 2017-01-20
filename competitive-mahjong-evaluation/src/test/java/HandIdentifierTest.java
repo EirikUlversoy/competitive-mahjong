@@ -140,13 +140,16 @@ public class HandIdentifierTest {
         //List<Tile> incorrectTiles = tilesFromFile.analyzeString("S123W123C1C2C3");
         List<Tile> correctTiles = tilesFromFile.analyzeString("S1234W123P1234V1V2V3");
 
-        List<SequenceGroup> sequenceGroups = handEvaluator.findSequences(tiles);
+        List<SequenceGroup> sequenceGroups = handEvaluator.findSequencesFromAllSuits(tiles);
+        System.out.println(sequenceGroups);
         Assert.assertEquals(sequenceGroups.size(),3);
         sequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroups,tiles);
         Assert.assertEquals(sequenceGroups.size(),3);
+        System.out.println(sequenceGroups);
+
         Assert.assertTrue(handIdentifier.sameSequenceInThreeSuits(sequenceGroups));
 
-        List<SequenceGroup> sequenceGroupsIncorrect = handEvaluator.findSequences(incorrectTiles);
+        List<SequenceGroup> sequenceGroupsIncorrect = handEvaluator.findSequencesFromAllSuits(incorrectTiles);
         //Assert.assertEquals(sequenceGroupsIncorrect.size(),2);
         sequenceGroups = handEvaluator.findMaxValidSequences(sequenceGroupsIncorrect,incorrectTiles);
         //Assert.assertEquals(sequenceGroupsIncorrect.size(),2);
@@ -158,7 +161,9 @@ public class HandIdentifierTest {
         Assert.assertTrue(handIdentifier.sameSequenceInThreeSuits(sequenceGroupsCorrect));
 
         List<Tile> tiles2 = tilesFromFile.analyzeString("S123W123P123V22S789");
-        sequenceGroups = handEvaluator.findSequences(tiles2);
+        sequenceGroups = handEvaluator.findSequencesFromAllSuits(tiles2);
+        System.out.println(sequenceGroups);
+
         Assert.assertTrue(handIdentifier.sameSequenceInThreeSuits(sequenceGroups));
     }
 

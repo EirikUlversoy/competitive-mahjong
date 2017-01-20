@@ -396,6 +396,18 @@ public class HandEvaluator {
 
         return allSequenceGroups;
     }
+
+    public List<SequenceGroup> findSequencesFromAllSuits(List<Tile> tiles){
+        List<Tile> pinTiles = filterPin(tiles);
+        List<Tile> wanTiles = filterWan(tiles);
+        List<Tile> souTiles = filterSou(tiles);
+
+        List<SequenceGroup> allGroups = findSequences(pinTiles);
+        allGroups.addAll(findSequences(wanTiles));
+        allGroups.addAll(findSequences(souTiles));
+
+        return allGroups;
+    }
     /**
      * Finds the sequences in the given tile list. The tilelist passed in should be of only one suit.
      * @param tiles

@@ -82,7 +82,8 @@ public class YakumanChecker {
 
         List<Tile> thirtheenOrphansExample = tilesFromFile.analyzeString("V1234C123S19W19P19");
         boolean didContain = false;
-        didContain = tiles.stream().distinct().allMatch(z -> thirtheenOrphansExample.contains(z));
+        didContain = thirtheenOrphansExample.stream().distinct().allMatch(z -> tiles.contains(z));
+        //didContain = tiles.stream().distinct().allMatch(z -> thirtheenOrphansExample.contains(z));
         System.out.println(tiles);
         System.out.println(thirtheenOrphansExample);
         boolean onlyTwoOfOne = tiles.stream()
@@ -90,7 +91,9 @@ public class YakumanChecker {
                 .distinct()
                 .count() == 13;
 
-
+        System.out.println(didContain);
+        System.out.println(onlyTwoOfOne);
+        System.out.println(handEvaluator.pairIsTerminalOrHonor(pair));
         return didContain && onlyTwoOfOne && handEvaluator.pairIsTerminalOrHonor(pair);
 
     }

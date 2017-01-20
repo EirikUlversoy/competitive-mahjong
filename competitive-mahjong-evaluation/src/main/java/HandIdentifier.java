@@ -194,7 +194,15 @@ public class HandIdentifier {
         if(sequenceGroups.size() <= 2){
             return false;
         }
-        return false;
+        boolean differentSuits = sequenceGroups.stream().map(z -> z.getSuit().getIdentifier()).distinct().count() == 3;
+        Tile firstTile = sequenceGroups.get(0).getFirstMember();
+        Tile secondTile = sequenceGroups.get(0).getSecondMember();
+        Tile thirdTile = sequenceGroups.get(0).getThirdMember();
+        boolean sameNumberAndIdInThreeSequences = sequenceGroups.stream().filter( z -> {
+            return z.isSuitlessMember(firstTile) && z.isSuitlessMember(secondTile) && z.isSuitlessMember(thirdTile);
+        }).count() == 3;
+
+        return differentSuits && sameNumberAndIdInThreeSequences;
     }
 
     /**

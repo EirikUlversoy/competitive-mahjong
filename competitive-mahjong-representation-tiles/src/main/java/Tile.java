@@ -79,6 +79,17 @@ public class Tile {
         return this.getIdentifier();
     }
 
+
+    @Override
+    public boolean equals(Object object){
+        Tile otherTile = (Tile)object;
+        return this.getIdentifier().equals(otherTile.getIdentifier());
+    }
+
+    @Override
+    public int hashCode(){
+        return 4;
+    }
     public void fixImage(){
         if(this.getClass() != ColorTile.class && this.getClass() != WindTile.class){
             if(this.getClass().equals(WanTile.class) || this.getSuit().getIdentifier().equals("Wan")){

@@ -112,26 +112,21 @@ public class SequenceGroup {
         return equal;
     }
 
+    public boolean isSuitlessMember(Tile tile){
+        String targetString = tile.getTileNumber()+tile.getTileId().toString();
+        String firstMemberString = this.getFirstMember().getTileNumber() + tile.getTileId().toString();
+        String secondMemberString = this.getSecondMember().getTileNumber() + tile.getTileId().toString();
+        String thirdMemberString = this.getThirdMember().getTileNumber() + tile.getTileId().toString();
+        return targetString.equals(firstMemberString) || targetString.equals(secondMemberString) || targetString.equals(thirdMemberString);
 
+    }
     public boolean isMember(Tile tile){
         String targetString = tile.getSuit().getIdentifier()+tile.getTileNumber()+tile.getTileId();
         String firstMemberString = this.getFirstMember().getSuit().getIdentifier() + this.getFirstMember().getTileNumber() + tile.getTileId();
         String secondMemberString = this.getSecondMember().getSuit().getIdentifier() + this.getSecondMember().getTileNumber() + tile.getTileId();
         String thirdMemberString = this.getThirdMember().getSuit().getIdentifier() + this.getThirdMember().getTileNumber() + tile.getTileId();
+        return targetString.equals(firstMemberString) || targetString.equals(secondMemberString) || targetString.equals(thirdMemberString);
 
-        System.out.println(targetString);
-        System.out.println(firstMemberString);
-        System.out.println("second");
-        System.out.println(secondMemberString);
-        System.out.println("third");
-        System.out.println(thirdMemberString);
-
-
-        if( targetString.equals(firstMemberString) || targetString.equals(secondMemberString) || targetString.equals(thirdMemberString)) {
-            return true;
-        } else {
-            return false;
-        }
     }
     public String toString(){
         String returnString = "";
