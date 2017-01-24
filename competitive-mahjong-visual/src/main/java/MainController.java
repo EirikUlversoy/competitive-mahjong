@@ -150,9 +150,10 @@ public class MainController implements Initializable {
 
     public void presentNewTile(){
         Tile nextTile = tileset.getRandomTiles(1).get(0);
-
+        currentlySelectedRectangle.setFill(drawnTile.getFill());
         rectangleTileMap.put(drawnTile,nextTile);
         rectangleMap.put(nextTile,drawnTile);
+        liftHandActual(drawnTile);
         drawnTile.setFill(new ImagePattern(nextTile.getImage()));
         drawnTile.setTranslateY(-25);
         drawnTile.setStroke(Paint.valueOf("red"));
@@ -169,22 +170,23 @@ public class MainController implements Initializable {
 
     public void discardTile(MouseEvent event){
 
-        Rectangle nextPondPlace = pondRectangles.stream().findAny().filter( z -> !z.isVisible()).orElse(new Rectangle());
-        System.out.println(nextPondPlace);
+        //Rectangle nextPondPlace = pondRectangles.stream().findAny().filter( z -> !z.isVisible()).orElse(new Rectangle());
+        Rectangle nextPondPlace = pondRectangles.stream().filter(z -> !z.isVisible()).findAny().orElse(new Rectangle());
+
         nextPondPlace.setFill(currentlySelectedRectangle.getFill());
-        //nextPondPlace.setTranslateX(50);
-        System.out.println(nextPondPlace.getFill());
-        System.out.println(currentlySelectedRectangle.getFill());
         nextPondPlace.setVisible(true);
         //currentlySelectedRectangle.setFill()
         Tile oldTile = rectangleTileMap.get(currentlySelectedRectangle);
         rectangleMap.remove(oldTile);
         rectangleMap.put(oldTile,nextPondPlace);
-
+        //currentlySelectedRectangle.setTranslateY(0);
+        //currentlySelectedRectangle.setStroke(Paint.valueOf("black"));
+        //drawnTile.toFront();
         //rectangleTileMap.remove(target);
         //rectangleTileMap.put(newTarget,)
         rectangleTileMap.put(nextPondPlace, oldTile);
-        rectangleTileMap.remove(currentlySelectedRectangle);
+        //rectangleTileMap.remove(currentlySelectedRectangle);
+
         presentNewTile();
     }
 
@@ -231,31 +233,32 @@ public class MainController implements Initializable {
             this.secondNode = target;
         }
     }
+    public void liftHandActual(Rectangle target){
+        currentlySelectedRectangle = target;
+        if(target.getTranslateY() == -25){
+            target.setTranslateY(0);
+            target.setStroke(Paint.valueOf("black"));
+        } else {
+            p1hand.getChildren().stream().forEach(z -> {
+                z.setTranslateY(0);
+                Rectangle newZ = (Rectangle)z;
+                newZ.setStroke(Paint.valueOf("black"));
 
+            });
+            drawnTile.setTranslateY(0);
+            drawnTile.setStroke(Paint.valueOf("black"));
+            target.setTranslateY(-25);
+            target.setStroke(Paint.valueOf("red"));
+            target.toFront();
+        }
+
+        findConnections(target);
+        findSetConnections(target);
+    }
     public void liftHand(MouseEvent event){
         if(event.getSource().getClass() != HBox.class){
             Rectangle target = (Rectangle)event.getSource();
-            currentlySelectedRectangle = target;
-            if(target.getTranslateY() == -25){
-                target.setTranslateY(0);
-                target.setStroke(Paint.valueOf("black"));
-            } else {
-                p1hand.getChildren().stream().forEach(z -> {
-                    z.setTranslateY(0);
-                    Rectangle newZ = (Rectangle)z;
-                    newZ.setStroke(Paint.valueOf("black"));
-
-                });
-                drawnTile.setTranslateY(0);
-                drawnTile.setStroke(Paint.valueOf("black"));
-                target.setTranslateY(-25);
-                target.setStroke(Paint.valueOf("red"));
-                target.toFront();
-            }
-
-            findConnections(target);
-            findSetConnections(target);
-
+            liftHandActual(target);
         }
 
     }
@@ -420,26 +423,6 @@ public class MainController implements Initializable {
         discardButton.setOnMouseClicked(this::discardTile);
 
         return rectangleTileMap;
-    }
-    private void handleCardClick(MouseEvent event) {
-
-        Game game = new Game();
-        Gameboard board = new Gameboard();
-        board.startGame();
-        List<GraphicalTile> graphicalTiles = board.getTileSet().getUnusedTiles().stream()
-                .map(z -> new GraphicalTile(30,30,board,z))
-                .collect(Collectors.toList());
-        int x = 500;
-        int y = 500;
-
-        for (GraphicalTile graphicalTile : graphicalTiles){
-            x += 30;
-            graphicalTile.x = x;
-            graphicalTile.y = y;
-
-        }
-
-
     }
 
     private void handlePondClick(MouseEvent event) {
