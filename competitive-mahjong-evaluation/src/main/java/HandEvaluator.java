@@ -28,7 +28,7 @@ public class HandEvaluator {
         honors.add("West");
         honors.add("East");
     }
-    public List<String> getHonors(){
+    public List<String> getHonorNames(){
         return this.honors;
     }
     /**
@@ -282,7 +282,7 @@ public class HandEvaluator {
         }
         return newOptionalPairs;
     }
-    public List<Tile> decomposeSetGroups(List<SetGroup> setGroups){
+    public List<Tile> decomposeSetGroupsIntoTiles(List<SetGroup> setGroups){
         List<Tile> tiles = new ArrayList<>();
         setGroups.stream()
                 .forEach( z -> {
@@ -295,7 +295,7 @@ public class HandEvaluator {
         return tiles;
     }
 
-    public List<Tile> decomposeSequenceGroups(List<SequenceGroup> seqGroups){
+    public List<Tile> decomposeSequenceGroupsIntoTiles(List<SequenceGroup> seqGroups){
         List<Tile> tiles = new ArrayList<>();
         seqGroups.stream()
                 .forEach( z -> {
@@ -307,7 +307,7 @@ public class HandEvaluator {
         return tiles;
     }
 
-    public List<Tile> decomposeGroups(List<SequenceGroup> sequenceGroups, List<SetGroup> setGroups){
+    public List<Tile> decomposeGroupsIntoTiles(List<SequenceGroup> sequenceGroups, List<SetGroup> setGroups){
         List<Tile> tiles = new ArrayList<>();
         sequenceGroups.stream()
                 .forEach( z -> {
