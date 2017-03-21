@@ -9,10 +9,8 @@ public class HandValueObject {
     private Integer value_closed;
 
     public HandValueObject(Config handConfig){
-        System.out.println(handConfig.toString());
         this.name = handConfig.getString("name");
         this.japanese_name = handConfig.getString("japanesename");
-        System.out.println(handConfig.getString("valueopen"));
         this.value_open = Integer.parseInt(handConfig.getString("valueopen"));
         this.value_closed = Integer.parseInt(handConfig.getString("valueclosed"));
     }

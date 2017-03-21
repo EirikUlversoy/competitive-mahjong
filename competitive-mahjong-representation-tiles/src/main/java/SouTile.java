@@ -6,15 +6,9 @@ public class SouTile extends Tile {
 
     }
 
-    public SouTile(Integer tileNumber){
-        super(tileNumber);
-        this.setSuit(new Suit("Sou"));
-
-    }
-
     public SouTile(Integer tileNumber, Integer tileId){
-        super(tileNumber,tileId);
-        this.setSuit(new Suit("Sou"));
+        super(tileNumber,tileId, new Suit("Sou"));
+        //this.setSuit(new Suit("Sou"));
     }
 
     @Override

@@ -55,8 +55,14 @@ public class Main extends Application
         List<Tile> initialTiles = testTileSet.getRandomTiles(14);
         initialTiles.stream().forEach(z -> System.out.println(z.getSuit().getIdentifier()+z.getTileNumber()));
         Map<Rectangle, Tile> rectangleTileMap = new HashMap<>();
+        TilesFromFile tilesFromFile = new TilesFromFile();
 
-        rectangleTileMap = main.fillHandRectangles(initialTiles);
+        List<Tile> altInitialTiles = tilesFromFile.analyzeString("S556699W22P22P33S33");
+        altInitialTiles = tilesFromFile.analyzeString("P123W123S123S789V22");
+        altInitialTiles.forEach(z -> z.fixImage());
+        //rectangleTileMap = main.fillHandRectangles(initialTiles);
+        rectangleTileMap = main.fillHandRectangles(initialTiles,testTileSet);
+
         Map<Tile, Rectangle> tileRectangleMap = new HashMap<>();
         Map<Rectangle, Tile> copyRectangleTileMap = rectangleTileMap;
         rectangleTileMap.keySet().stream().forEach(z -> tileRectangleMap.put(copyRectangleTileMap.get(z),z));

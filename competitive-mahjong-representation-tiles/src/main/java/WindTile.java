@@ -1,17 +1,21 @@
 public class WindTile extends Tile{
 
-    WindTile(){
+    public WindTile(){
         super();
 
     }
 
-    WindTile(String wind, Integer windId){
+    public WindTile(String wind, Integer windId){
         super(windId);
         this.setSuit(new Suit(wind));
+        this.setIdentifier(this.getSuit().getIdentifier()+getTileNumber()+getTileId());
+
     }
-    WindTile(String wind, Integer windId,Integer tile_id){
-        super(windId,tile_id);
-        this.setSuit(new Suit(wind));
+    public WindTile(String wind, Integer windId,Integer tile_id){
+        super(windId,tile_id, new Suit(wind));
+        this.setIdentifier(this.getSuit().getIdentifier()+getTileNumber()+getTileId());
+
+        //this.setSuit(new Suit(wind));
     }
 
 }

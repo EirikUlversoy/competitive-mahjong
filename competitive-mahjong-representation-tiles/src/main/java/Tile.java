@@ -20,22 +20,19 @@ public class Tile {
 
     public Tile(Integer tileNumber){
         this.tileNumber = tileNumber;
-        this.identifier = "not set";
-        this.position = new Position();
+        //this.identifier = "not set";
         this.tileId = 0;
     }
 
     public Tile(Integer tileNumber, Integer tileId){
         this.tileNumber = tileNumber;
-        this.identifier = "not set";
-        this.position = new Position();
+        //this.identifier = "not set";
         this.tileId = tileId;
     }
 
     public Tile(Integer tileNumber, Integer tileId, Suit suit){
         this.tileNumber = tileNumber;
-        this.identifier = "not set";
-        this.position = new Position();
+        this.identifier = suit.getIdentifier()+tileNumber+tileId;
         this.tileId = tileId;
         this.suit = suit;
     }
@@ -77,20 +74,22 @@ public class Tile {
     public void setTileId(Integer tileId) {
         this.tileId = tileId;
     }
-    public Position getPosition() {
-        return position;
-    }
-    public void setPosition(Position position) {
-        this.position = position;
-    }
 
     public String toString(){
-        String returnString = "";
-        returnString = returnString.concat(this.getClass().toString() +tileNumber.toString()+"-"+tileId.toString()).concat("@"+position.toString()).concat(tileNumber.toString());
-
-        return returnString;
+        return this.getIdentifier();
     }
 
+
+    @Override
+    public boolean equals(Object object){
+        Tile otherTile = (Tile)object;
+        return this.getIdentifier().equals(otherTile.getIdentifier());
+    }
+
+    @Override
+    public int hashCode(){
+        return 4;
+    }
     public void fixImage(){
         if(this.getClass() != ColorTile.class && this.getClass() != WindTile.class){
             if(this.getClass().equals(WanTile.class) || this.getSuit().getIdentifier().equals("Wan")){
@@ -106,7 +105,8 @@ public class Tile {
             this.findImage();
             System.out.println(this.image);
         } else {
-            this.setImagePath("/images/"+this.getIdentifier()+".png");
+            this.setImagePath("/images/"+this.getSuit().getIdentifier()+".png");
+           // this.setImagePath("/images/"+this.getTileNumber()+this.getSuit().getIdentifier());
             this.findImage();
         }
 

@@ -33,7 +33,6 @@ public class ValuationHan {
                 .map(key -> config.getConfig(String.format("hand.%s",key)))
                 .map(z -> new HandValueYakumanObject(z))
                 .collect(Collectors.toMap(HandValueObject::getName,Function.identity()));
-        System.out.println(stringYakumanHandValueObjectMap.toString());
     }
 
     public void setupHandValueObjectMap(){
@@ -43,14 +42,14 @@ public class ValuationHan {
                 .map(key -> config.getConfig(String.format("hand.%s",key)))
                 .map(z -> new HandValueObject(z))
                 .collect(Collectors.toMap(HandValueObject::getName,Function.identity()));
-        System.out.println(stringHandValueObjectMap.toString());
     }
     /**
      * Constructor sets up a list of the honor suits. Todo: Switch for class? Why else do I have different tile classes?
      */
     public ValuationHan(){
         handEvaluator = new HandEvaluator();
-
+        this.setupYakumanHandValueObjectMap();
+        this.setupHandValueObjectMap();
     }
 
     /**
@@ -61,14 +60,9 @@ public class ValuationHan {
     public Integer calculateHan(List<Tile> tiles, boolean closed){
         stringHandValueObjectMap.putAll(stringYakumanHandValueObjectMap);
         HandIdentifier handIdentifier = new HandIdentifier();
-        Hand hand = new Hand(4);
-        hand.setTiles(tiles);
-        List<String> hands = handIdentifier.identifyMatchingHands(hand,true,false,true);
-        System.out.println(hands);
-        stringHandValueObjectMap.keySet().stream()
-                .map(z -> stringHandValueObjectMap.get(z))
-                .map(z -> z.getValue_open())
-                .forEach(System.out::println);
+        //Hand hand = new Hand(4);
+        //hand.setTiles(tiles);
+        List<String> hands = handIdentifier.identifyMatchingHands(tiles,true,true,true);
 
         hands.stream().forEach(System.out::println);
         Integer hanValue = hands.stream()
@@ -76,7 +70,6 @@ public class ValuationHan {
                 .map(z -> { if(closed) {
                     return z.getValue_closed();
                 } else if(!closed){
-                    System.out.println(z.toString());
                     return z.getValue_open();
                 }  else {
                     return 0;
@@ -86,7 +79,17 @@ public class ValuationHan {
                 .peek(z -> z.toString())
                 .mapToInt(z -> z)
                 .sum();
-        System.out.println(hanValue);
+        YakumanChecker yakumanChecker = new YakumanChecker(handIdentifier);
+        List<String> yakumanStrings = yakumanChecker.findYakumanIfAny(tiles,true,true,true);
+        if(yakumanChecker.findYakumanIfAny(tiles,true,true,true).size() > 1){
+            hanValue = yakumanStrings.stream().map(z -> stringYakumanHandValueObjectMap.get(z)).map(z -> {
+                if(closed){
+                    return z.getValue_closed();
+                } else {
+                    return z.getValue_open();
+                }
+            } ).max((x,z) -> x.compareTo(z) ).orElse(0);
+        }
         return hanValue;
     }
 

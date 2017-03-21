@@ -34,7 +34,7 @@ public class TilesFromFileTest {
         varietyTest.add(new PinTile(2,1));
         varietyTest.add(new WanTile(3,1));
         varietyTest.add(new ColorTile("Green",1,1));
-        varietyTest.add(new WindTile("West",1,1));
+        varietyTest.add(new WindTile("East",1,1));
 
         List<Tile> varietyResults = tilesFromFile.analyzeString("S1P2W3C1V1");
         Collections.sort(varietyTest,(x,z)-> z.getTileNumber().compareTo(x.getTileNumber()));
@@ -65,10 +65,10 @@ public class TilesFromFileTest {
     @Test
     public void dealWithDuplicatesTest(){
         List<Tile> test = new ArrayList<>();
-        test.add(new PinTile(1,0));
-        test.add(new PinTile(1,0));
-        test.add(new PinTile(1,0));
-        test.add(new PinTile(1,0));
+        test.add(new PinTile(1,1));
+        test.add(new PinTile(1,1));
+        test.add(new PinTile(1,1));
+        test.add(new PinTile(1,1));
 
         List<Tile> result = new ArrayList<>();
         result.add(new PinTile(1,1));

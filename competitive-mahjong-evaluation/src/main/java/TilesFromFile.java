@@ -38,7 +38,7 @@ public class TilesFromFile {
         File file = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\samplehands");
         Files.lines(Paths.get(System.getProperty("user.dir")+"\\src\\test\\resources\\samplehands"))
                 .filter(z -> !z.contains("#"))
-                .forEach(z->strings.add(z));
+                .forEach(z -> strings.add(z));
 
         for(String string : strings){
             tileLists.add(analyzeString(string));
@@ -57,38 +57,23 @@ public class TilesFromFile {
         WIND = false;
     }
     public List<Tile> dealWithDuplicates(List<Tile> tiles){
-        Hand hand = new Hand(1);
-        HandEvaluator handEvaluator = new HandEvaluator();
-        List<Tile> newTiles = new ArrayList<>();
-        List<Map<Integer, List<Tile>>> maps = new ArrayList<>();
+        Map<String, Integer> mapthing = new HashMap<>();
 
-        List<Tile> Wan = handEvaluator.filterWan(tiles);
-        List<Tile> Sou = handEvaluator.filterSou(tiles);
-        List<Tile> Pin = handEvaluator.filterPin(tiles);
-        List<Tile> Color = handEvaluator.filterSuit(ColorTile.class, tiles);
-        List<Tile> Wind = handEvaluator.filterSuit(WindTile.class, tiles);
+        for(Tile tile: tiles){
+            String key = tile.getSuit().getIdentifier()+tile.getTileNumber();
+            if(mapthing.containsKey(key)){
+                System.out.println(tile.getTileId());
+                tile.setTileId(mapthing.get(key) + 1);
+                tile.setIdentifier(tile.getSuit().getIdentifier()+tile.getTileNumber()+tile.getTileId());
+                System.out.println(tile.getTileId());
+                mapthing.replace(key,tile.getTileId());
+            } else {
+                mapthing.put(key,1);
+            }
 
-        maps.add(handEvaluator.findTileCount(Wan));
-        maps.add(handEvaluator.findTileCount(Sou));
-        maps.add(handEvaluator.findTileCount(Pin));
-        maps.add(handEvaluator.findTileCount(Color));
-        maps.add(handEvaluator.findTileCount(Wind));
-
-        //final Map<Integer, List<Tile>> integerToTiles = handEvaluator.findTileCount(tiles);
-        for (Map<Integer, List<Tile>> tileMap : maps){
-            tileMap.keySet().stream()
-                    .map(z -> tileMap.get(z))
-                    .forEach(z -> {
-                        z.stream()
-                                .peek(x ->
-                                        x.setTileId(z.indexOf(x)+1))
-                                .forEach(x -> newTiles.add(x));
-                    });
-        }
-
-        return newTiles;
-
-
+            }
+        System.out.println(tiles);
+        return tiles;
     }
     public List<Tile> analyzeString(String string){
         this.tiles.clear();
@@ -96,8 +81,11 @@ public class TilesFromFile {
         string.chars()
                 .mapToObj(i -> (char)i)
                 .forEach(this::analyzeCharacters);
+        System.out.println("before dupl");
+        System.out.println(this.tiles);
         this.tiles = dealWithDuplicates(this.tiles);
-
+        System.out.println("dupl");
+        System.out.println(this.tiles);
         List<Tile> tileOutput = new ArrayList<>();
         tileOutput.addAll(this.tiles);
         return tileOutput;
@@ -132,15 +120,15 @@ public class TilesFromFile {
             default : {
                 Integer numericValue = Character.getNumericValue(i);
                 if(this.SOU){
-                    this.tiles.add(new SouTile(numericValue));
+                    this.tiles.add(new SouTile(numericValue,1));
                 } else if (this.WAN) {
-                    this.tiles.add(new WanTile(numericValue));
+                    this.tiles.add(new WanTile(numericValue,1));
                 } else if (this.PIN) {
-                    this.tiles.add(new PinTile(numericValue));
+                    this.tiles.add(new PinTile(numericValue,1));
                 } else if (this.COLOR) {
-                    this.tiles.add(new ColorTile(colorIntToString.get(numericValue),numericValue));
+                    this.tiles.add(new ColorTile(colorIntToString.get(numericValue),numericValue,1));
                 } else if (this.WIND) {
-                    this.tiles.add(new WindTile(windIntToString.get(numericValue),numericValue));
+                    this.tiles.add(new WindTile(windIntToString.get(numericValue),numericValue,1));
     }
             }
         }

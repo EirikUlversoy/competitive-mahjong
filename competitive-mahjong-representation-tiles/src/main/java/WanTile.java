@@ -8,14 +8,8 @@ public class WanTile extends Tile {
 
     }
 
-    public WanTile(Integer tileNumber) {
-        super(tileNumber);
-        this.setSuit(new Suit("Wan"));
-
-    }
     public WanTile(Integer tileNumber, Integer tile_id) {
-        super(tileNumber,tile_id);
-        this.setSuit(new Suit("Wan"));
+        super(tileNumber,tile_id, new Suit("Wan"));
 
     }
 
